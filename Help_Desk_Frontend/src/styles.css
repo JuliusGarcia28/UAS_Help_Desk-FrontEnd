@@ -1,0 +1,98 @@
+/* ==========================
+   GLOBAL COLOR PALETTE
+========================== */
+
+:root{
+  --primary:#0B2545;        /* azul marino principal */
+  --primary-light:#13315C;
+  --secondary:#134074;
+  --accent:#3FA7D6;
+  --accent-light:#7FD1F5;
+
+  --background:#F6F9FC;
+  --white:#FFFFFF;
+
+  --text-primary:#1F2933;
+  --text-secondary:#52606D;
+
+  --border:#E4E7EB;
+}
+
+/* ==========================
+   RESET
+========================== */
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  font-family: "Inter", "Segoe UI", Arial, sans-serif;
+  background:var(--background);
+  color:var(--text-primary);
+  line-height:1.6;
+}
+
+/* ==========================
+   GLOBAL UTILITIES
+========================== */
+
+.container{
+  width:90%;
+  max-width:1200px;
+  margin:auto;
+}
+
+.section{
+  padding:80px 0;
+}
+
+.section-title{
+  font-size:36px;
+  font-weight:700;
+  text-align:center;
+  margin-bottom:20px;
+}
+
+.section-subtitle{
+  text-align:center;
+  max-width:700px;
+  margin:auto;
+  margin-bottom:60px;
+  color:var(--text-secondary);
+}
+
+/* ==========================
+   BUTTONS
+========================== */
+
+.btn{
+  padding:12px 22px;
+  border-radius:8px;
+  border:none;
+  font-weight:600;
+  cursor:pointer;
+  transition:all .3s ease;
+}
+
+.btn-primary{
+  background:var(--primary);
+  color:white;
+}
+
+.btn-primary:hover{
+  background:var(--secondary);
+}
+
+.btn-outline{
+  background:transparent;
+  border:2px solid var(--primary);
+  color:var(--primary);
+}
+
+.btn-outline:hover{
+  background:var(--primary);
+  color:white;
+}
