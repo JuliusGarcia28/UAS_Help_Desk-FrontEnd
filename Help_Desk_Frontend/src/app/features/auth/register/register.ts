@@ -3,19 +3,21 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 
 @Component({
-  selector: 'app-login',
+  selector: 'app-register',
   standalone: true,
   imports: [FormsModule, RouterLink],
-  templateUrl: './login.html',
-  styleUrl: './login.css'
+  templateUrl: './register.html',
+  styleUrl: '../login/login.css'
 })
-export class Login {
+export class Register {
 
+  name:string = '';
   email:string = '';
   password:string = '';
+  confirmPassword:string = '';
 
-  login(){
-    console.log("Login:", this.email, this.password);
+  register(){
+    console.log("Registro:", this.name, this.email);
   }
 
 }
