@@ -4,11 +4,16 @@
 
 .navbar{
   width:100%;
+  padding: 1rem;
   background:var(--white);
   border-bottom:1px solid var(--border);
   position:sticky;
   top:0;
   z-index:1000;
+}
+
+.logo img{
+  height:100px;
 }
 
 .navbar-content{
@@ -39,7 +44,7 @@
 
 /* NAV LINKS */
 
-.btn a{text-decoration: none;}
+.btn {text-decoration: none;}
 
 .nav-links{
   display:flex;
