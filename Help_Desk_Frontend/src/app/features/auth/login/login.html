@@ -12,40 +12,85 @@
 
       <form (ngSubmit)="login()" #loginForm="ngForm">
 
+        <!-- EMAIL -->
         <div class="form-group">
           <label>Correo institucional</label>
           <input
             type="email"
             name="email"
             [(ngModel)]="email"
+            #emailCtrl="ngModel"
             required
+            email
+            pattern="^[a-zA-Z0-9._%+-]+@uas\.edu\.mx$"
             placeholder="correo@uas.edu.mx"
           >
+
+          <!-- ERRORES EMAIL -->
+          @if(emailCtrl.touched && emailCtrl.invalid){
+            <div class="input-error">
+
+              @if(emailCtrl.errors?.['required']){
+                <span>El correo es obligatorio</span>
+              }
+
+              @if(emailCtrl.errors?.['email']){
+                <span>Formato de correo inválido</span>
+              }
+
+              @if(emailCtrl.errors?.['pattern']){
+                <span>Debe ser un correo institucional (@uas.edu.mx)</span>
+              }
+
+            </div>
+          }
         </div>
 
+        <!-- PASSWORD -->
         <div class="form-group">
           <label>Contraseña</label>
           <input
             type="password"
             name="password"
             [(ngModel)]="password"
+            #passwordCtrl="ngModel"
             required
+            minlength="6"
             placeholder="••••••••"
           >
+
+          <!-- ERRORES PASSWORD -->
+          @if(passwordCtrl.touched && passwordCtrl.invalid){
+            <div class="input-error">
+
+              @if(passwordCtrl.errors?.['required']){
+                <span>La contraseña es obligatoria</span>
+              }
+
+              @if(passwordCtrl.errors?.['minlength']){
+                <span>Mínimo 6 caracteres</span>
+              }
+
+            </div>
+          }
         </div>
 
-        <button class="btn btn-primary btn-full">
-          Ingresar al sistema
+        <!-- BOTÓN -->
+        <button
+          class="btn btn-primary btn-full"
+          [disabled]="loading || loginForm.invalid"
+        >
+          {{ loading ? 'Ingresando...' : 'Ingresar al sistema' }}
         </button>
 
       </form>
 
-      <div class="auth-footer">
-        <p>
-          ¿No tienes cuenta?
-          <a routerLink="/register">Crear cuenta</a>
-        </p>
-      </div>
+      <!-- ERROR BACKEND -->
+      @if(error){
+        <div class="error-box">
+          {{ error }}
+        </div>
+      }
 
     </div>
 
