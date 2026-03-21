@@ -91,7 +91,7 @@ async function syncInventory() {
 
         // 4. Actualizar solo cambios
         await axios.patch(
-            `${API_URL}/register/${data.serial_number}/`,
+            `${API_URL}/update/${data.serial_number}/`,
             changes
         );
 
