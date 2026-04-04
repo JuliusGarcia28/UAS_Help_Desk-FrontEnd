@@ -96,3 +96,67 @@ body{
   background:var(--primary);
   color:white;
 }
+
+/** TABLES **/
+.table{
+  width:100%;
+  border-collapse:collapse;
+  background:white;
+  border-radius:10px;
+  overflow:hidden;
+}
+
+.table th, .table td{
+  padding:12px;
+  border-bottom:1px solid var(--border);
+  text-align:left;
+}
+
+.table th{
+  background:var(--primary);
+  color:white;
+}
+
+.table tr:hover{
+  background:#f1f5f9;
+}
+
+/* ==========================
+   SWEETALERT CUSTOM THEME
+========================== */
+
+.swal-popup{
+  border-radius:12px !important;
+  font-family: "Inter", "Segoe UI", sans-serif;
+}
+
+.swal-title{
+  font-weight:600 !important;
+}
+
+/* BOTÓN CONFIRMAR */
+.swal-confirm-btn{
+  background: var(--primary) !important;
+  border-radius:8px !important;
+  padding:10px 18px !important;
+  font-weight:600 !important;
+}
+
+.swal-confirm-btn:hover{
+  background: var(--secondary) !important;
+}
+
+/* BOTÓN CANCELAR */
+.swal-cancel-btn{
+  background: white !important;
+  color: var(--primary) !important;
+  border:2px solid var(--primary) !important;
+  border-radius:8px !important;
+  padding:10px 18px !important;
+  font-weight:600 !important;
+}
+
+.swal-cancel-btn:hover{
+  background: var(--primary) !important;
+  color:white !important;
+}

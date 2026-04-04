@@ -36,9 +36,17 @@ export class Login {
     this.loading = true;
 
     this.authService.login(this.email, this.password).subscribe({
-      next: () => {
+      next: (res) => {
         this.loading = false;
-        this.router.navigate(['/dashboard']);
+
+        const user = res.user;
+
+        //  REDIRECCIÓN POR ROL
+        if (user.role === 'admin') {
+          this.router.navigate(['/admin']);
+        } else {
+          this.router.navigate(['/']); // luego puedes hacer dashboard user
+        }
       },
       error: (err) => {
         this.loading = false;

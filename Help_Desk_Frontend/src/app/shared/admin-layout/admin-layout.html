@@ -1,0 +1,41 @@
+<div class="admin-container">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <div class="logo">
+      HelpDesk Admin
+    </div>
+
+    <nav>
+      <a routerLink="/admin/users" routerLinkActive="active">
+        👤 Usuarios
+      </a>
+
+      <a routerLink="/admin/assets" routerLinkActive="active">
+        💻 Inventario
+      </a>
+    </nav>
+
+  </aside>
+
+  <!-- CONTENT -->
+  <main class="content">
+
+    <header class="topbar">
+      <span>
+        {{ user.first_name }} {{ user.last_name }}
+      </span>
+
+      <button class="btn btn-outline" (click)="logout()">
+        Cerrar sesión
+      </button>
+    </header>
+
+    <section class="page">
+      <router-outlet></router-outlet>
+    </section>
+
+  </main>
+
+</div>

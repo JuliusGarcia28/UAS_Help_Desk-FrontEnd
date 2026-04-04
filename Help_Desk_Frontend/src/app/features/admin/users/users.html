@@ -1,0 +1,59 @@
+<h2>Usuarios</h2>
+
+<button class="btn btn-primary" (click)="createUser()">
+  + Nuevo usuario
+</button>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Username</th>
+      <th>Email</th>
+      <th>Rol</th>
+      <th>Estado</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr *ngFor="let user of users">
+
+      <td>{{ user.username }}</td>
+      <td>{{ user.email }}</td>
+      <td>{{ user.role }}</td>
+      <td>
+        <span [style.color]="user.status === 1 ? 'green' : 'red'">
+          {{ user.status === 1 ? 'Activo' : 'Inactivo' }}
+        </span>
+      </td>
+
+      <td>
+
+        <!-- VER -->
+        <button class="btn btn-outline" (click)="viewUser(user)">
+          Ver
+        </button>
+
+        <!-- EDITAR -->
+        <button
+          class="btn btn-outline"
+          (click)="editUser(user)"
+          [disabled]="isSelf(user)"
+        >
+          Editar
+        </button>
+
+        <!-- DESACTIVAR -->
+        <button
+          class="btn btn-primary"
+          (click)="deactivateUser(user)"
+          [disabled]="isSelf(user)"
+        >
+          Desactivar
+        </button>
+
+      </td>
+
+    </tr>
+  </tbody>
+</table>

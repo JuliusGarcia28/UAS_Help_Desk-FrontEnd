@@ -1,0 +1,21 @@
+<h2>Inventario</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Hostname</th>
+      <th>Modelo</th>
+      <th>Serie</th>
+      <th>IP</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr *ngFor="let asset of assets">
+      <td>{{ asset.hostname }}</td>
+      <td>{{ asset.model }}</td>
+      <td>{{ asset.serial_number }}</td>
+      <td>{{ asset.ip_address }}</td>
+    </tr>
+  </tbody>
+</table>
