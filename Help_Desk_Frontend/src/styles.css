@@ -97,6 +97,18 @@ body{
   color:white;
 }
 
+/** ADMIN ACTIONS **/
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.actions .btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 /** TABLES **/
 .table{
   width:100%;
@@ -159,4 +171,11 @@ body{
 .swal-cancel-btn:hover{
   background: var(--primary) !important;
   color:white !important;
+}
+
+/* Iconos */
+.icon {
+  font-family: 'Material Icons';
+  font-size: 20px;
+  vertical-align: middle;
 }

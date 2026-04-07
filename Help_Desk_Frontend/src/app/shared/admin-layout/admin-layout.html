@@ -8,13 +8,17 @@
     </div>
 
     <nav>
+
       <a routerLink="/admin/users" routerLinkActive="active">
-        👤 Usuarios
+        <span class="material-icons">group</span>
+        Usuarios
       </a>
 
       <a routerLink="/admin/assets" routerLinkActive="active">
-        💻 Inventario
+        <span class="material-icons">inventory_2</span>
+        Inventario
       </a>
+
     </nav>
 
   </aside>
@@ -28,6 +32,7 @@
       </span>
 
       <button class="btn btn-outline" (click)="logout()">
+        <span class="material-icons">logout</span>
         Cerrar sesión
       </button>
     </header>

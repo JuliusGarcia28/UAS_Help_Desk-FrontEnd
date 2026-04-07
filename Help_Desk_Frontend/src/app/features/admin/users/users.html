@@ -1,15 +1,18 @@
 <h2>Usuarios</h2>
 
-<button class="btn btn-primary" (click)="createUser()">
+<button class="btn btn-primary btn-create" (click)="createUser()">
   + Nuevo usuario
 </button>
 
 <table class="table">
   <thead>
     <tr>
-      <th>Username</th>
-      <th>Email</th>
+      <!--th>Nombre de Usuario</th-->
+      <th>Correo</th>
+      <th>Nombre(s)</th>
+      <th>Apellido(s)</th>
       <th>Rol</th>
+      <th>Departamento</th>
       <th>Estado</th>
       <th>Acciones</th>
     </tr>
@@ -18,20 +21,24 @@
   <tbody>
     <tr *ngFor="let user of users">
 
-      <td>{{ user.username }}</td>
+      <!--td>{{ user.username }}</td-->
       <td>{{ user.email }}</td>
+      <td>{{ user.first_name }}</td>
+      <td>{{ user.last_name }}</td>
       <td>{{ user.role }}</td>
+      <td>{{ user.department }}</td>
+
       <td>
         <span [style.color]="user.status === 1 ? 'green' : 'red'">
           {{ user.status === 1 ? 'Activo' : 'Inactivo' }}
         </span>
       </td>
 
-      <td>
+      <td class="actions">
 
         <!-- VER -->
         <button class="btn btn-outline" (click)="viewUser(user)">
-          Ver
+          <span class="material-icons">visibility</span>
         </button>
 
         <!-- EDITAR -->
@@ -40,16 +47,19 @@
           (click)="editUser(user)"
           [disabled]="isSelf(user)"
         >
-          Editar
+          <span class="material-icons">edit</span>
         </button>
 
-        <!-- DESACTIVAR -->
+        <!-- ACTIVAR / DESACTIVAR -->
         <button
-          class="btn btn-primary"
-          (click)="deactivateUser(user)"
+          class="btn"
+          [ngClass]="user.status === 1 ? 'btn-primary' : 'btn-outline'"
+          (click)="toggleUser(user)"
           [disabled]="isSelf(user)"
         >
-          Desactivar
+          <span class="material-icons">
+            {{ user.status === 1 ? 'block' : 'check_circle' }}
+          </span>
         </button>
 
       </td>

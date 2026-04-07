@@ -72,3 +72,13 @@
 .sidebar nav a:hover{
   background:var(--accent);
 }
+
+.sidebar nav a span {
+  font-size: 20px;
+}
+
+.topbar button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}

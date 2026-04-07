@@ -6,7 +6,8 @@ import Swal from 'sweetalert2';
 @Component({
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './users.html'
+  templateUrl: './users.html',
+  styleUrl: './users.css'
 })
 export class Users implements OnInit {
 
@@ -27,12 +28,10 @@ export class Users implements OnInit {
       .subscribe(res => this.users = res);
   }
 
-  // VALIDACIÓN
   isSelf(user: any): boolean {
     return user.id === this.currentUser.id;
   }
 
-  // VER DETALLE
   viewUser(user: any) {
     Swal.fire({
       title: `${user.first_name} ${user.last_name}`,
@@ -46,7 +45,6 @@ export class Users implements OnInit {
     });
   }
 
-  // EDITAR
   editUser(user: any) {
 
     if (this.isSelf(user)) {
@@ -85,7 +83,6 @@ export class Users implements OnInit {
     });
   }
 
-  // CREAR
   createUser() {
     Swal.fire({
       title: 'Nuevo usuario',
@@ -120,30 +117,42 @@ export class Users implements OnInit {
     });
   }
 
-  // DESACTIVAR (NO ELIMINAR)
-  deactivateUser(user: any) {
+  // NUEVA FUNCIÓN (ACTIVAR / DESACTIVAR)
+  toggleUser(user: any) {
 
     if (this.isSelf(user)) {
-      Swal.fire('No permitido', 'No puedes desactivar tu propio usuario', 'warning');
+      Swal.fire('No permitido', 'No puedes modificar tu propio usuario', 'warning');
       return;
     }
 
+    const isActive = user.status === 1;
+
     Swal.fire({
-      title: '¿Desactivar usuario?',
-      text: 'El usuario no podrá iniciar sesión',
+      title: isActive ? '¿Desactivar usuario?' : '¿Activar usuario?',
+      text: isActive
+        ? 'El usuario no podrá iniciar sesión'
+        : 'El usuario podrá volver a acceder',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Sí, desactivar',
+      confirmButtonText: isActive ? 'Sí, desactivar' : 'Sí, activar',
       confirmButtonColor: '#0B2545'
     }).then(result => {
 
       if (result.isConfirmed) {
 
-        this.http.patch(`${this.API}${user.id}/`, { status: 0 })
-          .subscribe(() => {
-            Swal.fire('Desactivado', 'Usuario desactivado', 'success');
-            this.getUsers();
-          });
+        this.http.patch(`${this.API}${user.id}/`, {
+          status: isActive ? 0 : 1
+        }).subscribe(() => {
+
+          Swal.fire(
+            isActive ? 'Desactivado' : 'Activado',
+            `El usuario ha sido ${isActive ? 'desactivado' : 'activado'}`,
+            'success'
+          );
+
+          this.getUsers();
+        });
+
       }
     });
   }

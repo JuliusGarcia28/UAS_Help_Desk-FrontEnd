@@ -1,21 +1,70 @@
 <h2>Inventario</h2>
 
+<button class="btn btn-primary btn-create" (click)="createAsset()">
+  + Nuevo equipo
+</button>
+
 <table class="table">
   <thead>
     <tr>
       <th>Hostname</th>
-      <th>Modelo</th>
+      <th>Tipo</th>
+      <!--th>Modelo</th-->
       <th>Serie</th>
+      <th>Sistema Operativo</th>
+      <th>CPU</th>
+      <th>RAM</th>
       <th>IP</th>
+      <th>Responsable</th>
+      <th>Estado</th>
+      <th>Acciones</th>
     </tr>
   </thead>
 
   <tbody>
     <tr *ngFor="let asset of assets">
+
       <td>{{ asset.hostname }}</td>
-      <td>{{ asset.model }}</td>
+      <td>{{ asset.asset_type }}</td>
+      <!--td>{{ asset.model }}</td-->
       <td>{{ asset.serial_number }}</td>
+      <td>{{ asset.operative_system }}</td>
+      <td>{{ asset.cpu }}</td>
+      <td>{{ asset.ram  }}</td>
       <td>{{ asset.ip_address }}</td>
+      <td>{{ asset.responsible_id }}</td>
+
+      <td>
+        <span [style.color]="asset.status === 1 ? 'green' : 'red'">
+          {{ asset.status === 1 ? 'Activo' : 'Inactivo' }}
+        </span>
+      </td>
+
+      <td class="actions">
+
+        <!-- VER -->
+        <button class="btn btn-outline" (click)="viewAsset(asset)">
+          <span class="material-icons">visibility</span>
+        </button>
+
+        <!-- EDITAR -->
+        <button class="btn btn-outline" (click)="editAsset(asset)">
+          <span class="material-icons">edit</span>
+        </button>
+
+        <!-- ACTIVAR / DESACTIVAR -->
+        <button
+          class="btn"
+          [ngClass]="asset.status === 1 ? 'btn-primary' : 'btn-outline'"
+          (click)="toggleAsset(asset)"
+        >
+          <span class="material-icons">
+            {{ asset.status === 1 ? 'build_circle' : 'check_circle' }}
+          </span>
+        </button>
+
+      </td>
+
     </tr>
   </tbody>
 </table>
