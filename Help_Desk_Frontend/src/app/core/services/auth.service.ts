@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError, tap } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 interface LoginResponse {
   user: any;
@@ -14,7 +15,7 @@ interface LoginResponse {
 })
 export class AuthService {
 
-  private API_URL = 'http://127.0.0.1:8000/auth';
+  private API_URL = `${environment.apiUrl}/auth`;
 
   constructor(private http: HttpClient) {}
 

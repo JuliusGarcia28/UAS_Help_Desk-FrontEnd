@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
+import { AdminService } from '../../../core/services/admin.service';
 
 @Component({
   standalone: true,
@@ -12,147 +12,213 @@ import Swal from 'sweetalert2';
 export class Users implements OnInit {
 
   users: any[] = [];
+  departments: any[] = [];
   currentUser: any;
 
-  API = 'http://127.0.0.1:8000/users/';
+  roleMap: any = {
+    client: 'Cliente',
+    technician: 'Técnico',
+    admin: 'Admin'
+  };
 
-  constructor(private http: HttpClient) {}
+  constructor(private adminService: AdminService) {}
 
   ngOnInit() {
     this.currentUser = JSON.parse(localStorage.getItem('user') || '{}');
     this.getUsers();
+    this.getDepartments();
   }
 
   getUsers() {
-    this.http.get<any>(this.API)
-      .subscribe(res => this.users = res);
+    this.adminService.getUsers().subscribe({
+      next: res => this.users = res,
+      error: () => this.errorAlert('Error al obtener usuarios')
+    });
+  }
+
+  getDepartments() {
+    this.adminService.getDepartments().subscribe({
+      next: res => this.departments = res,
+      error: () => this.errorAlert('Error al obtener departamentos')
+    });
   }
 
   isSelf(user: any): boolean {
     return user.id === this.currentUser.id;
   }
 
-  viewUser(user: any) {
+  isValidEmail(email: string): boolean {
+    return email.endsWith('@uas.edu.mx');
+  }
+
+  successAlert(msg: string) {
     Swal.fire({
-      title: `${user.first_name} ${user.last_name}`,
-      html: `
-        <b>Username:</b> ${user.username}<br>
-        <b>Email:</b> ${user.email}<br>
-        <b>Rol:</b> ${user.role}<br>
-        <b>Estado:</b> ${user.status === 1 ? 'Activo' : 'Inactivo'}
-      `,
+      title: msg,
+      icon: 'success',
       confirmButtonColor: '#0B2545'
     });
   }
 
+  errorAlert(msg: string) {
+    Swal.fire({
+      title: 'Error',
+      text: msg,
+      icon: 'error',
+      confirmButtonColor: '#0B2545'
+    });
+  }
+
+  toggleUser(user: any) {
+
+    if (this.isSelf(user)) return;
+
+    const newStatus = user.status === 1 ? 0 : 1;
+
+    Swal.fire({
+      title: '¿Confirmar acción?',
+      text: `El usuario será ${newStatus === 1 ? 'activado' : 'desactivado'}`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#0B2545',
+      cancelButtonColor: '#E4E7EB',
+      confirmButtonText: 'Sí',
+      cancelButtonText: 'Cancelar'
+    }).then(result => {
+      if (result.isConfirmed) {
+        this.adminService.toggleUser(user.id, newStatus).subscribe({
+          next: () => {
+            this.successAlert('Estado actualizado');
+            this.getUsers();
+          },
+          error: () => this.errorAlert('No se pudo actualizar')
+        });
+      }
+    });
+  }
+
+  viewUser(user: any) {
+    Swal.fire({
+      title: `${user.first_name} ${user.last_name}`,
+      html: `
+        <b>Email:</b> ${user.email}<br>
+        <b>Rol:</b> ${this.roleMap[user.role] || user.role}<br>
+        <b>Departamento:</b> ${user.department?.name || 'Sin asignar'}<br>
+        <b>Estado:</b> ${user.status === 1 ? 'Activo' : 'Inactivo'}
+      `,
+      confirmButtonColor: '#0B2545'
+    });
+  } 
+
   editUser(user: any) {
 
     if (this.isSelf(user)) {
-      Swal.fire('No permitido', 'No puedes editar tu propio usuario', 'warning');
-      return;
+      return this.errorAlert('No puedes editar tu propio usuario');
     }
+
+    const roleOptions = Object.entries(this.roleMap)
+      .map(([v, l]) => `<option value="${v}" ${user.role === v ? 'selected' : ''}>${l}</option>`).join('');
+
+    const departmentOptions = this.departments
+      .map(dep => `<option value="${dep.id}" ${user.department?.id === dep.id ? 'selected' : ''}>${dep.name}</option>`).join('');
 
     Swal.fire({
       title: 'Editar usuario',
       html: `
-        <input id="name" class="swal2-input" placeholder="Nombre" value="${user.first_name}">
-        <input id="last" class="swal2-input" placeholder="Apellido" value="${user.last_name}">
-        <input id="email" class="swal2-input" placeholder="Email" value="${user.email}">
+        <input id="first_name" class="swal2-input" value="${user.first_name}">
+        <input id="last_name" class="swal2-input" value="${user.last_name}">
+        <input id="email" class="swal2-input" value="${user.email}">
+        <select id="role" class="swal2-select" style="min-width: 61%;">
+          ${roleOptions}
+        </select>
+        <select id="department" class="swal2-select" style="min-width: 61%;">
+          <option value="">Sin departamento</option>
+          ${departmentOptions}
+        </select>
       `,
       showCancelButton: true,
-      confirmButtonText: 'Guardar',
       confirmButtonColor: '#0B2545',
-
       preConfirm: () => {
+
+        const email = (document.getElementById('email') as HTMLInputElement).value;
+
+        if (!this.isValidEmail(email)) {
+          Swal.showValidationMessage('Correo inválido');
+          return;
+        }
+
         return {
-          first_name: (document.getElementById('name') as HTMLInputElement).value,
-          last_name: (document.getElementById('last') as HTMLInputElement).value,
-          email: (document.getElementById('email') as HTMLInputElement).value
+          first_name: (document.getElementById('first_name') as HTMLInputElement).value,
+          last_name: (document.getElementById('last_name') as HTMLInputElement).value,
+          email,
+          role: (document.getElementById('role') as HTMLSelectElement).value,
+          department_id: (document.getElementById('department') as HTMLSelectElement).value || null
         };
       }
     }).then(result => {
-
       if (result.isConfirmed) {
-
-        this.http.patch(`${this.API}${user.id}/`, result.value)
-          .subscribe(() => {
-            Swal.fire('Actualizado', 'Usuario actualizado correctamente', 'success');
+        this.adminService.updateUser(user.id, result.value).subscribe({
+          next: () => {
+            this.successAlert('Usuario actualizado');
             this.getUsers();
-          });
+          },
+          error: () => this.errorAlert('Error al actualizar')
+        });
       }
     });
   }
 
   createUser() {
+
+    const roleOptions = Object.entries(this.roleMap)
+      .map(([v, l]) => `<option value="${v}">${l}</option>`).join('');
+
+    const departmentOptions = this.departments
+      .map(dep => `<option value="${dep.id}">${dep.name}</option>`).join('');
+
     Swal.fire({
       title: 'Nuevo usuario',
       html: `
-        <input id="username" class="swal2-input" placeholder="Username">
-        <input id="email" class="swal2-input" placeholder="Email">
-        <input id="password" type="password" class="swal2-input" placeholder="Password">
+        <input id="first_name" class="swal2-input" placeholder="Nombre(s)">
+        <input id="last_name" class="swal2-input" placeholder="Apellido(s)">
+        <input id="email" class="swal2-input" placeholder="Correo">
+        <select id="role" class="swal2-select" style="min-width: 61%;">${roleOptions}</select>
+        <select id="department" class="swal2-select" style="min-width: 61%;">
+          <option value="">Sin departamento</option>
+          ${departmentOptions}
+        </select>
+        <input id="password" type="password" class="swal2-input" placeholder="Contraseña">
       `,
       showCancelButton: true,
-      confirmButtonText: 'Crear',
       confirmButtonColor: '#0B2545',
-
       preConfirm: () => {
+
+        const email = (document.getElementById('email') as HTMLInputElement).value;
+
+        if (!this.isValidEmail(email)) {
+          Swal.showValidationMessage('Correo inválido');
+          return;
+        }
+
         return {
-          username: (document.getElementById('username') as HTMLInputElement).value,
-          email: (document.getElementById('email') as HTMLInputElement).value,
+          username: email,
+          first_name: (document.getElementById('first_name') as HTMLInputElement).value,
+          last_name: (document.getElementById('last_name') as HTMLInputElement).value,
+          email,
           password: (document.getElementById('password') as HTMLInputElement).value,
-          role: 'client',
+          role: (document.getElementById('role') as HTMLSelectElement).value,
+          department_id: (document.getElementById('department') as HTMLSelectElement).value || null,
           status: 1
         };
       }
     }).then(result => {
-
       if (result.isConfirmed) {
-
-        this.http.post(this.API, result.value)
-          .subscribe(() => {
-            Swal.fire('Creado', 'Usuario registrado', 'success');
+        this.adminService.createUser(result.value).subscribe({
+          next: () => {
+            this.successAlert('Usuario creado');
             this.getUsers();
-          });
-      }
-    });
-  }
-
-  // NUEVA FUNCIÓN (ACTIVAR / DESACTIVAR)
-  toggleUser(user: any) {
-
-    if (this.isSelf(user)) {
-      Swal.fire('No permitido', 'No puedes modificar tu propio usuario', 'warning');
-      return;
-    }
-
-    const isActive = user.status === 1;
-
-    Swal.fire({
-      title: isActive ? '¿Desactivar usuario?' : '¿Activar usuario?',
-      text: isActive
-        ? 'El usuario no podrá iniciar sesión'
-        : 'El usuario podrá volver a acceder',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: isActive ? 'Sí, desactivar' : 'Sí, activar',
-      confirmButtonColor: '#0B2545'
-    }).then(result => {
-
-      if (result.isConfirmed) {
-
-        this.http.patch(`${this.API}${user.id}/`, {
-          status: isActive ? 0 : 1
-        }).subscribe(() => {
-
-          Swal.fire(
-            isActive ? 'Desactivado' : 'Activado',
-            `El usuario ha sido ${isActive ? 'desactivado' : 'activado'}`,
-            'success'
-          );
-
-          this.getUsers();
+          },
+          error: () => this.errorAlert('Error al crear usuario')
         });
-
       }
     });
   }

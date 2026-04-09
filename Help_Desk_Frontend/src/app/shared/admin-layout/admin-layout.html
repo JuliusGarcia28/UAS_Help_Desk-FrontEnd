@@ -4,7 +4,8 @@
   <aside class="sidebar">
 
     <div class="logo">
-      HelpDesk Admin
+      <img src="img/Help_Desk_Logo_White.png" alt="HelpDesk">
+      <span>HelpDesk</span>
     </div>
 
     <nav>
@@ -19,6 +20,11 @@
         Inventario
       </a>
 
+      <a routerLink="/admin/departments" routerLinkActive="active">
+        <span class="material-icons">apartment</span>
+        Departamentos
+      </a>
+
     </nav>
 
   </aside>
@@ -27,9 +33,11 @@
   <main class="content">
 
     <header class="topbar">
-      <span>
+
+      <h1>Admin Panel</h1>
+      <!--span>
         {{ user.first_name }} {{ user.last_name }}
-      </span>
+      </span-->
 
       <button class="btn btn-outline" (click)="logout()">
         <span class="material-icons">logout</span>

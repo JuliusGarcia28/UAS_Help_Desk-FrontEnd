@@ -9,7 +9,6 @@
     <tr>
       <th>Hostname</th>
       <th>Tipo</th>
-      <!--th>Modelo</th-->
       <th>Serie</th>
       <th>Sistema Operativo</th>
       <th>CPU</th>
@@ -26,17 +25,16 @@
 
       <td>{{ asset.hostname }}</td>
       <td>{{ asset.asset_type }}</td>
-      <!--td>{{ asset.model }}</td-->
       <td>{{ asset.serial_number }}</td>
       <td>{{ asset.operative_system }}</td>
       <td>{{ asset.cpu }}</td>
-      <td>{{ asset.ram  }}</td>
+      <td>{{ asset.ram }}</td>
       <td>{{ asset.ip_address }}</td>
-      <td>{{ asset.responsible_id }}</td>
+      <td>{{ asset.responsible?.email || 'Sin asignar' }}</td>
 
       <td>
-        <span [style.color]="asset.status === 1 ? 'green' : 'red'">
-          {{ asset.status === 1 ? 'Activo' : 'Inactivo' }}
+        <span [style.color]="getStatusColor(asset.status)">
+          {{ getStatusText(asset.status) }}
         </span>
       </td>
 
@@ -59,8 +57,17 @@
           (click)="toggleAsset(asset)"
         >
           <span class="material-icons">
-            {{ asset.status === 1 ? 'build_circle' : 'check_circle' }}
+            {{ asset.status === 1 ? 'block' : 'check_circle' }}
           </span>
+        </button>
+
+        <!-- MANTENIMIENTO -->
+        <button
+          class="btn btn-outline"
+          (click)="setMaintenance(asset)"
+          [disabled]="asset.status === 3"
+        >
+          <span class="material-icons">build</span>
         </button>
 
       </td>

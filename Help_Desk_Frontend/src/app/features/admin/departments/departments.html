@@ -1,0 +1,49 @@
+<h2>Departamentos</h2>
+
+<button class="btn btn-primary btn-create" (click)="createDepartment()">
+  + Nuevo departamento
+</button>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Nombre</th>
+      <th>Descripción</th>
+      <th>Estado</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr *ngFor="let dep of departments">
+
+      <td>{{ dep.name }}</td>
+      <td>{{ dep.description }}</td>
+
+      <td>
+        <span [style.color]="dep.status === 1 ? 'green' : 'red'">
+          {{ dep.status === 1 ? 'Activo' : 'Inactivo' }}
+        </span>
+      </td>
+
+      <td class="actions">
+
+        <button class="btn btn-outline" (click)="editDepartment(dep)">
+          <span class="material-icons">edit</span>
+        </button>
+
+        <button
+          class="btn"
+          [ngClass]="dep.status === 1 ? 'btn-primary' : 'btn-outline'"
+          (click)="toggleDepartment(dep)"
+        >
+          <span class="material-icons">
+            {{ dep.status === 1 ? 'block' : 'check_circle' }}
+          </span>
+        </button>
+
+      </td>
+
+    </tr>
+  </tbody>
+</table>

@@ -82,3 +82,15 @@
   align-items: center;
   gap: 6px;
 }
+
+.logo {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo img {
+  max-width: 40%;
+  margin: 0;
+}
