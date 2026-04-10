@@ -14,9 +14,11 @@ export class Assets implements OnInit {
 
   assets: any[] = [];
   users: any[] = []; // usuarios activos
+  departments: any[] = [];
 
   searchTerm = '';
   filterStatus = '';
+  filterDepartment = '';
   filteredAssets: any[] = [];
 
   constructor(private adminService: AdminService) {}
@@ -24,6 +26,16 @@ export class Assets implements OnInit {
   ngOnInit() {
     this.getAssets();
     this.getUsers();
+    this.getDepartments();
+  }
+
+  getDepartments() {
+    this.adminService.getDepartments().subscribe({
+      next: res => {
+        this.departments = res.filter((d: any) => d.status === 1);
+      },
+      error: () => this.error('Error al obtener departamentos')
+    });
   }
 
   applyFilters() {
@@ -31,17 +43,24 @@ export class Assets implements OnInit {
 
       const matchSearch =
         `${asset.hostname} ${asset.serial_number} ${asset.ip_address}`
-        .toLowerCase()
-        .includes(this.searchTerm.toLowerCase());
+          .toLowerCase()
+          .includes(this.searchTerm.toLowerCase());
 
       const matchStatus =
         this.filterStatus !== ''
           ? asset.status === Number(this.filterStatus)
           : true;
 
-      return matchSearch && matchStatus;
-    });
-  }
+      const matchDepartment =
+        this.filterDepartment === ''
+          ? true
+          : this.filterDepartment === 'null'
+            ? !asset.responsible
+            : String(asset.responsible?.department?.id) === String(this.filterDepartment);
+
+        return matchSearch && matchStatus && matchDepartment;
+      });
+    }
 
   // ================= ALERTAS =================
 

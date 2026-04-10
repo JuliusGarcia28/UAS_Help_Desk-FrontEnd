@@ -14,11 +14,13 @@ export class Users implements OnInit {
 
   users: any[] = [];
   filteredUsers: any[] = [];
+  filteredDepartments: any[] =[];
   departments: any[] = [];
 
   searchTerm = '';
   filterRole = '';
   filterStatus = '';
+  filterDepartment = '';
 
   currentUser: any;
 
@@ -49,7 +51,7 @@ export class Users implements OnInit {
   getDepartments() {
     this.adminService.getDepartments().subscribe({
       next: res => {
-        // 🔥 SOLO ACTIVOS
+        // SOLO ACTIVOS
         this.departments = res.filter((d: any) => d.status === 1);
       },
       error: () => this.errorAlert('Error al obtener departamentos')
@@ -72,8 +74,15 @@ export class Users implements OnInit {
           ? user.status === Number(this.filterStatus)
           : true;
 
-      return matchSearch && matchRole && matchStatus;
-    });
+      const matchDepartment =
+        this.filterDepartment === ''
+          ? true
+          : this.filterDepartment === 'null'
+            ? !user.department
+            : String(user.department?.id) === String(this.filterDepartment);
+
+        return matchSearch && matchRole && matchStatus && matchDepartment;
+      });
   }
 
   isSelf(user: any): boolean {

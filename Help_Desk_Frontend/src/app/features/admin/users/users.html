@@ -16,6 +16,14 @@
     <option value="client">Cliente</option>
   </select>
 
+  <select [(ngModel)]="filterDepartment" (change)="applyFilters()">
+    <option value="">Todos los departamentos</option>
+    <option value="null">Sin asignar</option>
+    <option *ngFor="let dep of departments" [value]="dep.id">
+      {{ dep.name }}
+    </option>
+  </select>
+
   <select [(ngModel)]="filterStatus" (change)="applyFilters()">
     <option value="">Todos los estados</option>
     <option value="1">Activo</option>
