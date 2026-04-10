@@ -1,5 +1,22 @@
 <h2>Departamentos</h2>
 
+<div class="filters">
+
+  <input
+    type="text"
+    placeholder="Buscar departamento..."
+    [(ngModel)]="searchTerm"
+    (input)="applyFilters()"
+  />
+
+  <select [(ngModel)]="filterStatus" (change)="applyFilters()">
+    <option value="">Todos</option>
+    <option value="1">Activo</option>
+    <option value="0">Inactivo</option>
+  </select>
+
+</div>
+
 <button class="btn btn-primary btn-create" (click)="createDepartment()">
   + Nuevo departamento
 </button>
@@ -15,7 +32,7 @@
   </thead>
 
   <tbody>
-    <tr *ngFor="let dep of departments">
+    <tr *ngFor="let dep of filteredDepartments">
 
       <td>{{ dep.name }}</td>
       <td>{{ dep.description }}</td>

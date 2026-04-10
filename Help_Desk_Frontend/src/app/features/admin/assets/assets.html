@@ -1,5 +1,23 @@
 <h2>Inventario</h2>
 
+<div class="filters">
+
+  <input
+    type="text"
+    placeholder="Buscar equipo..."
+    [(ngModel)]="searchTerm"
+    (input)="applyFilters()"
+  />
+
+  <select [(ngModel)]="filterStatus" (change)="applyFilters()">
+    <option value="">Todos los estados</option>
+    <option value="1">Activo</option>
+    <option value="0">Inactivo</option>
+    <option value="2">Mantenimiento</option>
+  </select>
+
+</div>
+
 <button class="btn btn-primary btn-create" (click)="createAsset()">
   + Nuevo equipo
 </button>
@@ -21,7 +39,7 @@
   </thead>
 
   <tbody>
-    <tr *ngFor="let asset of assets">
+    <tr *ngFor="let asset of filteredAssets">
 
       <td>{{ asset.hostname }}</td>
       <td>{{ asset.asset_type }}</td>

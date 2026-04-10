@@ -1,17 +1,23 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { AdminService } from '../../../core/services/admin.service';
 
 @Component({
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './departments.html',
   styleUrl: './../users/users.css'
 })
 export class Departments implements OnInit {
 
   departments: any[] = [];
+
+  searchTerm = '';
+  filterStatus = '';
+  filteredDepartments: any[] = [];
+
 
   constructor(private adminService: AdminService) {}
 
@@ -21,8 +27,26 @@ export class Departments implements OnInit {
 
   getDepartments() {
     this.adminService.getDepartments().subscribe({
-      next: res => this.departments = res,
+      next: res => {
+        this.departments = res;
+        this.applyFilters();
+      },
       error: () => this.errorAlert('Error al obtener departamentos')
+    });
+  }
+
+  applyFilters() {
+  this.filteredDepartments = this.departments.filter(dep => {
+
+      const matchSearch =
+        dep.name.toLowerCase().includes(this.searchTerm.toLowerCase());
+
+      const matchStatus =
+        this.filterStatus !== ''
+          ? dep.status === Number(this.filterStatus)
+          : true;
+
+      return matchSearch && matchStatus;
     });
   }
 

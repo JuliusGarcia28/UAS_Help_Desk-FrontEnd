@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { AdminService } from '../../../core/services/admin.service';
 
 @Component({
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './assets.html',
   styleUrl: './../users/users.css'
 })
@@ -14,11 +15,32 @@ export class Assets implements OnInit {
   assets: any[] = [];
   users: any[] = []; // usuarios activos
 
+  searchTerm = '';
+  filterStatus = '';
+  filteredAssets: any[] = [];
+
   constructor(private adminService: AdminService) {}
 
   ngOnInit() {
     this.getAssets();
     this.getUsers();
+  }
+
+  applyFilters() {
+    this.filteredAssets = this.assets.filter(asset => {
+
+      const matchSearch =
+        `${asset.hostname} ${asset.serial_number} ${asset.ip_address}`
+        .toLowerCase()
+        .includes(this.searchTerm.toLowerCase());
+
+      const matchStatus =
+        this.filterStatus !== ''
+          ? asset.status === Number(this.filterStatus)
+          : true;
+
+      return matchSearch && matchStatus;
+    });
   }
 
   // ================= ALERTAS =================
@@ -77,7 +99,10 @@ export class Assets implements OnInit {
 
   getAssets() {
     this.adminService.getAssets().subscribe({
-      next: res => this.assets = res,
+      next: res => {
+        this.assets = res;
+        this.applyFilters();
+      },
       error: () => this.error('Error al obtener inventario')
     });
   }

@@ -1,18 +1,25 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { AdminService } from '../../../core/services/admin.service';
 
 @Component({
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './users.html',
   styleUrl: './users.css'
 })
 export class Users implements OnInit {
 
   users: any[] = [];
+  filteredUsers: any[] = [];
   departments: any[] = [];
+
+  searchTerm = '';
+  filterRole = '';
+  filterStatus = '';
+
   currentUser: any;
 
   roleMap: any = {
@@ -31,15 +38,41 @@ export class Users implements OnInit {
 
   getUsers() {
     this.adminService.getUsers().subscribe({
-      next: res => this.users = res,
+      next: res => {
+        this.users = res;
+        this.applyFilters();
+      },
       error: () => this.errorAlert('Error al obtener usuarios')
     });
   }
 
   getDepartments() {
     this.adminService.getDepartments().subscribe({
-      next: res => this.departments = res,
+      next: res => {
+        // 🔥 SOLO ACTIVOS
+        this.departments = res.filter((d: any) => d.status === 1);
+      },
       error: () => this.errorAlert('Error al obtener departamentos')
+    });
+  }
+
+  applyFilters() {
+    this.filteredUsers = this.users.filter(user => {
+
+      const matchSearch =
+        `${user.first_name} ${user.last_name} ${user.email}`
+        .toLowerCase()
+        .includes(this.searchTerm.toLowerCase());
+
+      const matchRole =
+        this.filterRole ? user.role === this.filterRole : true;
+
+      const matchStatus =
+        this.filterStatus !== ''
+          ? user.status === Number(this.filterStatus)
+          : true;
+
+      return matchSearch && matchRole && matchStatus;
     });
   }
 
@@ -52,20 +85,11 @@ export class Users implements OnInit {
   }
 
   successAlert(msg: string) {
-    Swal.fire({
-      title: msg,
-      icon: 'success',
-      confirmButtonColor: '#0B2545'
-    });
+    Swal.fire({ title: msg, icon: 'success', confirmButtonColor: '#0B2545' });
   }
 
   errorAlert(msg: string) {
-    Swal.fire({
-      title: 'Error',
-      text: msg,
-      icon: 'error',
-      confirmButtonColor: '#0B2545'
-    });
+    Swal.fire({ title: 'Error', text: msg, icon: 'error', confirmButtonColor: '#0B2545' });
   }
 
   toggleUser(user: any) {
@@ -80,9 +104,7 @@ export class Users implements OnInit {
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#0B2545',
-      cancelButtonColor: '#E4E7EB',
-      confirmButtonText: 'Sí',
-      cancelButtonText: 'Cancelar'
+      cancelButtonColor: '#E4E7EB'
     }).then(result => {
       if (result.isConfirmed) {
         this.adminService.toggleUser(user.id, newStatus).subscribe({
@@ -101,22 +123,14 @@ export class Users implements OnInit {
       title: `${user.first_name} ${user.last_name}`,
       html: `
         <b>Email:</b> ${user.email}<br>
-        <b>Rol:</b> ${this.roleMap[user.role] || user.role}<br>
-        <b>Departamento:</b> ${user.department?.name || 'Sin asignar'}<br>
-        <b>Estado:</b> ${user.status === 1 ? 'Activo' : 'Inactivo'}
+        <b>Rol:</b> ${this.roleMap[user.role]}<br>
+        <b>Departamento:</b> ${user.department?.name || 'Sin asignar'}
       `,
       confirmButtonColor: '#0B2545'
     });
-  } 
+  }
 
   editUser(user: any) {
-
-    if (this.isSelf(user)) {
-      return this.errorAlert('No puedes editar tu propio usuario');
-    }
-
-    const roleOptions = Object.entries(this.roleMap)
-      .map(([v, l]) => `<option value="${v}" ${user.role === v ? 'selected' : ''}>${l}</option>`).join('');
 
     const departmentOptions = this.departments
       .map(dep => `<option value="${dep.id}" ${user.department?.id === dep.id ? 'selected' : ''}>${dep.name}</option>`).join('');
@@ -127,10 +141,7 @@ export class Users implements OnInit {
         <input id="first_name" class="swal2-input" value="${user.first_name}">
         <input id="last_name" class="swal2-input" value="${user.last_name}">
         <input id="email" class="swal2-input" value="${user.email}">
-        <select id="role" class="swal2-select" style="min-width: 61%;">
-          ${roleOptions}
-        </select>
-        <select id="department" class="swal2-select" style="min-width: 61%;">
+        <select id="department" class="swal2-select">
           <option value="">Sin departamento</option>
           ${departmentOptions}
         </select>
@@ -150,7 +161,6 @@ export class Users implements OnInit {
           first_name: (document.getElementById('first_name') as HTMLInputElement).value,
           last_name: (document.getElementById('last_name') as HTMLInputElement).value,
           email,
-          role: (document.getElementById('role') as HTMLSelectElement).value,
           department_id: (document.getElementById('department') as HTMLSelectElement).value || null
         };
       }

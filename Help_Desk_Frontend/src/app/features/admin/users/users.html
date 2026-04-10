@@ -1,5 +1,29 @@
 <h2>Usuarios</h2>
 
+<div class="filters">
+
+  <input
+    type="text"
+    placeholder="Buscar usuario..."
+    [(ngModel)]="searchTerm"
+    (input)="applyFilters()"
+  />
+
+  <select [(ngModel)]="filterRole" (change)="applyFilters()">
+    <option value="">Todos los roles</option>
+    <option value="admin">Admin</option>
+    <option value="technician">Técnico</option>
+    <option value="client">Cliente</option>
+  </select>
+
+  <select [(ngModel)]="filterStatus" (change)="applyFilters()">
+    <option value="">Todos los estados</option>
+    <option value="1">Activo</option>
+    <option value="0">Inactivo</option>
+  </select>
+
+</div>
+
 <button class="btn btn-primary btn-create" (click)="createUser()">
   + Nuevo usuario
 </button>
@@ -7,10 +31,8 @@
 <table class="table">
   <thead>
     <tr>
-      <!--th>Nombre de Usuario</th-->
-      <th>Correo</th>
-      <th>Nombre(s)</th>
-      <th>Apellido(s)</th>
+      <th>Nombre</th>
+      <th>Email</th>
       <th>Rol</th>
       <th>Departamento</th>
       <th>Estado</th>
@@ -19,13 +41,11 @@
   </thead>
 
   <tbody>
-    <tr *ngFor="let user of users">
+    <tr *ngFor="let user of filteredUsers">
 
-      <!--td>{{ user.username }}</td-->
+      <td>{{ user.first_name }} {{ user.last_name }}</td>
       <td>{{ user.email }}</td>
-      <td>{{ user.first_name }}</td>
-      <td>{{ user.last_name }}</td>
-      <td>{{ roleMap[user.role] || user.role }}</td>
+      <td>{{ roleMap[user.role] }}</td>
       <td>{{ user.department?.name || 'Sin asignar' }}</td>
 
       <td>
@@ -35,33 +55,23 @@
       </td>
 
       <td class="actions">
-
-        <!-- VER -->
         <button class="btn btn-outline" (click)="viewUser(user)">
           <span class="material-icons">visibility</span>
         </button>
 
-        <!-- EDITAR -->
-        <button
-          class="btn btn-outline"
-          (click)="editUser(user)"
-          [disabled]="isSelf(user)"
-        >
+        <button class="btn btn-outline" (click)="editUser(user)">
           <span class="material-icons">edit</span>
         </button>
 
-        <!-- ACTIVAR / DESACTIVAR -->
         <button
           class="btn"
           [ngClass]="user.status === 1 ? 'btn-primary' : 'btn-outline'"
           (click)="toggleUser(user)"
-          [disabled]="isSelf(user)"
         >
           <span class="material-icons">
             {{ user.status === 1 ? 'block' : 'check_circle' }}
           </span>
         </button>
-
       </td>
 
     </tr>
