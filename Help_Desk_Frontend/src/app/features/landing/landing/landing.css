@@ -211,3 +211,85 @@
 .footer p{
   font-size:14px;
 }
+
+/* ==========================
+   DOWNLOADS
+========================== */
+
+.downloads {
+  background: #f9fbfd;
+}
+
+.downloads-grid {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.download-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 40px;
+  max-width: 360px;
+  width: 100%;
+  text-align: center;
+  transition: 0.3s;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+}
+
+.download-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+}
+
+.download-icon {
+  width: 70px;
+  height: 70px;
+  margin: 0 auto 20px;
+  border-radius: 50%;
+  background: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.download-icon span {
+  font-size: 32px;
+  color: white;
+}
+
+.download-card h3 {
+  margin-bottom: 10px;
+}
+
+.download-card p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+}
+
+.download-features {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 25px;
+  text-align: left;
+}
+
+.download-features li {
+  font-size: 14px;
+  margin-bottom: 8px;
+  color: var(--text-primary);
+}
+
+.download-note {
+  display: block;
+  margin-top: 12px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+/* botón ancho completo */
+.btn-full {
+  width: 100%;
+}
