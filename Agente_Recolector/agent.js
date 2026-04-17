@@ -119,77 +119,48 @@ async function startAgent() {
     // Primera ejecución
     await syncInventory();
 
-    // Ejecutar cada vez que inicia sistema (puedes dejarlo así o quitar intervalo)
+    // Ejecutar cada vez que inicia sistema
     setInterval(syncInventory, 1000 * 60 * 10);
+
+    // Revisión diaria completa
+    setInterval(async () => {
+        console.log("Revisión diaria completa del inventario...");
+
+        try {
+            const data = await collectInventory();
+
+            const response = await axios.get(
+                `${API_URL}/${data.serial_number}/`
+            );
+
+            if (!response.data.exists) {
+                console.log("No existe en revisión diaria, registrando...");
+                await axios.post(`${API_URL}/register/`, data);
+                return;
+            }
+
+            const serverData = response.data.data;
+            const changes = getDifferences(data, serverData);
+
+            if (Object.keys(changes).length === 0) {
+                console.log("Revisión diaria: sin cambios");
+                return;
+            }
+
+            console.log("Revisión diaria: cambios detectados", changes);
+
+            await axios.patch(
+                `${API_URL}/update/${data.serial_number}/`,
+                changes
+            );
+
+            console.log("Revisión diaria: equipo actualizado");
+
+        } catch (error) {
+            console.error("Error en revisión diaria:", error.message);
+        }
+
+    }, 1000 * 60 * 60 * 24);
 }
 
 startAgent();
-
-//Anterior
-
-/*const si = require('systeminformation');
-const axios = require('axios');
-
-async function collectInventory() {
-
-    const cpu = await si.cpu();
-    const mem = await si.mem();
-    const os = await si.osInfo();
-    const system = await si.system();
-    const network = await si.networkInterfaces();
-
-    const ip = network.find(n => !n.internal && n.ip4);
-
-    return {
-
-        hostname: os.hostname,
-
-        asset_type: "desktop",
-
-        model: system.model,
-
-        serial_number: system.serial,
-
-        operative_system: os.distro + " " + os.release,
-
-        ip_address: ip ? ip.ip4 : null,
-
-        cpu: cpu.brand,
-
-        ram: Math.round(mem.total / (1024 * 1024 * 1024)) // convertir a GB
-    };
-
-}
-
-async function sendInventory() {
-
-    try {
-
-        const data = await collectInventory();
-
-        await axios.post(
-            "http://localhost:8000/assets/agent/register/",
-            data
-        );
-
-        console.log("Inventario enviado");
-
-    } catch (error) {
-
-        console.error("Error:", error.message);
-
-    }
-
-}
-
-async function startAgent() {
-
-    console.log("Agente iniciado");
-
-    await sendInventory();
-
-    setInterval(sendInventory, 1000 * 60 * 10);
-
-}
-
-startAgent();*/
