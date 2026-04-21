@@ -138,20 +138,65 @@ export class Assets implements OnInit {
 
   // ================= VIEW =================
 
-  viewAsset(asset: any) {
-    Swal.fire({
-      title: asset.hostname,
-      html: `
-        <b>Tipo:</b> ${asset.asset_type}<br>
-        <b>Serie:</b> ${asset.serial_number}<br>
-        <b>SO:</b> ${asset.operative_system}<br>
-        <b>CPU:</b> ${asset.cpu}<br>
-        <b>RAM:</b> ${asset.ram}<br>
-        <b>IP:</b> ${asset.ip_address}<br>
-        <b>Responsable:</b> ${asset.responsible?.email || 'Sin asignar'}
-      `,
-      confirmButtonColor: '#0B2545'
+  viewHistory(asset: any) {
+
+    this.adminService.getAssetHistory(asset.id).subscribe({
+
+      next: (history) => {
+
+        if (!history.length) {
+          this.error('No hay historial para este equipo');
+          return;
+        }
+
+        const timeline = `
+          <table class="history-table">
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>Hostname</th>
+                <th>Serie</th>
+                <th>CPU</th>
+                <th>RAM</th>
+                <th>IP</th>
+                <th>Estado</th>
+                <th>Usuario</th>
+                <th>Departamento</th>
+                <th>Motivo</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${history.map((h: any) => `
+              <tr>
+                <td>${new Date(h.snapshot_date).toLocaleString()}</td>
+                <td>${h.hostname}</td>
+                <td>${h.serial_number}</td>
+                <td>${h.cpu}</td>
+                <td>${h.ram}</td>
+                <td>${h.ip_address}</td>
+                <td>${this.getStatusText(h.status)}</td>
+                <td>${h.user_email || 'Sin asignar'}</td>
+                <td>${h.department_name || 'Sin asignar'}</td>
+                <td>${h.change_reason || 'Actualización'}</td>
+              </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        `;
+
+        Swal.fire({
+          title: `Historial - ${asset.hostname}`,
+          html: `<div class="history-container">${timeline}</div>`,
+          width: '1300px',
+          confirmButtonColor: '#0B2545'
+        });
+
+      },
+
+      error: () => this.error('Error al obtener historial')
+
     });
+
   }
 
   // ================= SELECT RESPONSABLE =================
@@ -181,7 +226,7 @@ export class Assets implements OnInit {
         <input id="ram" type="number" class="swal2-input" value="${asset.ram}" placeholder="RAM">
         <input id="ip_address" class="swal2-input" value="${asset.ip_address}" placeholder="IP">
 
-        <select id="responsible" class="swal2-select" style="min-width: 61%;">
+        <select id="responsible" class="swal2-select" style="min-width: 60%;">
           <option value="">Sin asignar</option>
           ${userOptions}
         </select>

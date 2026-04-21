@@ -50,6 +50,10 @@ export class AdminService {
     return this.http.patch(`${this.ASSETS_API}${id}/`, { status });
   }
 
+  getAssetHistory(id: string): Observable<any> {
+    return this.http.get(`${this.ASSETS_API}${id}/history/`);
+  }
+
   // ================= DEPARTMENTS =================
 
   getDepartments(): Observable<any> {

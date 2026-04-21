@@ -1,59 +1,16 @@
 .admin-container{
   display:flex;
-  height:100vh;
+  min-height:100vh;
 }
+
+/* SIDEBAR */
 
 .sidebar{
   width:240px;
   background:var(--primary);
   color:white;
   padding:20px;
-}
-
-.sidebar .logo{
-  font-size:20px;
-  font-weight:700;
-  margin-bottom:30px;
-}
-
-.sidebar nav a{
-  display:block;
-  padding:10px;
-  border-radius:6px;
-  color:white;
-  text-decoration:none;
-  margin-bottom:10px;
-}
-
-.sidebar nav a.active,
-.sidebar nav a:hover{
-  background:var(--accent);
-}
-
-.content{
-  flex:1;
-  background:var(--background);
-}
-
-.topbar{
-  background:white;
-  padding:15px;
-  border-bottom:1px solid var(--border);
-}
-
-.page{
-  padding:20px;
-}
-
-/* UPGRADE */
-
-.topbar{
-  background:white;
-  padding:15px 20px;
-  border-bottom:1px solid var(--border);
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
+  transition:.3s;
 }
 
 .sidebar nav a{
@@ -77,20 +34,79 @@
   font-size: 20px;
 }
 
-.topbar button {
-  display: flex;
-  align-items: center;
-  gap: 6px;
+/* CONTENT */
+
+.content{
+  flex:1;
+  background:var(--background);
+  display:flex;
+  flex-direction:column;
 }
 
+/* TOPBAR */
+
+.topbar{
+  background:white;
+  padding:15px 20px;
+  border-bottom:1px solid var(--border);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+/* PAGE */
+
+.page{
+  padding:20px;
+  overflow-x:auto;
+}
+
+/* LOGO */
+
 .logo {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
 }
 
 .logo img {
-  max-width: 40%;
-  margin: 0;
+  max-width:50px;
+}
+
+/* ==========================
+   📱 MOBILE
+========================== */
+
+@media (max-width: 768px){
+
+  .admin-container{
+    flex-direction:column;
+  }
+
+  .sidebar{
+    width:100%;
+    display:flex;
+    overflow-x:auto;
+    padding:10px;
+  }
+
+  .sidebar nav{
+    display:flex;
+    gap:10px;
+  }
+
+  .sidebar nav a{
+    white-space:nowrap;
+    font-size:14px;
+  }
+
+  .topbar h1{
+    font-size:18px;
+  }
+
+  .page{
+    padding:10px;
+  }
+
 }

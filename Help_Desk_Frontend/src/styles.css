@@ -179,3 +179,23 @@ body{
   font-size: 20px;
   vertical-align: middle;
 }
+
+/* TABLAS RESPONSIVE */
+
+@media (max-width:768px){
+
+  .table {
+    display:block;
+    overflow-x:auto;
+    white-space:nowrap;
+  }
+
+  .filters{
+    flex-direction:column;
+  }
+
+  .btn-create{
+    width:100%;
+  }
+
+}

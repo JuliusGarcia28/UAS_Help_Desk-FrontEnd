@@ -14,3 +14,61 @@
   border-radius: 6px;
   border: 1px solid var(--border);
 }
+
+
+
+/*Tabla de historial*/
+.history-container {
+  max-height: 400px;
+  overflow-y: auto;
+  text-align: left;
+}
+
+.history-item {
+  border-left: 3px solid var(--accent);
+  padding: 10px 15px;
+  margin-bottom: 15px;
+  background: #f9fbfd;
+  border-radius: 6px;
+}
+
+.history-date {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 5px;
+}
+
+.history-body {
+  font-size: 14px;
+}
+
+.history-container {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.history-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.history-table th {
+  background-color: #0B2545;
+  color: white;
+  padding: 8px;
+  text-align: left;
+}
+
+.history-table td {
+  padding: 8px;
+  border-bottom: 1px solid #ddd;
+}
+
+.history-table tr:nth-child(even) {
+  background-color: #f9fbfd;
+}
+
+.history-table tr:hover {
+  background-color: #eef3f8;
+}

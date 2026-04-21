@@ -151,7 +151,7 @@ export class Users implements OnInit {
         <input id="last_name" class="swal2-input" value="${user.last_name}">
         <input id="email" class="swal2-input" value="${user.email}">
         <select id="department" class="swal2-select">
-          <option value="">Sin departamento</option>
+          <option value="" class="swal2-select" style="min-width: 60%;">Sin departamento</option>
           ${departmentOptions}
         </select>
       `,
