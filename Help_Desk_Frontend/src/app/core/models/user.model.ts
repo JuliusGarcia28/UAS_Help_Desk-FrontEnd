@@ -3,6 +3,7 @@ export interface Department {
   name: string;
   description: string;
   status: number;
+  parent: string | null;
 }
 
 export interface User {

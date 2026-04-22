@@ -72,3 +72,93 @@
 .history-table tr:hover {
   background-color: #eef3f8;
 }
+
+/** ARBOL DE DEPARTAMENTOS **/
+.tree-container {
+  margin-top: 20px;
+}
+
+.tree-node {
+  margin: 4px 0;
+}
+
+.node-content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #f9fbfd;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border-left: 3px solid var(--accent);
+}
+
+.node-name {
+  font-weight: 500;
+  flex: 1;
+}
+
+.status {
+  font-size: 12px;
+}
+
+.tree-line {
+  color: #bbb;
+  margin-right: 5px;
+}
+
+.actions {
+  display: flex;
+  gap: 5px;
+}
+
+/* SweetAlert responsive */
+.swal2-popup {
+  width: 90% !important;
+  max-width: 500px;
+  font-size: 14px;
+}
+
+@media (max-width: 480px) {
+  .swal2-popup {
+    width: 95% !important;
+    padding: 1rem;
+  }
+}
+
+/* Inputs y selects iguales */
+.swal2-input,
+.swal2-select {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+
+  box-sizing: border-box !important;
+
+  height: 42px !important;
+  min-height: 42px !important;
+
+  padding: 0 10px !important;
+
+  margin: 10px 0 !important;
+
+  border-radius: 6px !important;
+  border: 1px solid var(--border) !important;
+
+  font-size: 14px !important;
+  background-color: white !important;
+}
+
+.swal2-actions {
+  flex-wrap: wrap;
+}
+
+.swal-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.swal2-confirm,
+.swal2-cancel {
+  flex: 1;
+  min-width: 120px;
+}

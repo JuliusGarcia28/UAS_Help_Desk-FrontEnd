@@ -21,29 +21,33 @@
   + Nuevo departamento
 </button>
 
-<table class="table">
-  <thead>
-    <tr>
-      <th>Nombre</th>
-      <th>Descripción</th>
-      <th>Estado</th>
-      <th>Acciones</th>
-    </tr>
-  </thead>
+<div class="tree-container">
+  <ng-container *ngFor="let dep of tree">
+    <ng-container *ngTemplateOutlet="recursiveTemplate; context:{ $implicit: dep, level: 0 }"></ng-container>
+  </ng-container>
+</div>
 
-  <tbody>
-    <tr *ngFor="let dep of filteredDepartments">
+<!-- TEMPLATE RECURSIVO -->
+<ng-template #recursiveTemplate let-dep let-level="level">
 
-      <td>{{ dep.name }}</td>
-      <td>{{ dep.description }}</td>
+  <div class="tree-node">
 
-      <td>
-        <span [style.color]="dep.status === 1 ? 'green' : 'red'">
-          {{ dep.status === 1 ? 'Activo' : 'Inactivo' }}
-        </span>
-      </td>
+    <div class="node-content" [style.marginLeft.px]="level * 20">
 
-      <td class="actions">
+      <span class="tree-line" *ngIf="level > 0">│</span>
+
+      <span class="node-name">
+        {{ dep.name }}
+      </span>
+
+      <span
+        class="status"
+        [style.color]="dep.status === 1 ? 'green' : 'red'"
+      >
+        {{ dep.status === 1 ? 'Activo' : 'Inactivo' }}
+      </span>
+
+      <div class="actions">
 
         <button class="btn btn-outline" (click)="editDepartment(dep)">
           <span class="material-icons">edit</span>
@@ -59,8 +63,15 @@
           </span>
         </button>
 
-      </td>
+      </div>
 
-    </tr>
-  </tbody>
-</table>
+    </div>
+
+    <!-- HIJOS -->
+    <ng-container *ngFor="let child of dep.children">
+      <ng-container *ngTemplateOutlet="recursiveTemplate; context:{ $implicit: child, level: level + 1 }"></ng-container>
+    </ng-container>
+
+  </div>
+
+</ng-template>
