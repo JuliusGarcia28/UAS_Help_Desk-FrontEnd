@@ -168,7 +168,8 @@ export class Users implements OnInit {
   }
 
   isValidEmail(email: string): boolean {
-    return email?.toLowerCase().endsWith('@uas.edu.mx');
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
   }
 
   successAlert(msg: string) {
@@ -262,7 +263,7 @@ export class Users implements OnInit {
         }
 
         if (!this.isValidEmail(email)) {
-          Swal.showValidationMessage('Correo inválido (@uas.edu.mx)');
+          Swal.showValidationMessage('Correo en formato inválido');
           return;
         }
 
@@ -324,7 +325,7 @@ export class Users implements OnInit {
         }
 
         if (!this.isValidEmail(email)) {
-          Swal.showValidationMessage('Correo inválido (@uas.edu.mx)');
+          Swal.showValidationMessage('Correo en formato inválido');
           return;
         }
 

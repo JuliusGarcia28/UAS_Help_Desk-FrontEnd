@@ -26,8 +26,7 @@
             #emailCtrl="ngModel"
             required
             email
-            pattern="^[a-zA-Z0-9._%+-]+@uas\.edu\.mx$"
-            placeholder="correo@uas.edu.mx"
+            placeholder="usuario@correo.com"
           >
 
           <!-- ERRORES EMAIL -->
@@ -40,10 +39,6 @@
 
               @if(emailCtrl.errors?.['email']){
                 <span>Formato de correo inválido</span>
-              }
-
-              @if(emailCtrl.errors?.['pattern']){
-                <span>Debe ser un correo institucional (@uas.edu.mx)</span>
               }
 
             </div>
