@@ -1,0 +1,38 @@
+<h2>Mis Tickets</h2>
+
+<button class="btn btn-primary" (click)="createTicket()">
+  + Nuevo ticket
+</button>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Descripción</th>
+      <th>Prioridad</th>
+      <th>Estado</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr *ngFor="let t of tickets">
+
+      <td>{{ t.description }}</td>
+
+      <td>{{ priorityMap[t.priority] }}</td>
+
+      <td>
+        <span [style.color]="getStatusColor(t.status)">
+          {{ statusMap[t.status] }}
+        </span>
+      </td>
+
+      <td class="actions">
+        <button class="btn btn-outline" (click)="viewHistory(t)">
+          <span class="material-icons">history</span>
+        </button>
+      </td>
+
+    </tr>
+  </tbody>
+</table>

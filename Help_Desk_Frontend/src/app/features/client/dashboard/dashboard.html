@@ -1,0 +1,24 @@
+<h2>Mi Panel</h2>
+
+<div class="cards">
+
+  <div class="card">
+    <h3>Total Tickets</h3>
+    <p>{{ tickets.length }}</p>
+  </div>
+
+  <div class="card">
+    <h3>Abiertos</h3>
+    <p>{{ openTickets }}</p>
+  </div>
+
+  <div class="card">
+    <h3>En proceso</h3>
+    <p>{{ inProgress }}</p>
+  </div>
+
+</div>
+
+<button class="btn btn-primary" routerLink="/client/tickets">
+  Ver mis tickets
+</button>

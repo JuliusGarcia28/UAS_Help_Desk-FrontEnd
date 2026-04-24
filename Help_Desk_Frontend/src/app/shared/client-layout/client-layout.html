@@ -1,0 +1,58 @@
+<div class="client-container">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <div class="logo">
+      <img src="img/Help_Desk_Logo_White.png" alt="HelpDesk">
+      <span>HelpDesk</span>
+    </div>
+
+    <nav>
+
+      <a routerLink="/client" routerLinkActive="active">
+        <span class="material-icons">dashboard</span>
+        Mi Panel
+      </a>
+
+      <a routerLink="/client/tickets" routerLinkActive="active">
+        <span class="material-icons">support_agent</span>
+        Mis Tickets
+      </a>
+
+      <a routerLink="/client/tickets" routerLinkActive="active">
+        <span class="material-icons">add_circle</span>
+        Nuevo Ticket
+      </a>
+
+    </nav>
+
+  </aside>
+
+  <!-- CONTENT -->
+  <main class="content">
+
+    <header class="topbar">
+
+      <h1>Panel de Usuario</h1>
+
+      <div class="user-info">
+        <span>
+          {{ user.first_name }} {{ user.last_name }}
+        </span>
+
+        <button class="btn btn-outline logout-btn" style="display: flex; flex-direction: row; align-items: center;" (click)="logout()">
+          <span class="material-icons">logout</span>
+          <span>Cerrar Sesión</span>
+        </button>
+      </div>
+
+    </header>
+
+    <section class="page">
+      <router-outlet></router-outlet>
+    </section>
+
+  </main>
+
+</div>

@@ -1,0 +1,90 @@
+.client-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 220px;
+  background: var(--primary);
+  color: white;
+  padding: 20px;
+}
+
+.sidebar nav a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 8px;
+  color: white;
+  text-decoration: none;
+  margin-bottom: 10px;
+  transition: 0.2s;
+}
+
+.sidebar nav a.active,
+.sidebar nav a:hover {
+  background: var(--accent);
+}
+
+/* CONTENT */
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: var(--background);
+}
+
+/* TOPBAR */
+.topbar {
+  background: white;
+  padding: 15px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* USER */
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* PAGE */
+.page {
+  padding: 20px;
+}
+
+/* LOGO */
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.logo img {
+  max-width: 50%;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+
+  .client-container {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    display: flex;
+    overflow-x: auto;
+  }
+
+  .sidebar nav {
+    display: flex;
+    gap: 10px;
+  }
+}
