@@ -70,12 +70,31 @@
   gap:10px;
 }
 
+.logo span {
+  font-size:24px;
+  font-weight:bold;
+  color:white;
+}
+
 .logo img {
-  max-width:5%;
+  max-width:45%;
+}
+
+.page{
+  padding:25px;
+}
+
+/* CONTENEDOR GENERAL DE CADA VISTA */
+.admin-card{
+  background:white;
+  padding:25px;
+  border-radius:12px;
+  border:1px solid var(--border);
+  box-shadow:0 10px 25px rgba(0,0,0,0.05);
 }
 
 /* ==========================
-   📱 MOBILE
+  MOBILE
 ========================== */
 
 @media (max-width: 768px){

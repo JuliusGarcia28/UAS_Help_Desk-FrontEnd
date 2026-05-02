@@ -1,0 +1,58 @@
+.table{
+  margin-top:20px;
+}
+
+.badge{
+  padding:6px 12px;
+  border-radius:20px;
+  font-size:12px;
+  font-weight:600;
+}
+
+/* STATUS */
+.badge.open{
+  background:#fff4e5;
+  color:#ff9800;
+}
+
+.badge.progress{
+  background:#e3f2fd;
+  color:#3FA7D6;
+}
+
+.badge.closed{
+  background:#e8f5e9;
+  color:green;
+}
+
+/* PRIORITY */
+.badge.low{
+  background:#f1f5f9;
+}
+
+.badge.medium{
+  background:#e3f2fd;
+}
+
+.badge.high{
+  background:#fdecea;
+  color:#e53935;
+}
+
+/* BOTONES ACCIONES */
+.actions .btn{
+  padding:6px 10px;
+  border-radius:6px;
+}
+
+.floating-btn{
+  position:sticky;
+  bottom:30px;
+  right:30px;
+  height:60px;
+  font-size:28px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 10px 25px rgba(0,0,0,0.2);
+}

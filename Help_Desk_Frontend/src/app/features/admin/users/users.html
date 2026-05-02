@@ -1,3 +1,4 @@
+<div class="admin-card">
 <h2>Usuarios</h2>
 
 <div class="filters">
@@ -53,19 +54,29 @@
 
       <td>{{ user.first_name }} {{ user.last_name }}</td>
       <td>{{ user.email }}</td>
-      <td>{{ roleMap[user.role] }}</td>
+      <td>
+        <span class="badge"
+        [ngClass]="{
+        'admin': user.role === 'admin',
+        'tech': user.role === 'technician',
+        'client': user.role === 'client'
+        }">
+          {{ roleMap[user.role] }}
+        </span>
+      </td>
       <td>{{ user.department?.name || 'Sin asignar' }}</td>
 
       <td>
-        <span [style.color]="user.status === 1 ? 'green' : 'red'">
+        <span class="badge"
+        [ngClass]="user.status === 1 ? 'active' : 'inactive'">
           {{ user.status === 1 ? 'Activo' : 'Inactivo' }}
         </span>
       </td>
 
       <td class="actions">
-        <button class="btn btn-outline" (click)="viewUser(user)">
+        <!--button class="btn btn-outline" (click)="viewUser(user)">
           <span class="material-icons">visibility</span>
-        </button>
+        </button-->
 
         <button class="btn btn-outline" (click)="editUser(user)">
           <span class="material-icons">edit</span>
@@ -85,3 +96,4 @@
     </tr>
   </tbody>
 </table>
+</div>

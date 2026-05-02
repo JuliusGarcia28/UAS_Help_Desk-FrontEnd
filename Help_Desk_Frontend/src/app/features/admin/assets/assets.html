@@ -1,4 +1,5 @@
-<h2>Inventario</h2>
+<div class="admin-card">
+  <h2>Inventario</h2>
 
 <div class="filters">
 
@@ -59,7 +60,12 @@
       <td>{{ asset.responsible?.email || 'Sin asignar' }}</td>
 
       <td>
-        <span [style.color]="getStatusColor(asset.status)">
+        <span class="badge"
+          [ngClass]="{
+          'active': asset.status === 1,
+          'inactive': asset.status === 0,
+          'maintenance': asset.status === 2
+          }">
           {{ getStatusText(asset.status) }}
         </span>
       </td>
@@ -101,3 +107,4 @@
     </tr>
   </tbody>
 </table>
+</div>

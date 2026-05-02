@@ -162,3 +162,140 @@
   flex: 1;
   min-width: 120px;
 }
+
+.filters{
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+  margin-bottom:20px;
+  background:white;
+  padding:15px;
+  border-radius:10px;
+  border:1px solid var(--border);
+}
+
+/* INPUTS */
+.filters input,
+.filters select{
+  padding:10px 12px;
+  border-radius:8px;
+  border:1px solid var(--border);
+  background:#f9fbfd;
+  font-size:14px;
+  transition:.2s;
+}
+
+.filters input:focus,
+.filters select:focus{
+  outline:none;
+  border-color:var(--accent);
+  background:white;
+}
+
+.btn-create{
+  margin-bottom:15px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.table{
+  margin-top:15px;
+  border-radius:12px;
+  overflow:hidden;
+}
+
+.table th{
+  font-size:13px;
+  letter-spacing:.5px;
+}
+
+.table td{
+  font-size:14px;
+}
+
+/* hover más suave */
+.table tr:hover{
+  background:#f8fafc;
+}
+
+.badge{
+  padding:5px 10px;
+  border-radius:20px;
+  font-size:12px;
+  font-weight:600;
+}
+
+/* STATUS */
+.badge.active{
+  background:#e8f5e9;
+  color:green;
+}
+
+.badge.inactive{
+  background:#fdecea;
+  color:#e53935;
+}
+
+/* ROLES */
+.badge.admin{
+  background:#e3f2fd;
+  color:#134074;
+}
+
+.badge.tech{
+  background:#fff4e5;
+  color:#ff9800;
+}
+
+.badge.client{
+  background:#f1f5f9;
+}
+
+.actions .btn{
+  padding:6px 8px;
+  border-radius:6px;
+}
+
+.actions .btn:hover{
+  transform:scale(1.05);
+}
+
+.node-content{
+  background:white;
+  border:1px solid var(--border);
+  border-left:4px solid var(--accent);
+  border-radius:8px;
+  padding:10px 15px;
+  margin-bottom:8px;
+  transition:.2s;
+}
+
+.node-content:hover{
+  background:#f9fbfd;
+}
+
+.badge.maintenance{
+  background:#fff4e5;
+  color:#ff9800;
+}
+
+.actions .btn{
+  padding:6px 8px;
+  border-radius:6px;
+}
+
+.actions .btn:hover{
+  transform:scale(1.05);
+}
+
+.table,
+.admin-card,
+.node-content{
+  animation:fadeIn .3s ease;
+}
+
+@keyframes fadeIn{
+  from{opacity:0; transform:translateY(10px);}
+  to{opacity:1; transform:translateY(0);}
+}

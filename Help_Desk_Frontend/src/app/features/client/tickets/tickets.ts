@@ -6,7 +6,8 @@ import Swal from 'sweetalert2';
 @Component({
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './tickets.html'
+  templateUrl: './tickets.html',
+  styleUrl: './tickets.css'
 })
 export class Tickets implements OnInit {
 
