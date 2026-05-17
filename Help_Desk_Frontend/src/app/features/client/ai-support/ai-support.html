@@ -1,0 +1,110 @@
+<div class="ai-container">
+
+  <div class="ai-header">
+
+    <div>
+
+      <h2>
+        Asistente IA
+      </h2>
+
+      <p>
+        Describe tu problema técnico
+      </p>
+
+    </div>
+
+  </div>
+
+  <!-- SELECT EQUIPOS -->
+
+  <div class="asset-select">
+
+    <label>
+      Equipo afectado
+    </label>
+
+    <select #assetSelect>
+
+      <option value="">
+        Selecciona un equipo
+      </option>
+
+      <option
+        *ngFor="let asset of assets"
+        [value]="asset.id">
+
+        {{ asset.hostname }}
+        -
+        {{ asset.asset_type }}
+
+      </option>
+
+    </select>
+
+  </div>
+
+  <!-- CHAT -->
+
+  <div class="chat-box">
+
+    <div
+      *ngFor="let msg of messages"
+      class="message"
+      [ngClass]="msg.role">
+
+      <div class="bubble">
+
+        {{ msg.content }}
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- INPUT -->
+
+  <div class="chat-input">
+
+    <textarea
+      #problemInput
+      placeholder="Describe el problema..."
+    ></textarea>
+
+    <button
+      class="btn-send"
+      (click)="sendProblem(problemInput, assetSelect)"
+      [disabled]="loading">
+
+      {{ loading ? 'Analizando...' : 'Enviar' }}
+
+    </button>
+
+  </div>
+
+  <!-- ACTIONS -->
+
+  <div
+    class="actions"
+    *ngIf="session">
+
+    <button
+      class="btn-solved"
+      (click)="solved()">
+
+      ✓ Se solucionó
+
+    </button>
+
+    <button
+      class="btn-escalate"
+      (click)="escalate()">
+
+      El problema continúa
+
+    </button>
+
+  </div>
+
+</div>

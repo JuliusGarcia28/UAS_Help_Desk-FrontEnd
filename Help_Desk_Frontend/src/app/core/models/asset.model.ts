@@ -1,5 +1,5 @@
 export interface Asset {
-  id: number;
+  id: string;
   hostname: string;
   asset_type: string;
   serial_number: string;
@@ -11,16 +11,16 @@ export interface Asset {
   status: number;
 
   responsible?: {
-    id: number;
+    id: string;
     email: string;
     department?: {
-      id: number;
+      id: string;
       name: string;
     };
   };
 
   department?: {
-    id: number;
+    id: string;
     name: string;
   };
 }

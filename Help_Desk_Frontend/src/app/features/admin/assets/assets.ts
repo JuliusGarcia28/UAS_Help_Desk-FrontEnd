@@ -38,6 +38,15 @@ export class Assets implements OnInit {
     });
   }
 
+  getStatusClass(status: number): string {
+    switch (status) {
+      case 1: return 'active';
+      case 0: return 'inactive';
+      case 2: return 'maintenance';
+      default: return '';
+    }
+  }
+
   applyFilters() {
     this.filteredAssets = this.assets.filter(asset => {
 
@@ -138,66 +147,99 @@ export class Assets implements OnInit {
 
   // ================= VIEW =================
 
-  viewHistory(asset: any) {
+ viewHistory(asset: any) {
 
-    this.adminService.getAssetHistory(asset.id).subscribe({
+  this.adminService.getAssetHistory(asset.id).subscribe({
 
-      next: (history) => {
+    next: (history) => {
 
-        if (!history.length) {
-          this.error('No hay historial para este equipo');
-          return;
-        }
+      if (!history.length) {
+        this.error('No hay historial para este equipo');
+        return;
+      }
 
-        const timeline = `
-          <table class="history-table">
-            <thead>
-              <tr>
-                <th>Fecha</th>
-                <th>Hostname</th>
-                <th>Serie</th>
-                <th>CPU</th>
-                <th>RAM</th>
-                <th>IP</th>
-                <th>Estado</th>
-                <th>Usuario</th>
-                <th>Departamento</th>
-                <th>Motivo</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${history.map((h: any) => `
-              <tr>
-                <td>${new Date(h.snapshot_date).toLocaleString()}</td>
-                <td>${h.hostname}</td>
-                <td>${h.serial_number}</td>
-                <td>${h.cpu}</td>
-                <td>${h.ram}</td>
-                <td>${h.ip_address}</td>
-                <td>${this.getStatusText(h.status)}</td>
-                <td>${h.user_email || 'Sin asignar'}</td>
-                <td>${h.department_name || 'Sin asignar'}</td>
-                <td>${h.change_reason || 'Actualización'}</td>
-              </tr>
-              `).join('')}
-            </tbody>
-          </table>
-        `;
+      // ORDENAR MÁS RECIENTE PRIMERO
+      history.sort((a: any, b: any) =>
+        new Date(b.snapshot_date).getTime() -
+        new Date(a.snapshot_date).getTime()
+      );
 
-        Swal.fire({
-          title: `Historial - ${asset.hostname}`,
-          html: `<div class="history-container">${timeline}</div>`,
-          width: '1300px',
-          confirmButtonColor: '#0B2545'
-        });
+      const timeline = `
+        <div class="history-timeline">
 
-      },
+          ${history.map((h: any) => `
 
-      error: () => this.error('Error al obtener historial')
+            <div class="timeline-item">
 
-    });
+              <div class="timeline-dot"></div>
 
-  }
+              <div class="timeline-card">
+
+                <div class="timeline-header">
+                  <span class="timeline-date">
+                    ${new Date(h.snapshot_date).toLocaleString()}
+                  </span>
+
+                  <span class="badge ${this.getStatusClass(h.status)}">
+                    ${this.getStatusText(h.status)}
+                  </span>
+                </div>
+
+                <div class="timeline-body">
+
+                  <div class="timeline-row">
+                    <b>Equipo:</b> ${h.hostname}
+                  </div>
+
+                  <div class="timeline-row">
+                    <b>Serie:</b> ${h.serial_number}
+                  </div>
+
+                  <div class="timeline-row">
+                    <b>Hardware:</b> ${h.cpu} | ${h.ram}GB
+                  </div>
+
+                  <div class="timeline-row">
+                    <b>IP:</b> ${h.ip_address}
+                  </div>
+
+                  <div class="timeline-row">
+                    <b>Usuario:</b> ${h.user_email || 'Sin asignar'}
+                  </div>
+
+                  <div class="timeline-row">
+                    <b>Departamento:</b> ${h.department_name || 'Sin asignar'}
+                  </div>
+
+                  <div class="timeline-reason">
+                    ${h.change_reason || 'Actualización del sistema'}
+                  </div>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          `).join('')}
+
+        </div>
+      `;
+
+      Swal.fire({
+        title: `Historial - ${asset.hostname}`,
+        html: `<div class="history-container">${timeline}</div>`,
+        width: '750px',
+        confirmButtonColor: '#0B2545'
+      });
+
+    },
+
+    error: () => this.error('Error al obtener historial')
+
+  });
+
+}
 
   // ================= SELECT RESPONSABLE =================
 

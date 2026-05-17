@@ -295,6 +295,114 @@
   animation:fadeIn .3s ease;
 }
 
+.history-container {
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+/* TIMELINE */
+.history-timeline {
+  position: relative;
+  margin-left: 10px;
+  padding-left: 20px;
+  border-left: 2px solid var(--border);
+}
+
+/* ITEM */
+.timeline-item {
+  position: relative;
+  margin-bottom: 35px; 
+  padding-bottom: 10px;
+}
+
+.timeline-item:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 30px;
+  width: 2px;
+  height: calc(100% + 15px);
+  background: linear-gradient(
+    to bottom,
+    var(--border),
+    transparent
+  );
+}
+
+/* DOT */
+.timeline-dot {
+  position: absolute;
+  left: -11px;
+  top: 12px;
+  width: 14px;
+  height: 14px;
+  background: var(--accent);
+  border-radius: 50%;
+  border: 3px solid white;
+  box-shadow: 0 0 0 2px var(--accent-light);
+}
+
+/* CARD */
+.timeline-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+  transition: .2s;
+}
+
+.timeline-card:hover {
+  transform: translateY(-2px);
+}
+
+/* HEADER */
+.timeline-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border); 
+}
+
+.timeline-date {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+/* BODY */
+/*.timeline-body {
+  font-size: 13px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}*/
+
+.timeline-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 15px;
+  font-size: 13px;
+}
+
+.timeline-row {
+  color: var(--text-primary);
+}
+
+/* MOTIVO */
+.timeline-reason {
+  grid-column: span 2; 
+  margin-top: 10px;
+  padding: 10px;
+  background: #f1f5f9;
+  border-left: 3px solid var(--accent);
+  border-radius: 6px;
+  font-style: italic;
+  color: var(--text-secondary);
+}
+
 @keyframes fadeIn{
   from{opacity:0; transform:translateY(10px);}
   to{opacity:1; transform:translateY(0);}

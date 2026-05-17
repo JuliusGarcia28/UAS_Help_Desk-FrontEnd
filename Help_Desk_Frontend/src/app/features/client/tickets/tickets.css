@@ -56,3 +56,41 @@
   justify-content:center;
   box-shadow:0 10px 25px rgba(0,0,0,0.2);
 }
+
+/* Inputs y selects iguales */
+.swal2-input,
+.swal2-select {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+
+  box-sizing: border-box !important;
+
+  height: 42px !important;
+  min-height: 42px !important;
+
+  padding: 0 10px !important;
+
+  margin: 10px 0 !important;
+
+  border-radius: 6px !important;
+  border: 1px solid var(--border) !important;
+
+  font-size: 14px !important;
+  background-color: white !important;
+}
+
+.swal2-actions {
+  flex-wrap: wrap;
+}
+
+.swal-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.swal2-confirm,
+.swal2-cancel {
+  flex: 1;
+  min-width: 120px;
+}
