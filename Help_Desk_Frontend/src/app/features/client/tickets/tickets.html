@@ -19,7 +19,7 @@
     <tr *ngFor="let t of tickets">
 
       <!--td>{{ t.description }}</td-->
-      <td>{{ t.description | slice:0:50 }}{{ t.description.length > 50 ? '...' : '' }}</td>
+      <td>{{ t.description | slice:0:85 }}{{ t.description.length > 85 ? '...' : '' }}</td>
 
       <td>
         <span class="badge"

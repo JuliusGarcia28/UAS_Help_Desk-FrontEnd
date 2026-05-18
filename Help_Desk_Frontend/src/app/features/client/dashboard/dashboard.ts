@@ -15,7 +15,7 @@ export class Dashboard implements OnInit {
 
   openTickets = 0;
   inProgress = 0;
-
+  closed = 0;
   constructor(private ticketService: TicketService) {}
 
   ngOnInit() {
@@ -24,6 +24,7 @@ export class Dashboard implements OnInit {
 
       this.openTickets = res.filter(t => t.status === 1).length;
       this.inProgress = res.filter(t => t.status === 2).length;
+      this.closed = res.filter(t => t.status === 3).length;
     });
   }
 }
