@@ -9,7 +9,7 @@ import { Ticket, TicketHistory } from '../models/ticket.model';
 })
 export class TicketService {
 
-  private API = `${environment.apiUrl}/tickets/`;
+  private API = `${environment.apiUrl}/api/tickets/`;
 
   constructor(private http: HttpClient) {}
 
@@ -21,6 +21,9 @@ export class TicketService {
     return this.http.post<Ticket>(this.API, data);
   }
 
+  updateTicketStatus(id: string, status: number): Observable<Ticket> {
+    return this.http.patch<Ticket>(`${this.API}${id}/`, { status });
+  }
   getTicketHistory(id: string): Observable<TicketHistory[]> {
     return this.http.get<TicketHistory[]>(`${this.API}${id}/history/`);
   }

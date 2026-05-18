@@ -42,11 +42,19 @@ export class Login {
         const user = res.user;
 
         //  REDIRECCIÓN POR ROL
+        if (user.must_change_password) {
+          this.router.navigate(['/change-password']);
+          return;
+        }
+
+        //  REDIRECCIÓN POR ROL
         if (user.role === 'admin') {
           this.router.navigate(['/admin']);
-        }else if (user.role === 'client') {
+        } else if (user.role === 'client') {
           this.router.navigate(['/client']);
-        }else {
+        } else if (user.role === 'technician') {
+          this.router.navigate(['/tech']);
+        } else {
           this.router.navigate(['/']); // luego puedes hacer dashboard user
         }
       },

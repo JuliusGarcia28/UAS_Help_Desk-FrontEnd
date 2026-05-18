@@ -10,12 +10,17 @@ interface LoginResponse {
   refresh: string;
 }
 
+interface RegisterPayload {
+  email: string;
+  password: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  private API_URL = `${environment.apiUrl}/auth`;
+  private API_URL = `${environment.apiUrl}/api/auth`;
 
   constructor(private http: HttpClient) {}
 
@@ -33,12 +38,34 @@ export class AuthService {
     );
   }
 
+  register(email: string, password: string): Observable<any> {
+    const normalizedEmail = email.trim().toLowerCase();
+
+    const payload: RegisterPayload = {
+      email: normalizedEmail,
+      password
+    };
+
+    return this.http.post(`${this.API_URL}/register/`, payload).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   logout(): Observable<any> {
     const refresh = localStorage.getItem('refresh');
 
     return this.http.post(`${this.API_URL}/logout/`, { refresh }).pipe(
       tap(() => {
         localStorage.clear();
+      }),
+      catchError(this.handleError)
+    );
+  }
+
+  changePassword(password: string): Observable<any> {
+    return this.http.post(`${this.API_URL}/change-password/`, { password }).pipe(
+      tap(() => {
+        // no-op
       }),
       catchError(this.handleError)
     );
@@ -69,8 +96,18 @@ export class AuthService {
     else if (error.status === 403) {
       message = 'No autorizado';
     }
+    else if (error.status === 409) {
+      message = 'Ya existe una cuenta con este correo';
+    }
     else if (error.status >= 500) {
       message = 'Error del servidor';
+    }
+
+    if (error.status === 400 && error.error) {
+      const firstError = Object.values(error.error).find(value => Array.isArray(value)) as string[] | undefined;
+      if (firstError?.[0]) {
+        message = firstError[0];
+      }
     }
 
     return throwError(() => message);
