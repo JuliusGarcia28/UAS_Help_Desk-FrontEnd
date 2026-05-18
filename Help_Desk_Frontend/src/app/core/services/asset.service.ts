@@ -14,7 +14,7 @@ import { Asset } from '../models/asset.model';
 })
 export class AssetService {
 
-  private API = `${environment.apiUrl}/inventory`;
+  private API = `${environment.apiUrl}/api/inventory`;
 
   constructor(
     private http: HttpClient

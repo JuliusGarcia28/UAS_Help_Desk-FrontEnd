@@ -107,4 +107,26 @@
 
   </div>
 
+  <!-- SUGGESTIONS (IA) AND FEEDBACK -->
+
+  <div class="suggestions" *ngIf="session && messages.length > 0">
+
+    <h4>Posibles soluciones sugeridas</h4>
+
+    <div class="suggestion-text">
+      {{ lastAssistant }}
+    </div>
+
+    <div class="help-modal" *ngIf="!askedIfHelped">
+      <p>¿Te ayudaron estas soluciones?</p>
+
+      <div class="help-actions">
+        <button class="btn" (click)="onHelpAnswer(true)">Sí</button>
+        <button class="btn btn-outline" (click)="onHelpAnswer(false)">No</button>
+      </div>
+
+    </div>
+
+  </div>
+
 </div>
