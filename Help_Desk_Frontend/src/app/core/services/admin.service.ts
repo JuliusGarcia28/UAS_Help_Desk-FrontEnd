@@ -8,9 +8,9 @@ import { environment } from '../../environments/environment';
 })
 export class AdminService {
 
-  private USERS_API = `${environment.apiUrl}/api/users/`;
-  private ASSETS_API = `${environment.apiUrl}/api/inventory/`;
-  private DEPARTMENTS_API = `${environment.apiUrl}/api/departments/`;
+  private USERS_API = `${environment.apiUrl}/users/`;
+  private ASSETS_API = `${environment.apiUrl}/inventory/`;
+  private DEPARTMENTS_API = `${environment.apiUrl}/departments/`;
 
   constructor(private http: HttpClient) {}
 

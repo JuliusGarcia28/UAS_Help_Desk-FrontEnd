@@ -12,7 +12,7 @@ import { environment } from '../../environments/environment';
 })
 export class AiSupportService {
 
-  private API = `${environment.apiUrl}/api/support-ai`;
+  private API = `${environment.apiUrl}/support-ai`;
 
   constructor(
     private http: HttpClient

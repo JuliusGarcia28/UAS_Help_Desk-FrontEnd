@@ -12,7 +12,6 @@ import { AiSupportService } from '../../../core/services/ai_support.service';
 import { AssetService } from '../../../core/services/asset.service';
 
 import { Asset } from '../../../core/models/asset.model';
-import { TicketService } from '../../../core/services/ticket.service';
 
 
 @Component({
@@ -34,68 +33,11 @@ export class AiSupport implements OnInit {
   constructor(
     private aiService: AiSupportService,
     private assetService: AssetService
-    , private ticketService: TicketService
   ) {}
 
   ngOnInit(): void {
 
     this.loadAssets();
-
-  }
-
-  lastAssistant: string | null = null;
-
-  // Track whether we've asked the user if the suggestions helped
-  askedIfHelped = false;
-
-  onHelpAnswer(answer: boolean) {
-
-    if (!this.session) return;
-
-    // If user says YES -> create ticket and mark as solved
-    if (answer) {
-
-      this.aiService.escalate(this.session.id).subscribe({
-        next: (res: any) => {
-          const ticketId = res.ticket_id;
-
-          // Mark ticket as closed (status = 3)
-          this.ticketService.updateTicketStatus(ticketId, 3).subscribe({
-            next: () => {
-              // Mark session as solved
-              this.aiService.solved(this.session.id).subscribe({
-                next: () => {
-                  Swal.fire({
-                    icon: 'success',
-                    title: 'Gracias',
-                    text: 'Se generó un ticket y fue marcado como resuelto.'
-                  });
-                }
-              });
-            }
-          });
-
-        },
-        error: () => {
-          Swal.fire({ icon: 'error', title: 'Error', text: 'No se pudo generar el ticket' });
-        }
-      });
-
-    } else {
-
-      // User says NO -> create ticket (pending)
-      this.aiService.escalate(this.session.id).subscribe({
-        next: (res: any) => {
-          Swal.fire({ icon: 'info', title: 'Ticket creado', text: `Ticket ${res.ticket_id} creado y pendiente` });
-        },
-        error: () => {
-          Swal.fire({ icon: 'error', title: 'Error', text: 'No se pudo generar el ticket' });
-        }
-      });
-
-    }
-
-    this.askedIfHelped = true;
 
   }
 
@@ -200,8 +142,6 @@ export class AiSupport implements OnInit {
             role: 'assistant',
             content: assistantMessage.content
           });
-
-          this.lastAssistant = assistantMessage.content;
 
         }
 
