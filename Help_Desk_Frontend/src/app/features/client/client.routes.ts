@@ -6,7 +6,7 @@ import { AiSupport } from "./ai-support/ai-support";
 
 export const clientRoutes: Route[] = [
   {
-    path: '',
+    path: 'dashboard',
     canActivate: [clientGuard],
     component: Dashboard,
   },
@@ -22,7 +22,7 @@ export const clientRoutes: Route[] = [
   },
   {
     path: '',
-    redirectTo: 'client',
+    redirectTo: 'client/dashboard',
     pathMatch: 'full'
   }
 ];

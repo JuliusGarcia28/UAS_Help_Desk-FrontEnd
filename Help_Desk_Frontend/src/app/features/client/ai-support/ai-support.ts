@@ -3,15 +3,32 @@ import {
   OnInit
 } from '@angular/core';
 
-import { CommonModule } from '@angular/common';
+import {
+  CommonModule
+} from '@angular/common';
+
+import {
+  Router
+} from '@angular/router';
 
 import Swal from 'sweetalert2';
 
-import { AiSupportService } from '../../../core/services/ai_support.service';
+import {
+  retry,
+  finalize
+} from 'rxjs/operators';
 
-import { AssetService } from '../../../core/services/asset.service';
+import {
+  AiSupportService
+} from '../../../core/services/ai_support.service';
 
-import { Asset } from '../../../core/models/asset.model';
+import {
+  AssetService
+} from '../../../core/services/asset.service';
+
+import {
+  Asset
+} from '../../../core/models/asset.model';
 
 
 @Component({
@@ -30,14 +47,33 @@ export class AiSupport implements OnInit {
 
   assets: Asset[] = [];
 
+  lastProblemDescription = '';
+
+  currentTime = '';
+
   constructor(
     private aiService: AiSupportService,
-    private assetService: AssetService
+    private assetService: AssetService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
 
     this.loadAssets();
+
+    this.updateTime();
+
+  }
+
+  updateTime() {
+
+    const now = new Date();
+
+    this.currentTime =
+      now.toLocaleTimeString([], {
+        hour: '2-digit',
+        minute: '2-digit'
+      });
 
   }
 
@@ -47,14 +83,11 @@ export class AiSupport implements OnInit {
       localStorage.getItem('user') || '{}'
     );
 
-    this.assetService.getAssets()
+    this.assetService
+      .getAssets()
       .subscribe({
 
         next: (res) => {
-
-          /*
-            SOLO EQUIPOS DEL USUARIO
-          */
 
           this.assets = res.filter(
             (asset: Asset) =>
@@ -95,6 +128,7 @@ export class AiSupport implements OnInit {
       });
 
       return;
+
     }
 
     if (!message) {
@@ -106,48 +140,70 @@ export class AiSupport implements OnInit {
       });
 
       return;
+
     }
+
+    this.lastProblemDescription = message;
 
     this.loading = true;
 
-    /*
-      MOSTRAR MENSAJE USUARIO
-    */
+    this.updateTime();
 
+    /*
+      MENSAJE USER
+    */
     this.messages.push({
+
       role: 'user',
+
       content: message
+
     });
+
+    this.scrollToBottom();
 
     this.aiService.sendMessage(
       message,
       assetId
-    ).subscribe({
+    )
+    .pipe(
+
+      retry(3),
+
+      finalize(() => {
+
+        this.loading = false;
+
+      })
+
+    )
+    .subscribe({
 
       next: (res) => {
 
         this.session = res;
 
-        /*
-          RESPUESTA IA ABAJO
-        */
-
-        const assistantMessage = res.messages.find(
-          (m: any) => m.role === 'assistant'
-        );
+        const assistantMessage =
+          res.messages.find(
+            (m: any) =>
+              m.role === 'assistant'
+          );
 
         if (assistantMessage) {
 
+          this.updateTime();
+
           this.messages.push({
+
             role: 'assistant',
+
             content: assistantMessage.content
+
           });
 
         }
 
         textarea.value = '';
-
-        this.loading = false;
 
         this.scrollToBottom();
 
@@ -155,17 +211,81 @@ export class AiSupport implements OnInit {
 
       error: () => {
 
-        this.loading = false;
-
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'No se pudo conectar con la IA'
-        });
+        this.showAiErrorOptions();
 
       }
 
     });
+
+  }
+
+  showAiErrorOptions() {
+
+    Swal.fire({
+
+      icon: 'error',
+
+      title: 'La IA no está disponible',
+
+      text: 'No se pudo procesar tu solicitud después de varios intentos.',
+
+      showCancelButton: true,
+
+      confirmButtonText: 'Crear ticket manual',
+
+      cancelButtonText: 'Cerrar',
+
+      reverseButtons: true
+
+    }).then(result => {
+
+      if (result.isConfirmed) {
+
+        this.createManualTicket();
+
+      }
+
+    });
+
+  }
+
+  createManualTicket() {
+
+    this.aiService
+      .createManualTicket(
+        this.lastProblemDescription
+      )
+      .subscribe({
+
+        next: (ticket) => {
+
+          Swal.fire({
+
+            icon: 'success',
+
+            title: 'Ticket creado',
+
+            text: `Ticket ${ticket.id} generado correctamente`
+
+          });
+
+        },
+
+        error: () => {
+
+          Swal.fire({
+
+            icon: 'error',
+
+            title: 'Error',
+
+            text: 'No se pudo crear el ticket manual'
+
+          });
+
+        }
+
+      });
 
   }
 
@@ -175,11 +295,12 @@ export class AiSupport implements OnInit {
 
       const chatBox = document.querySelector(
         '.chat-box'
-      );
+      ) as HTMLElement;
 
       if (chatBox) {
 
-        chatBox.scrollTop = chatBox.scrollHeight;
+        chatBox.scrollTop =
+          chatBox.scrollHeight;
 
       }
 
@@ -191,16 +312,23 @@ export class AiSupport implements OnInit {
 
     if (!this.session) return;
 
-    this.aiService.solved(this.session.id)
+    this.aiService
+      .solved(this.session.id)
       .subscribe({
 
         next: () => {
 
           Swal.fire({
+
             icon: 'success',
+
             title: 'Excelente',
+
             text: 'La incidencia fue solucionada'
+
           });
+
+          this.router.navigate(['/client/dashboard']);
 
         }
 
@@ -212,15 +340,20 @@ export class AiSupport implements OnInit {
 
     if (!this.session) return;
 
-    this.aiService.escalate(this.session.id)
+    this.aiService
+      .escalate(this.session.id)
       .subscribe({
 
         next: (res: any) => {
 
           Swal.fire({
+
             icon: 'info',
+
             title: 'Ticket generado',
+
             text: `Ticket ${res.ticket_id} creado`
+
           });
 
         }

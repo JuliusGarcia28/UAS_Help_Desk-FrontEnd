@@ -1,0 +1,37 @@
+<div class="technician-container">
+
+  <aside class="sidebar">
+
+    <div class="logo">
+      <img src="img/Help_Desk_Logo_White.png" alt="HelpDesk">
+      <span>HelpDesk</span>
+    </div>
+
+    <nav>
+      <a routerLink="/tech" routerLinkActive="active">
+        <span class="material-icons">dashboard</span>
+        Panel Técnico
+      </a>
+
+      <a routerLink="/tech/tickets" routerLinkActive="active">
+        <span class="material-icons">confirmation_number</span>
+        Tickets Asignados
+      </a>
+    </nav>
+
+  </aside>
+
+  <main class="content">
+
+    <header class="topbar">
+      <h1>Tech Panel</h1>
+      <button type="button" class="logout-btn" (click)="logout()">Cerrar sesión</button>
+    </header>
+
+    <section class="page">
+      <router-outlet></router-outlet>
+    </section>
+
+  </main>
+
+</div>

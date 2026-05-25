@@ -1,10 +1,20 @@
 import { Injectable } from '@angular/core';
 
-import { HttpClient } from '@angular/common/http';
+import {
+  HttpClient
+} from '@angular/common/http';
 
-import { Observable } from 'rxjs';
+import {
+  Observable
+} from 'rxjs';
 
-import { environment } from '../../environments/environment';
+import {
+  environment
+} from '../../environments/environment';
+
+import {
+  Ticket
+} from '../models/ticket.model';
 
 
 @Injectable({
@@ -13,6 +23,8 @@ import { environment } from '../../environments/environment';
 export class AiSupportService {
 
   private API = `${environment.apiUrl}/support-ai`;
+
+  private TICKET_API = `${environment.apiUrl}/tickets/`;
 
   constructor(
     private http: HttpClient
@@ -51,6 +63,23 @@ export class AiSupportService {
     return this.http.post(
       `${this.API}/${sessionId}/solved/`,
       {}
+    );
+
+  }
+
+  /*
+    CREAR TICKET MANUAL
+  */
+  createManualTicket(
+    description: string
+  ): Observable<Ticket> {
+
+    return this.http.post<Ticket>(
+      this.TICKET_API,
+      {
+        description,
+        priority: 2
+      }
     );
 
   }

@@ -1,5 +1,7 @@
 <div class="ai-container">
 
+  <!-- HEADER -->
+
   <div class="ai-header">
 
     <div>
@@ -9,14 +11,14 @@
       </h2>
 
       <p>
-        Describe tu problema técnico
+        Describe tu problema técnico y recibirás ayuda automática
       </p>
 
     </div>
 
   </div>
 
-  <!-- SELECT EQUIPOS -->
+  <!-- SELECT EQUIPO -->
 
   <div class="asset-select">
 
@@ -50,12 +52,89 @@
 
     <div
       *ngFor="let msg of messages"
-      class="message"
+      class="message-wrapper"
       [ngClass]="msg.role">
 
-      <div class="bubble">
+      <!-- AVATAR -->
 
-        {{ msg.content }}
+      <div class="avatar">
+
+        <span
+          class="material-icons">
+
+          {{
+            msg.role === 'assistant'
+            ? 'smart_toy'
+            : 'person'
+          }}
+
+        </span>
+
+      </div>
+
+      <!-- MENSAJE -->
+
+      <div class="message-content">
+
+        <div class="message-header">
+
+          <span class="sender">
+
+            {{
+              msg.role === 'assistant'
+              ? 'Asistente IA'
+              : 'Tú'
+            }}
+
+          </span>
+
+          <span class="time">
+
+            {{ currentTime }}
+
+          </span>
+
+        </div>
+
+        <div
+          class="bubble"
+          [ngClass]="msg.role">
+
+          <div class="formatted-text">
+
+            {{ msg.content }}
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- LOADING -->
+
+    <div
+      class="message-wrapper assistant loading-message"
+      *ngIf="loading">
+
+      <div class="avatar">
+
+        <span class="material-icons">
+          smart_toy
+        </span>
+
+      </div>
+
+      <div class="message-content">
+
+        <div class="bubble assistant typing">
+
+          <span></span>
+          <span></span>
+          <span></span>
+
+        </div>
 
       </div>
 
@@ -69,7 +148,8 @@
 
     <textarea
       #problemInput
-      placeholder="Describe el problema..."
+      placeholder="Describe el problema técnico..."
+      [disabled]="loading"
     ></textarea>
 
     <button
@@ -77,7 +157,15 @@
       (click)="sendProblem(problemInput, assetSelect)"
       [disabled]="loading">
 
-      {{ loading ? 'Analizando...' : 'Enviar' }}
+      <span class="material-icons">
+        send
+      </span>
+
+      {{
+        loading
+        ? 'Analizando problema...'
+        : 'Enviar'
+      }}
 
     </button>
 
@@ -93,7 +181,11 @@
       class="btn-solved"
       (click)="solved()">
 
-      ✓ Se solucionó
+      <span class="material-icons">
+        check_circle
+      </span>
+
+      Se solucionó
 
     </button>
 
@@ -101,7 +193,11 @@
       class="btn-escalate"
       (click)="escalate()">
 
-      El problema continúa
+      <span class="material-icons">
+        support_agent
+      </span>
+
+      Escalar ticket
 
     </button>
 

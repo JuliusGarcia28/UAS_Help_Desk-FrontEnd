@@ -1,0 +1,198 @@
+<div class="admin-card">
+
+  <h2>Tickets</h2>
+
+  <div class="filters">
+
+    <input
+      type="text"
+      placeholder="Buscar ticket..."
+      [(ngModel)]="searchTerm"
+      (input)="applyFilters()"
+    />
+
+    <select
+      [(ngModel)]="filterPriority"
+      (change)="applyFilters()"
+    >
+
+      <option value="">
+        Todas las prioridades
+      </option>
+
+      <option value="1">
+        Baja
+      </option>
+
+      <option value="2">
+        Media
+      </option>
+
+      <option value="3">
+        Alta
+      </option>
+
+      <option value="4">
+        Crítica
+      </option>
+
+    </select>
+
+    <select
+      [(ngModel)]="filterStatus"
+      (change)="applyFilters()"
+    >
+
+      <option value="">
+        Todos los estados
+      </option>
+
+      <option value="1">
+        Abierto
+      </option>
+
+      <option value="2">
+        En proceso
+      </option>
+
+      <option value="3">
+        Resuelto
+      </option>
+
+      <option value="4">
+        Escalado
+      </option>
+
+      <option value="0">
+        Cerrado
+      </option>
+
+    </select>
+
+  </div>
+
+  <table class="table">
+
+    <thead>
+
+      <tr>
+
+        <th>ID</th>
+
+        <th>Descripción</th>
+
+        <th>Cliente</th>
+
+        <th>Técnico</th>
+
+        <th>Prioridad</th>
+
+        <th>Status</th>
+
+        <th>Fecha</th>
+
+        <th>Acciones</th>
+
+      </tr>
+
+    </thead>
+
+    <tbody>
+
+      <tr *ngFor="let ticket of filteredTickets">
+
+        <td>
+          #{{ ticket.id }}
+        </td>
+
+        <td>
+
+          {{
+            ticket.description.length > 60
+              ? (ticket.description | slice:0:60) + '...'
+              : ticket.description
+          }}
+
+        </td>
+
+        <td>
+
+          {{ ticket.client?.email || ticket.cliente }}
+
+        </td>
+
+        <td>
+
+          {{
+            ticket.technician
+              ? ticket.technician.email
+              : 'Sin asignar'
+          }}
+
+        </td>
+
+        <td>
+
+          <span
+            class="badge"
+            [ngClass]="getPriorityClass(ticket.priority)"
+          >
+
+            {{ priorityMap[ticket.priority] }}
+
+          </span>
+
+        </td>
+
+        <td>
+
+          <span class="badge active">
+
+            {{ statusMap[ticket.status] }}
+
+          </span>
+
+        </td>
+
+        <td>
+
+          {{
+            ticket.created_at
+              | date:'short'
+          }}
+
+        </td>
+
+        <td class="actions">
+
+          <button
+            class="btn btn-outline"
+            (click)="viewHistory(ticket)"
+          >
+
+            <span class="material-icons">
+              history
+            </span>
+
+          </button>
+
+          <button
+            class="btn btn-outline"
+            (click)="editTicket(ticket)"
+          >
+
+            <span class="material-icons">
+              edit
+            </span>
+
+          </button>
+
+        </td>
+
+      </tr>
+
+    </tbody>
+
+  </table>
+
+</div>

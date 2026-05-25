@@ -3,6 +3,7 @@ import { adminGuard } from '../../core/guards/admin.guard';
 import { Users } from './users/users';
 import { Assets } from './assets/assets';
 import { Departments } from './departments/departments';
+import { Tickets } from './tickets/tickets';
 
 
 export const AdminRoutes: Routes = [
@@ -20,6 +21,11 @@ export const AdminRoutes: Routes = [
     path: 'departments',
     canActivate: [adminGuard],
     component: Departments
+  },
+  {
+    path: 'tickets',
+    canActivate: [adminGuard],
+    component: Tickets
   },
   {
     path: '',
