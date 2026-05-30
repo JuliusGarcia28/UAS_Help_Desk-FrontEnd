@@ -1,3 +1,5 @@
+import { User } from './user.model';
+
 export interface Ticket {
 
   id: string;
@@ -14,9 +16,9 @@ export interface Ticket {
 
   cliente: string;
 
-  technician?: any;
+  technician?: User | null;
 
-  client?: any;
+  client?: User | null;
 
 }
 

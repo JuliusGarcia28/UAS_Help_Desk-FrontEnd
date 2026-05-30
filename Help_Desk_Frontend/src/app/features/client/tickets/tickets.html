@@ -26,9 +26,10 @@
           [ngClass]="{
           'low': t.priority === 1,
           'medium': t.priority === 2,
-          'high': t.priority === 3
+          'high': t.priority === 3,
+          'critical': t.priority === 4
         }">
-          {{ priorityMap[t.priority] }}
+          {{ priorityMap[t.priority]  || 'Sin prioridad'}}
         </span>
       </td>
 

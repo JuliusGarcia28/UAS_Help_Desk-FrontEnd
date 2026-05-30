@@ -37,7 +37,8 @@ export class Tickets implements OnInit {
   priorityMap: any = {
     1: 'Baja',
     2: 'Media',
-    3: 'Alta'
+    3: 'Alta',
+    4: 'Crítica'
   };
 
   constructor(

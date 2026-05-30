@@ -117,7 +117,11 @@
 
         <td>
 
-          {{ ticket.client?.email || ticket.cliente }}
+          {{
+            ticket.client?.email ||
+            ticket.cliente ||
+            'Sin cliente'
+          }}
 
         </td>
 
@@ -168,6 +172,7 @@
           <button
             class="btn btn-outline"
             (click)="viewHistory(ticket)"
+            title="Ver historial"
           >
 
             <span class="material-icons">
@@ -179,10 +184,35 @@
           <button
             class="btn btn-outline"
             (click)="editTicket(ticket)"
+            title="Editar ticket"
           >
 
             <span class="material-icons">
               edit
+            </span>
+
+          </button>
+
+          <button
+            class="btn btn-outline"
+            (click)="assignTechnician(ticket)"
+            title="Asignar técnico"
+          >
+
+            <span class="material-icons">
+              assignment_ind
+            </span>
+
+          </button>
+
+          <button
+            class="btn btn-outline"
+            (click)="closeTicket(ticket)"
+            [disabled]="ticket.status === 3"
+            title="Marcar como resuelto">
+
+            <span class="material-icons">
+              done
             </span>
 
           </button>

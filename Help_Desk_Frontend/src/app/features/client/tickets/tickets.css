@@ -39,6 +39,12 @@
   color:#e53935;
 }
 
+.badge.critical {
+  background: #b91c1c;
+  color: white;
+  font-weight: bold;
+}
+
 /* BOTONES ACCIONES */
 .actions .btn{
   padding:6px 10px;

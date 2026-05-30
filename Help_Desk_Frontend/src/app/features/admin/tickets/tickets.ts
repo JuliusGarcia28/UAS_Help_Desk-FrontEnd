@@ -21,6 +21,10 @@ import {
   AdminService
 } from '../../../core/services/admin.service';
 
+import {
+  Ticket
+} from '../../../core/models/ticket.model';
+
 @Component({
   standalone: true,
   imports: [
@@ -32,9 +36,9 @@ import {
 })
 export class Tickets implements OnInit {
 
-  tickets: any[] = [];
+  tickets: Ticket[] = [];
 
-  filteredTickets: any[] = [];
+  filteredTickets: Ticket[] = [];
 
   technicians: any[] = [];
 
@@ -85,6 +89,8 @@ export class Tickets implements OnInit {
         next: (res) => {
 
           this.tickets = res;
+
+          console.log('Tickets =>', res);
 
           this.applyFilters();
 
@@ -225,7 +231,7 @@ export class Tickets implements OnInit {
   // HISTORY
   // =========================
 
-  viewHistory(ticket: any) {
+  viewHistory(ticket: Ticket) {
 
     this.ticketService
       .getTicketHistory(ticket.id)
@@ -316,181 +322,357 @@ export class Tickets implements OnInit {
 
   }
 
-// =========================
-// EDIT
-// =========================
+  // =========================
+  // EDIT
+  // =========================
 
-editTicket(ticket: any) {
+  editTicket(ticket: Ticket) {
 
-  const technicianOptions =
-    this.technicians.map((tech: any) => `
+    const technicianOptions =
+      this.technicians.map((tech: any) => `
 
-      <option
-        value="${tech.id}"
-        ${ticket.technician?.id === tech.id ? 'selected' : ''}
-      >
-
-        ${tech.first_name}
-        ${tech.last_name}
-
-      </option>
-
-    `).join('');
-
-  Swal.fire({
-
-    title: `Ticket #${ticket.id}`,
-
-    html: `
-
-      <div class="swal-form">
-
-        <textarea
-          id="description"
-          class="swal2-textarea"
-          readonly
-        >${ticket.description}</textarea>
-
-        <input
-          class="swal2-input"
-          readonly
-          value="${ticket.client?.email || ticket.cliente}"
+        <option
+          value="${tech.id}"
+          ${ticket.technician?.id === tech.id ? 'selected' : ''}
         >
 
-        <select
-          id="technician"
-          class="swal2-select"
+          ${tech.first_name}
+          ${tech.last_name}
+
+        </option>
+
+      `).join('');
+
+    Swal.fire({
+
+      title: `Ticket #${ticket.id}`,
+
+      html: `
+
+        <div class="swal-form">
+
+          <textarea
+            id="description"
+            class="swal2-textarea"
+            readonly
+          >${ticket.description}</textarea>
+
+          <input
+            class="swal2-input"
+            readonly
+            value="${ticket.client?.email || ticket.cliente || 'Sin cliente'}"
+          >
+
+          <select
+            id="technician"
+            class="swal2-select"
+          >
+
+            <option value="">
+              Sin técnico
+            </option>
+
+            ${technicianOptions}
+
+          </select>
+
+          <select
+            id="priority"
+            class="swal2-select"
+          >
+
+            <option value="1" ${ticket.priority === 1 ? 'selected' : ''}>
+              Baja
+            </option>
+
+            <option value="2" ${ticket.priority === 2 ? 'selected' : ''}>
+              Media
+            </option>
+
+            <option value="3" ${ticket.priority === 3 ? 'selected' : ''}>
+              Alta
+            </option>
+
+            <option value="4" ${ticket.priority === 4 ? 'selected' : ''}>
+              Crítica
+            </option>
+
+          </select>
+
+          <select
+            id="status"
+            class="swal2-select"
+          >
+
+            <option value="1" ${ticket.status === 1 ? 'selected' : ''}>
+              Abierto
+            </option>
+
+            <option value="2" ${ticket.status === 2 ? 'selected' : ''}>
+              En proceso
+            </option>
+
+            <option value="3" ${ticket.status === 3 ? 'selected' : ''}>
+              Resuelto
+            </option>
+
+            <option value="4" ${ticket.status === 4 ? 'selected' : ''}>
+              Escalado
+            </option>
+
+            <option value="0" ${ticket.status === 0 ? 'selected' : ''}>
+              Cerrado
+            </option>
+
+          </select>
+
+        </div>
+
+      `,
+
+      width: '700px',
+
+      showCancelButton: true,
+
+      confirmButtonColor: '#0B2545',
+
+      preConfirm: () => {
+
+        const technicianElement =
+          document.getElementById('technician') as HTMLSelectElement;
+
+        const priorityElement =
+          document.getElementById('priority') as HTMLSelectElement;
+
+        const statusElement =
+          document.getElementById('status') as HTMLSelectElement;
+
+        return {
+
+          technician:
+            technicianElement.value || null,
+
+          priority:
+            Number(priorityElement.value),
+
+          status:
+            Number(statusElement.value)
+
+        };
+
+      }
+
+    }).then((result) => {
+
+      if (result.isConfirmed) {
+
+        this.ticketService
+          .updateTicket(
+            ticket.id,
+            result.value
+          )
+          .subscribe({
+
+            next: () => {
+
+              this.success(
+                'Ticket actualizado'
+              );
+
+              this.getTickets();
+
+            },
+
+            error: () => {
+
+              this.error(
+                'No se pudo actualizar'
+              );
+
+            }
+
+          });
+
+      }
+
+    });
+
+  }
+
+  // =========================
+  // ASSIGN TECHNICIAN
+  // =========================
+
+  assignTechnician(ticket: Ticket) {
+
+    const technicianOptions =
+      this.technicians.map((tech: any) => `
+
+        <option
+          value="${tech.id}"
+          ${ticket.technician?.id === tech.id ? 'selected' : ''}
         >
 
-          <option value="">
-            Sin técnico
-          </option>
+          ${tech.first_name}
+          ${tech.last_name}
 
-          ${technicianOptions}
+        </option>
 
-        </select>
+      `).join('');
 
-        <select
-          id="priority"
-          class="swal2-select"
-        >
+    Swal.fire({
 
-          <option value="1" ${ticket.priority === 1 ? 'selected' : ''}>
-            Baja
-          </option>
+      title: `Ticket #${ticket.id}`,
 
-          <option value="2" ${ticket.priority === 2 ? 'selected' : ''}>
-            Media
-          </option>
+      html: `
 
-          <option value="3" ${ticket.priority === 3 ? 'selected' : ''}>
-            Alta
-          </option>
+        <div class="swal-form">
 
-          <option value="4" ${ticket.priority === 4 ? 'selected' : ''}>
-            Crítica
-          </option>
+          <select
+            id="technician"
+            class="swal2-select"
+          >
 
-        </select>
+            <option value="">
+              Sin técnico
+            </option>
 
-        <select
-          id="status"
-          class="swal2-select"
-        >
+            ${technicianOptions}
 
-          <option value="1" ${ticket.status === 1 ? 'selected' : ''}>
-            Abierto
-          </option>
+          </select>
 
-          <option value="2" ${ticket.status === 2 ? 'selected' : ''}>
-            En proceso
-          </option>
+        </div>
 
-          <option value="3" ${ticket.status === 3 ? 'selected' : ''}>
-            Resuelto
-          </option>
+      `,
 
-          <option value="4" ${ticket.status === 4 ? 'selected' : ''}>
-            Escalado
-          </option>
+      width: '700px',
 
-          <option value="0" ${ticket.status === 0 ? 'selected' : ''}>
-            Cerrado
-          </option>
+      showCancelButton: true,
 
-        </select>
+      confirmButtonColor: '#0B2545',
 
-      </div>
+      preConfirm: () => {
 
-    `,
+        const technicianElement =
+          document.getElementById('technician') as HTMLSelectElement;
 
-    width: '700px',
+        const priorityElement =
+          document.getElementById('priority') as HTMLSelectElement;
 
-    showCancelButton: true,
+        const statusElement =
+          document.getElementById('status') as HTMLSelectElement;
 
-    confirmButtonColor: '#0B2545',
+        return {
 
-    preConfirm: () => {
+          technician:
+            technicianElement.value || null,
 
-      const technicianElement =
-        document.getElementById('technician') as HTMLSelectElement;
+          priority:
+            Number(priorityElement.value),
 
-      const priorityElement =
-        document.getElementById('priority') as HTMLSelectElement;
+          status:
+            Number(statusElement.value)
 
-      const statusElement =
-        document.getElementById('status') as HTMLSelectElement;
+        };
 
-      return {
+      }
 
-        technician:
-          technicianElement.value || null,
+    }).then((result) => {
 
-        priority:
-          Number(priorityElement.value),
+      if (result.isConfirmed) {
 
-        status:
-          Number(statusElement.value)
+        this.ticketService
+          .updateTicket(
+            ticket.id,
+            result.value
+          )
+          .subscribe({
 
-      };
+            next: () => {
 
-    }
+              this.success(
+                'Ticket actualizado'
+              );
 
-  }).then((result) => {
+              this.getTickets();
 
-    if (result.isConfirmed) {
+            },
 
-      this.ticketService
-        .updateTicket(
-          ticket.id,
-          result.value
-        )
-        .subscribe({
+            error: () => {
 
-          next: () => {
+              this.error(
+                'No se pudo actualizar'
+              );
 
-            this.success(
-              'Ticket actualizado'
-            );
+            }
 
-            this.getTickets();
+          });
 
-          },
+      }
 
-          error: () => {
+    });
 
-            this.error(
-              'No se pudo actualizar'
-            );
+  }
 
-          }
+  // =========================
+  // CLOSE TICKET
+  // =========================
 
-        });
+  closeTicket(ticket: Ticket) {
 
-    }
+    Swal.fire({
 
-  });
+      title: '¿Marcar ticket como resuelto?',
 
-}
+      text: `Ticket #${ticket.id}`,
+
+      icon: 'question',
+
+      showCancelButton: true,
+
+      confirmButtonText: 'Sí, resolver',
+
+      cancelButtonText: 'Cancelar',
+
+      confirmButtonColor: '#0B2545'
+
+    }).then((result) => {
+
+      if (result.isConfirmed) {
+
+        this.ticketService
+          .updateTicket(
+            ticket.id,
+            {
+              status: 3
+            }
+          )
+          .subscribe({
+
+            next: () => {
+
+              this.success(
+                'Ticket marcado como resuelto'
+              );
+
+              this.getTickets();
+
+            },
+
+            error: () => {
+
+              this.error(
+                'No se pudo cerrar el ticket'
+              );
+
+            }
+
+          });
+
+      }
+
+    });
+
+  }
 
 }
