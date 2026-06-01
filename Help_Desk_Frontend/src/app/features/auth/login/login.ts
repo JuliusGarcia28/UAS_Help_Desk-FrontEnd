@@ -45,9 +45,11 @@ export class Login {
         if (user.role === 'admin') {
           this.router.navigate(['/admin']);
         }else if (user.role === 'client') {
-          this.router.navigate(['/client']);
-        }else {
-          this.router.navigate(['/']); // luego puedes hacer dashboard user
+          this.router.navigate(['/client/dashboard']);
+        } else if (user.role === 'technician') {
+          this.router.navigate(['/technician/dashboard']);
+        } else {
+          this.router.navigate(['/']);
         }
       },
       error: (err) => {

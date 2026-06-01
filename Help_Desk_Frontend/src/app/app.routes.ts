@@ -7,6 +7,9 @@ import { AdminRoutes } from './features/admin/admin.routes';
 import { ClientLayout } from './shared/client-layout/client-layout';
 import { clientGuard } from './core/guards/client.guard';
 import { clientRoutes } from './features/client/client.routes';
+import { TechnicianLayout } from './shared/technician-layout/technician-layout';
+import { technicianRoutes } from './features/technician/technician.routes';
+import { technicianGuard } from './core/guards/technician.guard';
 
 export const routes: Routes = [
   {
@@ -20,6 +23,12 @@ export const routes: Routes = [
     component: ClientLayout,
     canActivate: [clientGuard],
     children: clientRoutes
+  },
+  {
+    path: 'technician',
+    component: TechnicianLayout,
+    canActivate: [technicianGuard],
+    children: technicianRoutes
   },
 
   ...LandingRoutes,

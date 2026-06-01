@@ -129,7 +129,7 @@
 
           {{
             ticket.technician
-              ? ticket.technician.email
+              ? ticket.technician_data?.email
               : 'Sin asignar'
           }}
 
@@ -169,6 +169,17 @@
 
         <td class="actions">
 
+        <button
+          class="btn btn-outline"
+          (click)="viewTicket(ticket)"
+          title="Ver detalles">
+
+          <span class="material-icons">
+            visibility
+          </span>
+
+        </button>
+
           <button
             class="btn btn-outline"
             (click)="viewHistory(ticket)"
@@ -200,7 +211,7 @@
           >
 
             <span class="material-icons">
-              assignment_ind
+              how_to_reg
             </span>
 
           </button>

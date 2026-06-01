@@ -1,0 +1,77 @@
+<h2>Historial IA</h2>
+
+@if (loading) {
+
+  <p>Cargando conversaciones...</p>
+
+} @else {
+
+  @if (sessions.length > 0) {
+
+    <table class="table">
+
+      <thead>
+
+        <tr>
+          <th>Fecha</th>
+          <th>Problema</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+
+      </thead>
+
+      <tbody>
+
+        <tr *ngFor="let s of sessions">
+
+          <td>
+            {{ s.created_at | date:'short' }}
+          </td>
+
+          <td>
+            {{ s.problem_description | slice:0:70 }}
+            {{ s.problem_description.length > 70 ? '...' : '' }}
+          </td>
+
+          <td>
+
+            <span
+              class="badge"
+              [class.solved]="s.status === 'solved'"
+              [class.active]="s.status === 'active'"
+              [class.escalated]="s.status === 'escalated'">
+
+              {{ s.status }}
+
+            </span>
+
+          </td>
+
+          <td>
+
+            <button
+              class="btn btn-outline"
+              (click)="viewChat(s)">
+
+              Ver chat
+
+            </button>
+
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  } @else {
+
+    <p>
+      Aún no existen conversaciones con el asistente IA.
+    </p>
+
+  }
+
+}

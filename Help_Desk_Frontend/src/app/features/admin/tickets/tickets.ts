@@ -227,6 +227,94 @@ export class Tickets implements OnInit {
 
   }
 
+  viewTicket(ticket: Ticket) {
+
+  Swal.fire({
+
+    title: `Ticket #${ticket.id}`,
+
+    width: '900px',
+
+    html: `
+
+      <div style="text-align:left">
+
+        <h3>Información general</h3>
+
+        <p><b>Descripción:</b><br>${ticket.description}</p>
+
+        <p><b>Categoría:</b> ${ticket.category || 'N/A'}</p>
+          
+        <p><b>Prioridad:</b> ${this.priorityMap[ticket.priority]}</p>
+
+        <p><b>Estado:</b> ${this.statusMap[ticket.status]}</p>
+
+        <hr>
+
+        <h3>Cliente</h3>
+
+        <p>
+          ${ticket.client?.first_name || ''}
+
+          ${ticket.client?.last_name || ''}
+        </p>
+
+        <p>${ticket.client?.email || ''}</p>
+
+        <hr>
+
+        <h3>Técnico</h3>
+
+        <p>
+          ${
+            ticket.technician_data
+            ? ticket.technician_data.first_name +
+              ' ' +
+              ticket.technician_data.last_name
+            : 'Sin asignar'
+          }
+        </p>
+
+        <hr>
+
+        <h3>Diagnóstico</h3>
+
+        <p>${ticket.diagnosis || 'Sin diagnóstico'}</p>
+
+        <hr>
+
+        <h3>Resolución</h3>
+
+        <p>${ticket.resolution || 'Pendiente'}</p>
+
+        <hr>
+
+        <h3>Fechas</h3>
+
+        <p><b>Creado:</b> ${new Date(ticket.created_at).toLocaleString()}</p>
+
+        <p><b>Actualizado:</b> ${new Date(ticket.updated_at).toLocaleString()}</p>
+
+        <p><b>Finalizado:</b>
+          ${
+            ticket.finished_at
+              ? new Date(ticket.finished_at).toLocaleString()
+              : 'No finalizado'
+          }
+        </p>
+
+        <p><b>Tiempo resolución:</b>
+          ${ticket.resolution_time || 'N/A'}
+        </p>
+
+      </div>
+
+    `
+
+  });
+
+}
+
   // =========================
   // HISTORY
   // =========================
@@ -333,7 +421,7 @@ export class Tickets implements OnInit {
 
         <option
           value="${tech.id}"
-          ${ticket.technician?.id === tech.id ? 'selected' : ''}
+          ${ticket.technician_data?.id === tech.id ? 'selected' : ''}
         >
 
           ${tech.first_name}
@@ -505,112 +593,110 @@ export class Tickets implements OnInit {
 
   assignTechnician(ticket: Ticket) {
 
-    const technicianOptions =
-      this.technicians.map((tech: any) => `
+  const technicianOptions =
+    this.technicians.map((tech: any) => `
 
-        <option
-          value="${tech.id}"
-          ${ticket.technician?.id === tech.id ? 'selected' : ''}
+      <option
+        value="${tech.id}"
+        ${ticket.technician_data?.id === tech.id ? 'selected' : ''}
+      >
+
+        ${tech.first_name}
+        ${tech.last_name}
+
+      </option>
+
+    `).join('');
+
+  Swal.fire({
+
+    title: `Asignar técnico - Ticket #${ticket.id}`,
+
+    html: `
+
+      <div class="swal-form">
+
+        <select
+          id="technician"
+          class="swal2-select"
         >
 
-          ${tech.first_name}
-          ${tech.last_name}
+          <option value="">
+            Sin técnico
+          </option>
 
-        </option>
+          ${technicianOptions}
 
-      `).join('');
+        </select>
 
-    Swal.fire({
+      </div>
 
-      title: `Ticket #${ticket.id}`,
+    `,
 
-      html: `
+    width: '600px',
 
-        <div class="swal-form">
+    showCancelButton: true,
 
-          <select
-            id="technician"
-            class="swal2-select"
-          >
+    confirmButtonText: 'Guardar',
 
-            <option value="">
-              Sin técnico
-            </option>
+    cancelButtonText: 'Cancelar',
 
-            ${technicianOptions}
+    confirmButtonColor: '#0B2545',
 
-          </select>
+    preConfirm: () => {
 
-        </div>
+      const technicianElement =
+        document.getElementById(
+          'technician'
+        ) as HTMLSelectElement;
 
-      `,
+      return {
 
-      width: '700px',
+        technician:
+          technicianElement.value
+            ? String(technicianElement.value)
+            : null
 
-      showCancelButton: true,
+      };
 
-      confirmButtonColor: '#0B2545',
+    }
 
-      preConfirm: () => {
+  }).then((result) => {
 
-        const technicianElement =
-          document.getElementById('technician') as HTMLSelectElement;
+    if (!result.isConfirmed) {
+      return;
+    }
 
-        const priorityElement =
-          document.getElementById('priority') as HTMLSelectElement;
+    this.ticketService
+      .updateTicket(
+        ticket.id,
+        result.value
+      )
+      .subscribe({
 
-        const statusElement =
-          document.getElementById('status') as HTMLSelectElement;
+        next: () => {
 
-        return {
+          this.success(
+            'Técnico asignado correctamente'
+          );
 
-          technician:
-            technicianElement.value || null,
+          this.getTickets();
 
-          priority:
-            Number(priorityElement.value),
+        },
 
-          status:
-            Number(statusElement.value)
+        error: (err) => {
 
-        };
+          console.error(err);
 
-      }
+          this.error(
+            'No se pudo asignar el técnico'
+          );
 
-    }).then((result) => {
+        }
 
-      if (result.isConfirmed) {
+      });
 
-        this.ticketService
-          .updateTicket(
-            ticket.id,
-            result.value
-          )
-          .subscribe({
-
-            next: () => {
-
-              this.success(
-                'Ticket actualizado'
-              );
-
-              this.getTickets();
-
-            },
-
-            error: () => {
-
-              this.error(
-                'No se pudo actualizar'
-              );
-
-            }
-
-          });
-
-      }
-
-    });
+  });
 
   }
 

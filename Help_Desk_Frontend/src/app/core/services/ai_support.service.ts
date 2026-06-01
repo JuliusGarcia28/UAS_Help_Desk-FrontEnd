@@ -84,4 +84,20 @@ export class AiSupportService {
 
   }
 
+  getSessions(): Observable<any[]> {
+
+    return this.http.get<any[]>(
+      `${this.API}/sessions/`
+    );
+
+  }
+
+  getSession(id: string): Observable<any> {
+
+    return this.http.get(
+      `${this.API}/sessions/${id}/`
+    );
+
+  }
+
 }

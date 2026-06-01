@@ -1,95 +1,105 @@
-import { Component, OnInit } from '@angular/core';
-import { TicketService } from '../../../core/services/ticket.service';
-import { CommonModule } from '@angular/common';
-import Swal from 'sweetalert2';
+import {
+  Component,
+  OnInit
+} from '@angular/core';
+
+import {
+  CommonModule
+} from '@angular/common';
+
+import {
+  RouterModule
+} from '@angular/router';
+
+import {
+  TicketService
+} from '../../../core/services/ticket.service';
 
 @Component({
   standalone: true,
-  imports: [CommonModule],
+  imports: [
+    CommonModule,
+    RouterModule
+  ],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css'
 })
-export class Tickets implements OnInit {
+export class Dashboard implements OnInit {
 
-  user: any = JSON.parse(localStorage.getItem('user') || '{}');
+  user: any =
+    JSON.parse(
+      localStorage.getItem('user') || '{}'
+    );
+
   tickets: any[] = [];
-  selected: string = 'pendientes';
 
-  statusMap: any = {
-    1: 'Abierto',
-    2: 'En proceso',
-    3: 'Cerrado'
-  };
+  openTickets = 0;
 
-  priorityMap: any = {
-    1: 'Baja',
-    2: 'Media',
-    3: 'Alta'
-  };
+  inProgress = 0;
 
-  constructor(private ticketService: TicketService) {}
+  closed = 0;
 
-  ngOnInit() {
+  totalTickets = 0;
+
+  constructor(
+    private ticketService: TicketService
+  ) {}
+
+  ngOnInit(): void {
+
     this.loadTickets();
+
   }
 
-  loadTickets() {
-    this.ticketService.getTickets().subscribe(res => {
-      this.tickets = res;
-    });
-  }
+  loadTickets(): void {
 
-  filteredTickets() {
-    if (this.selected === 'pendientes') {
-      return this.tickets.filter(t => t.status === 1);
-    }
+    this.ticketService
+      .getTickets()
+      .subscribe({
 
-    if (this.selected === 'asignados') {
-      return this.tickets.filter(t => this.isAssigned(t));
-    }
+        next: (res) => {
 
-    if (this.selected === 'resueltos') {
-      return this.tickets.filter(t => t.status === 3);
-    }
+          const myTickets = res.filter(
+            (ticket: any) =>
+              ticket.technician_data?.id ===
+              this.user.id
+          );
 
-    return this.tickets;
-  }
+          this.tickets = myTickets;
 
-  isAssigned(t: any) {
-    return t.assigned_to === this.user.id || (t.assigned_to && t.assigned_to.id === this.user.id) || t.assigned_to_email === this.user.email;
-  }
+          this.openTickets =
+            myTickets.filter(
+              (t: any) => t.status === 1
+            ).length;
 
-  countPending() { return this.tickets.filter(t => t.status === 1).length; }
-  countAssigned() { return this.tickets.filter(t => this.isAssigned(t)).length; }
-  countResolved() { return this.tickets.filter(t => t.status === 3).length; }
+          this.inProgress =
+            myTickets.filter(
+              (t: any) => t.status === 2
+            ).length;
 
-  getStatusColor(status: number) {
-    return status === 1 ? 'orange' :
-           status === 2 ? '#3FA7D6' :
-           'green';
-  }
+          this.closed =
+            myTickets.filter(
+              (t: any) => t.status === 3
+            ).length;
 
-  viewHistory(ticket: any) {
+          this.totalTickets =
+            this.openTickets +
+            this.inProgress +
+            this.closed;
 
-    this.ticketService.getTicketHistory(ticket.id).subscribe(history => {
+        },
 
-      const html = history.map(h => `
-        <div class="history-item">
-          <div class="history-date">${new Date(h.change_date).toLocaleString()}</div>
-          <div class="history-body">
-            Estado: ${this.statusMap[h.status]}<br>
-            Usuario: ${h.changed_by_email || 'Sistema'}
-          </div>
-        </div>
-      `).join('');
+        error: (err) => {
 
-      Swal.fire({
-        title: 'Historial',
-        html: `<div class="history-container">${html}</div>`,
-        width: 600
+          console.error(
+            'Error cargando tickets',
+            err
+          );
+
+        }
+
       });
 
-    });
   }
 
 }

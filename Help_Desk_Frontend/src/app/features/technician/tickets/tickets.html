@@ -1,0 +1,134 @@
+<h2>Mis Tickets</h2>
+
+<div
+  class="tabs"
+  style="display:flex;gap:10px;margin-top:10px"
+>
+
+  <button
+    class="btn"
+    [class.active]="selected==='asignados'"
+    (click)="selected='asignados'"
+  >
+    Asignados ({{ countAssigned() }})
+  </button>
+
+  <button
+    class="btn"
+    [class.active]="selected==='proceso'"
+    (click)="selected='proceso'"
+  >
+    En proceso ({{ countInProgress() }})
+  </button>
+
+  <button
+    class="btn"
+    [class.active]="selected==='resueltos'"
+    (click)="selected='resueltos'"
+  >
+    Resueltos ({{ countResolved() }})
+  </button>
+
+</div>
+
+<div *ngIf="filteredTickets().length > 0">
+
+  <table class="table">
+
+    <thead>
+
+      <tr>
+
+        <th>ID</th>
+
+        <th>Descripción</th>
+
+        <th>Prioridad</th>
+
+        <th>Estado</th>
+
+        <th>Fecha</th>
+
+        <th>Acciones</th>
+
+      </tr>
+
+    </thead>
+
+    <tbody>
+
+      <tr *ngFor="let t of filteredTickets()">
+
+        <td>#{{ t.id }}</td>
+
+        <td>
+          {{ t.description | slice:0:50 }}
+          {{ t.description.length > 50 ? '...' : '' }}
+        </td>
+
+        <td>
+
+          <span
+            class="badge"
+            [ngClass]="{
+              'low': t.priority === 1,
+              'medium': t.priority === 2,
+              'high': t.priority === 3,
+              'critical': t.priority === 4
+            }"
+          >
+
+            {{ priorityMap[t.priority] }}
+
+          </span>
+
+        </td>
+
+        <td>
+
+          <span
+            class="badge"
+            [ngClass]="{
+              'open': t.status === 1,
+              'progress': t.status === 2,
+              'closed': t.status === 3
+            }"
+          >
+
+            {{ statusMap[t.status] }}
+
+          </span>
+
+        </td>
+
+        <td>
+          {{ t.created_at | date:'short' }}
+        </td>
+
+        <td class="actions">
+
+          <button
+            class="btn btn-outline"
+            (click)="viewHistory(t)"
+          >
+            <span class="material-icons">
+              history
+            </span>
+          </button>
+
+        </td>
+
+      </tr>
+
+    </tbody>
+
+  </table>
+
+</div>
+
+<div
+  *ngIf="filteredTickets().length === 0"
+  style="margin-top:2rem"
+>
+  <p>No hay tickets para esta categoría.</p>
+</div>

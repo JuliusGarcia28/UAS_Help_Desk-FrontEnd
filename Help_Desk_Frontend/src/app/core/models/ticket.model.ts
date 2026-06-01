@@ -6,20 +6,35 @@ export interface Ticket {
 
   description: string;
 
+  category: string;
+
+  diagnosis: string;
+
+  resolution: string;
+
   priority: number;
 
   status: number;
 
-  created_at?: string;
+  source: string;
 
-  finished_at?: string;
+  asset?: string;
 
   cliente: string;
 
-  technician?: User | null;
+  technician?: string;
 
-  client?: User | null;
+  client?: User;
 
+  technician_data?: User;
+
+  created_at: string;
+
+  updated_at: string;
+
+  finished_at?: string;
+
+  resolution_time?: number;
 }
 
 export interface TicketHistory {

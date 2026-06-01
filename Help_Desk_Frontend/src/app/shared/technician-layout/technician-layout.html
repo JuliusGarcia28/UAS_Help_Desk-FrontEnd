@@ -8,12 +8,12 @@
     </div>
 
     <nav>
-      <a routerLink="/tech" routerLinkActive="active">
+      <a routerLink="/technician/dashboard" routerLinkActive="active">
         <span class="material-icons">dashboard</span>
         Panel Técnico
       </a>
 
-      <a routerLink="/tech/tickets" routerLinkActive="active">
+      <a routerLink="/technician/tickets" routerLinkActive="active">
         <span class="material-icons">confirmation_number</span>
         Tickets Asignados
       </a>
@@ -25,7 +25,10 @@
 
     <header class="topbar">
       <h1>Tech Panel</h1>
-      <button type="button" class="logout-btn" (click)="logout()">Cerrar sesión</button>
+      <button class="btn btn-outline logout-btn" style="display: flex; flex-direction: row; align-items: center;" (click)="logout()">
+          <span class="material-icons" style="margin-right: 0.2rem;">logout</span>
+          <span>Cerrar Sesión</span>
+      </button>
     </header>
 
     <section class="page">

@@ -305,7 +305,7 @@ export class Users implements OnInit {
           <select id="role" class="swal2-select">${roleOptions}</select>
           <select id="department" class="swal2-select">
             <option value="">Sin departamento</option>
-            ${departmentOptions}
+              ${departmentOptions}
           </select>
           <input id="password" type="password" class="swal2-input" placeholder="Contraseña">
         </div>
