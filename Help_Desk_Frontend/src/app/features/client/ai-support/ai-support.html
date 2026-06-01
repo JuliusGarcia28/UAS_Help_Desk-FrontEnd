@@ -1,111 +1,72 @@
 <div class="ai-container">
 
   <!-- HEADER -->
-
   <div class="ai-header">
-
     <div>
-
-      <h2>
-        Asistente IA
-      </h2>
-
-      <p>
-        Describe tu problema técnico y recibirás ayuda automática
-      </p>
-
+      <h2>Asistente IA</h2>
+      <p>Describe tu problema técnico y recibirás ayuda automática</p>
     </div>
-
   </div>
 
   <!-- SELECT EQUIPO -->
-
   <div class="asset-select">
 
-    <label>
-      Equipo afectado
-    </label>
+  <label>
+    Equipo afectado
+  </label>
 
-    <select #assetSelect>
+  <select
+    #assetSelect
+    (change)="onAssetChange(assetSelect.value)">
 
-      <option value="">
-        Selecciona un equipo
-      </option>
+    <option value="">
+      Selecciona un equipo
+    </option>
 
-      <option
-        *ngFor="let asset of assets"
-        [value]="asset.id">
+    <option
+      *ngFor="let asset of assets"
+      [value]="asset.id">
 
-        {{ asset.hostname }}
-        -
-        {{ asset.asset_type }}
+      {{ asset.hostname }} - {{ asset.asset_type }}
 
-      </option>
+    </option>
 
-    </select>
+  </select>
 
   </div>
 
   <!-- CHAT -->
-
-  <div class="chat-box">
+  <div
+    class="chat-box"
+    [class.empty]="messages.length === 0">
 
     <div
       *ngFor="let msg of messages"
       class="message-wrapper"
       [ngClass]="msg.role">
 
-      <!-- AVATAR -->
-
       <div class="avatar">
-
-        <span
-          class="material-icons">
-
-          {{
-            msg.role === 'assistant'
-            ? 'smart_toy'
-            : 'person'
-          }}
-
+        <span class="material-icons">
+          {{ msg.role === 'assistant' ? 'smart_toy' : 'person' }}
         </span>
-
       </div>
-
-      <!-- MENSAJE -->
 
       <div class="message-content">
 
         <div class="message-header">
-
           <span class="sender">
-
-            {{
-              msg.role === 'assistant'
-              ? 'Asistente IA'
-              : 'Tú'
-            }}
-
+            {{ msg.role === 'assistant' ? 'Asistente IA' : 'Tú' }}
           </span>
 
           <span class="time">
-
             {{ currentTime }}
-
           </span>
-
         </div>
 
-        <div
-          class="bubble"
-          [ngClass]="msg.role">
-
+        <div class="bubble" [ngClass]="msg.role">
           <div class="formatted-text">
-
             {{ msg.content }}
-
           </div>
-
         </div>
 
       </div>
@@ -113,29 +74,18 @@
     </div>
 
     <!-- LOADING -->
-
     <div
       class="message-wrapper assistant loading-message"
       *ngIf="loading">
 
       <div class="avatar">
-
-        <span class="material-icons">
-          smart_toy
-        </span>
-
+        <span class="material-icons">smart_toy</span>
       </div>
 
       <div class="message-content">
-
         <div class="bubble assistant typing">
-
-          <span></span>
-          <span></span>
-          <span></span>
-
+          <span></span><span></span><span></span>
         </div>
-
       </div>
 
     </div>
@@ -143,7 +93,6 @@
   </div>
 
   <!-- INPUT -->
-
   <div class="chat-input">
 
     <textarea
@@ -154,8 +103,8 @@
 
     <button
       class="btn-send"
-      (click)="sendProblem(problemInput, assetSelect)"
-      [disabled]="loading">
+      (click)="sendProblem(problemInput)"
+      [disabled]="loading || !selectedAssetId">
 
       <span class="material-icons">
         send
@@ -172,33 +121,16 @@
   </div>
 
   <!-- ACTIONS -->
+  <div class="actions" *ngIf="session">
 
-  <div
-    class="actions"
-    *ngIf="session">
-
-    <button
-      class="btn-solved"
-      (click)="solved()">
-
-      <span class="material-icons">
-        check_circle
-      </span>
-
+    <button class="btn-solved" (click)="solved()">
+      <span class="material-icons">check_circle</span>
       Se solucionó
-
     </button>
 
-    <button
-      class="btn-escalate"
-      (click)="escalate()">
-
-      <span class="material-icons">
-        support_agent
-      </span>
-
+    <button class="btn-escalate" (click)="escalate()">
+      <span class="material-icons">support_agent</span>
       Escalar ticket
-
     </button>
 
   </div>
