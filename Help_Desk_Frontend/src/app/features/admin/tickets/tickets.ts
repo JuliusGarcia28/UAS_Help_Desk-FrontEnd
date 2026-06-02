@@ -231,7 +231,7 @@ export class Tickets implements OnInit {
 
   Swal.fire({
 
-    title: `Ticket #${ticket.id}`,
+    title: `Ticket #${ticket.code}`,
 
     width: '900px',
 
@@ -322,7 +322,7 @@ export class Tickets implements OnInit {
   viewHistory(ticket: Ticket) {
 
     this.ticketService
-      .getTicketHistory(ticket.id)
+      .getTicketHistory(ticket.code)
       .subscribe({
 
         next: (history) => {
@@ -386,7 +386,7 @@ export class Tickets implements OnInit {
 
           Swal.fire({
 
-            title: `Historial Ticket #${ticket.id}`,
+            title: `Historial Ticket #${ticket.code}`,
 
             html,
 
@@ -433,7 +433,7 @@ export class Tickets implements OnInit {
 
     Swal.fire({
 
-      title: `Ticket #${ticket.id}`,
+      title: `Ticket #${ticket.code}`,
 
       html: `
 
@@ -610,7 +610,7 @@ export class Tickets implements OnInit {
 
   Swal.fire({
 
-    title: `Asignar técnico - Ticket #${ticket.id}`,
+    title: `Asignar técnico - Ticket #${ticket.code}`,
 
     html: `
 
@@ -710,7 +710,7 @@ export class Tickets implements OnInit {
 
       title: '¿Marcar ticket como resuelto?',
 
-      text: `Ticket #${ticket.id}`,
+      text: `Ticket #${ticket.code} - ${ticket.description}`,
 
       icon: 'question',
 

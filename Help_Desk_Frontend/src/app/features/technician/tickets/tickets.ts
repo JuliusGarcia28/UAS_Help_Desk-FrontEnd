@@ -85,9 +85,7 @@ export class Tickets implements OnInit {
         t => this.isAssigned(t)
       );
 
-    if (
-      this.selected === 'asignados'
-    ) {
+    if (this.selected === 'asignados') {
 
       return myTickets.filter(
         t => t.status === 1
@@ -95,9 +93,7 @@ export class Tickets implements OnInit {
 
     }
 
-    if (
-      this.selected === 'proceso'
-    ) {
+    if (this.selected === 'proceso') {
 
       return myTickets.filter(
         t => t.status === 2
@@ -105,9 +101,7 @@ export class Tickets implements OnInit {
 
     }
 
-    if (
-      this.selected === 'resueltos'
-    ) {
+    if (this.selected === 'resueltos') {
 
       return myTickets.filter(
         t => t.status === 3
@@ -152,6 +146,235 @@ export class Tickets implements OnInit {
 
   }
 
+  viewTicket(ticket: Ticket) {
+
+    Swal.fire({
+
+      title: ticket.code,
+
+      width: '900px',
+
+      html: `
+
+        <div style="text-align:left">
+
+          <h3>Información general</h3>
+
+          <p>
+            <b>Descripción:</b><br>
+            ${ticket.description}
+          </p>
+
+          <p>
+            <b>Categoría:</b>
+            ${ticket.category || 'N/A'}
+          </p>
+
+          <p>
+            <b>Prioridad:</b>
+            ${this.priorityMap[ticket.priority]}
+          </p>
+
+          <p>
+            <b>Estado:</b>
+            ${this.statusMap[ticket.status]}
+          </p>
+
+          <hr>
+
+          <h3>Cliente</h3>
+
+          <p>
+            ${ticket.client?.first_name || ''}
+            ${ticket.client?.last_name || ''}
+          </p>
+
+          <p>
+            ${ticket.client?.email || ''}
+          </p>
+
+          <hr>
+
+          <h3>Diagnóstico</h3>
+
+          <p>
+            ${ticket.diagnosis || 'Sin diagnóstico'}
+          </p>
+
+          <hr>
+
+          <h3>Resolución</h3>
+
+          <p>
+            ${ticket.resolution || 'Pendiente'}
+          </p>
+
+          <hr>
+
+          <h3>Fechas</h3>
+
+          <p>
+            <b>Creado:</b>
+            ${new Date(ticket.created_at).toLocaleString()}
+          </p>
+
+          <p>
+            <b>Actualizado:</b>
+            ${new Date(ticket.updated_at).toLocaleString()}
+          </p>
+
+        </div>
+
+      `
+
+    });
+
+  }
+
+  startTicket(ticket: Ticket) {
+
+    Swal.fire({
+
+      title: '¿Iniciar atención?',
+
+      text: ticket.code,
+
+      icon: 'question',
+
+      showCancelButton: true,
+
+      confirmButtonText: 'Iniciar'
+
+    }).then(result => {
+
+      if (!result.isConfirmed) {
+        return;
+      }
+
+      this.ticketService
+        .updateTicket(
+          ticket.id,
+          {
+            status: 2
+          }
+        )
+        .subscribe({
+
+          next: () => {
+
+            Swal.fire(
+              'Correcto',
+              'Ticket en proceso',
+              'success'
+            );
+
+            this.loadTickets();
+
+          }
+
+        });
+
+    });
+
+  }
+
+  resolveTicket(ticket: Ticket) {
+
+    Swal.fire({
+
+      title: `Resolver ${ticket.code}`,
+
+      width: 800,
+
+      html: `
+
+        <textarea
+          id="diagnosis"
+          class="swal2-textarea"
+          placeholder="Diagnóstico"
+        >${ticket.diagnosis || ''}</textarea>
+
+        <textarea
+          id="resolution"
+          class="swal2-textarea"
+          placeholder="Resolución aplicada"
+        >${ticket.resolution || ''}</textarea>
+
+      `,
+
+      showCancelButton: true,
+
+      confirmButtonText: 'Resolver',
+
+      preConfirm: () => {
+
+        const diagnosis =
+          (
+            document.getElementById(
+              'diagnosis'
+            ) as HTMLTextAreaElement
+          ).value;
+
+        const resolution =
+          (
+            document.getElementById(
+              'resolution'
+            ) as HTMLTextAreaElement
+          ).value;
+
+        if (!resolution) {
+
+          Swal.showValidationMessage(
+            'Debe capturar la resolución'
+          );
+
+          return false;
+
+        }
+
+        return {
+
+          diagnosis,
+
+          resolution,
+
+          status: 3
+
+        };
+
+      }
+
+    }).then(result => {
+
+      if (!result.isConfirmed) {
+        return;
+      }
+
+      this.ticketService
+        .updateTicket(
+          ticket.id,
+          result.value
+        )
+        .subscribe({
+
+          next: () => {
+
+            Swal.fire(
+              'Correcto',
+              'Ticket resuelto',
+              'success'
+            );
+
+            this.loadTickets();
+
+          }
+
+        });
+
+    });
+
+  }
+
   viewHistory(ticket: Ticket) {
 
     this.ticketService
@@ -190,12 +413,16 @@ export class Tickets implements OnInit {
 
         Swal.fire({
 
-          title: `Historial Ticket #${ticket.id}`,
+          title: `Historial ${ticket.code}`,
 
           html: `
+
             <div class="history-container">
+
               ${html}
+
             </div>
+
           `,
 
           width: 700

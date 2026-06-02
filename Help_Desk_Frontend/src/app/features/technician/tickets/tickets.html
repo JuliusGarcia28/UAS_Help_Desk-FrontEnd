@@ -39,7 +39,7 @@
 
       <tr>
 
-        <th>ID</th>
+        <th>Código</th>
 
         <th>Descripción</th>
 
@@ -59,7 +59,7 @@
 
       <tr *ngFor="let t of filteredTickets()">
 
-        <td>#{{ t.id }}</td>
+        <td>{{ t.code }}</td>
 
         <td>
           {{ t.description | slice:0:50 }}
@@ -109,12 +109,51 @@
 
           <button
             class="btn btn-outline"
+            (click)="viewTicket(t)"
+            title="Ver ticket"
+          >
+            <span class="material-icons">
+              visibility
+            </span>
+          </button>
+
+          <button
+            class="btn btn-outline"
             (click)="viewHistory(t)"
+            title="Historial"
           >
             <span class="material-icons">
               history
             </span>
           </button>
+
+          @if (t.status === 1) {
+
+            <button
+              class="btn btn-outline"
+              (click)="startTicket(t)"
+              title="Iniciar atención"
+            >
+              <span class="material-icons">
+                play_arrow
+              </span>
+            </button>
+
+          }
+
+          @if (t.status !== 3) {
+
+            <button
+              class="btn btn-outline"
+              (click)="resolveTicket(t)"
+              title="Resolver ticket"
+            >
+              <span class="material-icons">
+                done
+              </span>
+            </button>
+
+          }
 
         </td>
 

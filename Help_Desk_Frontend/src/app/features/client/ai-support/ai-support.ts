@@ -46,7 +46,7 @@ export class AiSupport implements OnInit {
 
   assets: Asset[] = [];
 
-  selectedAssetId: string = ''; // 🔥 FIX IMPORTANTE
+  selectedAssetId: string = '';
 
   lastProblemDescription = '';
 
@@ -196,7 +196,7 @@ export class AiSupport implements OnInit {
         },
 
         error: () => {
-          this.showAiErrorOptions(); // 🔥 FIX AQUÍ
+          this.showAiErrorOptions();
         }
 
       });
@@ -246,7 +246,7 @@ export class AiSupport implements OnInit {
 
             icon: 'success',
             title: 'Ticket creado',
-            text: `Ticket ${ticket.id} generado correctamente`
+            text: `Ticket ${ticket.code} generado correctamente`
 
           });
 
@@ -332,7 +332,7 @@ export class AiSupport implements OnInit {
 
             icon: 'info',
             title: 'Ticket generado',
-            text: `Ticket ${res.ticket_id} creado`
+            text: `Ticket ${res.code} creado`
 
           });
 
