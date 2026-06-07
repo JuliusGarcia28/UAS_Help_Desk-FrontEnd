@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
+import { ThemeService } from '../../core/services/theme.service';
 
 import Swal from 'sweetalert2';
 
@@ -17,8 +18,17 @@ export class AdminLayout {
 
   constructor(
     private auth: AuthService,
-    private router: Router
+    private router: Router,
+    public themeService: ThemeService
   ) {}
+
+  toggleTheme(): void {
+    this.themeService.toggleTheme();
+  }
+
+  isDark(): boolean {
+    return this.themeService.isDark();
+  }
 
   logout() {
 
@@ -30,12 +40,14 @@ export class AdminLayout {
       confirmButtonText: 'Sí, cerrar sesión',
       cancelButtonText: 'Cancelar',
 
-      // COLORES PERSONALIZADOS
-      confirmButtonColor: '#0B2545', // primary
-      cancelButtonColor: '#E4E7EB',  // border
+      confirmButtonColor: '#0B2545',
+      cancelButtonColor: '#E4E7EB',
 
-      background: '#FFFFFF',
-      color: '#1F2933',
+      background: getComputedStyle(document.body)
+        .getPropertyValue('--surface'),
+
+      color: getComputedStyle(document.body)
+        .getPropertyValue('--text-primary'),
 
       reverseButtons: true,
 
@@ -51,14 +63,6 @@ export class AdminLayout {
       if (result.isConfirmed) {
 
         this.auth.logout().subscribe(() => {
-
-          /*Swal.fire({
-            title: 'Sesión cerrada',
-            text: 'Has salido correctamente',
-            icon: 'success',
-            confirmButtonColor: '#0B2545'
-          });*/
-
           this.router.navigate(['/login']);
         });
 

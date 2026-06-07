@@ -83,10 +83,16 @@ export class AiHistory implements OnInit {
           margin-bottom:20px;
           padding:12px;
           border-radius:10px;
+          color: var(--text-primary);
           background:${
             m.role === 'user'
-              ? '#e3f2fd'
-              : '#f5f5f5'
+              ? 'var(--primary)'
+              : '#e9e3e3'
+          };
+          color:${
+            m.role === 'user'
+              ? 'white'
+              : 'black'
           };
           text-align:${
             m.role === 'user'
@@ -124,6 +130,8 @@ export class AiHistory implements OnInit {
           max-height:500px;
           overflow-y:auto;
           text-align:left;
+          background: var(--surface);
+          color: var(--text-primary);
         ">
 
           ${html}

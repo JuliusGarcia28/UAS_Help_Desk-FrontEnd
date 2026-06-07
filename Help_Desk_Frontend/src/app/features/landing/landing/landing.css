@@ -5,7 +5,7 @@
 .navbar{
   width:100%;
   padding: 1rem;
-  background:var(--white);
+  background:var(--surface);
   border-bottom:1px solid var(--border);
   position:sticky;
   top:0;
@@ -67,6 +67,10 @@
 .nav-actions{
   display:flex;
   gap:12px;
+  display:flex;
+  flex-direction:row;
+  justify-content:center;
+  align-items:center;
 }
 
 /* ==========================
@@ -132,7 +136,7 @@
 }
 
 .feature-card{
-  background:white;
+  background:var(--surface);
   padding:30px;
   border-radius:10px;
   border:1px solid var(--border);
@@ -217,7 +221,7 @@
 ========================== */
 
 .downloads {
-  background: #f9fbfd;
+  background: var(--background);
 }
 
 .downloads-grid {
@@ -227,7 +231,7 @@
 }
 
 .download-card {
-  background: var(--white);
+  background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 40px;

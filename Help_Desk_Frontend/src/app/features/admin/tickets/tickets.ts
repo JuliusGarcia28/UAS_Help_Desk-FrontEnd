@@ -322,7 +322,7 @@ export class Tickets implements OnInit {
   viewHistory(ticket: Ticket) {
 
     this.ticketService
-      .getTicketHistory(ticket.code)
+      .getTicketHistory(ticket.id)
       .subscribe({
 
         next: (history) => {

@@ -1,6 +1,8 @@
 .client-container {
   display: flex;
   min-height: 100vh;
+  background:var(--surface);
+  color:var(--text-primary);
 }
 
 /* SIDEBAR */
@@ -38,7 +40,8 @@
 
 /* TOPBAR */
 .topbar {
-  background: white;
+  background:var(--surface);
+  color:var(--text-primary);
   padding: 15px 20px;
   border-bottom: 1px solid var(--border);
   display: flex;

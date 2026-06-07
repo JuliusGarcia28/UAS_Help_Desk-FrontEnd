@@ -113,7 +113,7 @@ body{
 .table{
   width:100%;
   border-collapse:collapse;
-  background:white;
+  background:var(--surface);
   border-radius:10px;
   overflow:hidden;
 }
@@ -122,15 +122,18 @@ body{
   padding:12px;
   border-bottom:1px solid var(--border);
   text-align:left;
+  background-color:var(--surface);
+  color:var(--text-primary);
 }
 
 .table th{
   background:var(--primary);
-  color:white;
+  color:#fff !important;
 }
 
 .table tr:hover{
-  background:#f1f5f9;
+  background:rgba(63,167,214,.08);
+  color:var(--text-primary);
 }
 
 /* ==========================
@@ -140,28 +143,36 @@ body{
 .swal-popup{
   border-radius:12px !important;
   font-family: "Inter", "Segoe UI", sans-serif;
+  background:var(--surface) !important;
+  color:var(--text-primary) !important;
 }
 
 .swal-title{
   font-weight:600 !important;
 }
 
+.swal2-actions{
+  background: var(--surface) !important;
+  color: var(--text-primary) !important;
+}
+
 /* BOTÓN CONFIRMAR */
 .swal-confirm-btn{
-  background: var(--primary) !important;
+  background:var(--surface) !important;
+  color:white !important;
   border-radius:8px !important;
   padding:10px 18px !important;
   font-weight:600 !important;
 }
 
 .swal-confirm-btn:hover{
-  background: var(--secondary) !important;
+  background:var(--secondary) !important;
 }
 
 /* BOTÓN CANCELAR */
 .swal-cancel-btn{
-  background: white !important;
-  color: var(--primary) !important;
+  background:var(--surface) !important;
+  color:var(--primary) !important;
   border:2px solid var(--primary) !important;
   border-radius:8px !important;
   padding:10px 18px !important;
@@ -169,8 +180,9 @@ body{
 }
 
 .swal-cancel-btn:hover{
-  background: var(--primary) !important;
-  color:white !important;
+  background:var(--accent-light) !important;
+
+  color:#0F172A !important;
 }
 
 /* Iconos */
@@ -215,11 +227,15 @@ button:active{
 .swal-popup{
   border-radius:16px !important;
   padding:20px !important;
+  background:var(--surface) !important;
+  color:var(--text-primary) !important;
 }
 
 /* INPUTS */
 .swal2-input,
 .swal2-select{
+  background:var(--surface) !important;
+  color:var(--text-primary) !important;
   border-radius:8px !important;
   border:1px solid var(--border) !important;
   transition:.2s;
@@ -233,6 +249,8 @@ button:active{
 
 /* BOTONES */
 .swal-confirm-btn{
+  background:var(--surface) !important;
+  color:var(--text-primary) !important;
   box-shadow:0 5px 15px rgba(0,0,0,0.1);
 }
 
@@ -248,6 +266,8 @@ button:active{
   display:flex;
   flex-direction:column;
   gap:10px;
+  background:var(--surface) !important;
+  color:var(--text-primary) !important;
 }
 
 /* ============================= */
@@ -305,7 +325,7 @@ button:active{
 
 /* CARD */
 .timeline-card {
-  background: white;
+  background:var(--surface);
   border: 1px solid var(--border);
   border-left: 4px solid var(--accent);
   border-radius: 12px;
@@ -351,7 +371,7 @@ button:active{
   grid-column: span 2;
   margin-top: 10px;
   padding: 10px;
-  background: #f1f5f9;
+  background:rgba(63,167,214,.08);
   border-left: 3px solid var(--accent);
   border-radius: 6px;
   font-style: italic;
@@ -383,4 +403,168 @@ button:active{
     width:100%;
   }
 
+}
+
+/* ==========================
+   LIGHT THEME
+========================== */
+
+:root{
+
+  --primary:#0B2545;
+  --primary-light:#13315C;
+  --secondary:#134074;
+
+  --accent:#3FA7D6;
+  --accent-light:#7FD1F5;
+
+  --background:#F6F9FC;
+  --surface:#FFFFFF;
+
+  --white:#FFFFFF;
+
+  --text-primary:#1F2933;
+  --text-secondary:#52606D;
+
+  --border:#E4E7EB;
+
+  --shadow:rgba(0,0,0,0.08);
+}
+
+/* ==========================
+   DARK THEME
+========================== */
+
+body.dark-theme{
+
+  --primary:#163A63;
+  --primary-light:#204B7D;
+  --secondary:#2D5B8E;
+
+  --accent:#4DB6E8;
+  --accent-light:#8DDBFF;
+
+  --background:#0F172A;
+  --surface:#1E293B;
+
+  --white:#1E293B;
+
+  --text-primary:#F1F5F9;
+  --text-secondary:#CBD5E1;
+
+  --border:#334155;
+
+  --shadow:rgba(0,0,0,0.35);
+}
+
+body.dark-theme .swal-popup{
+
+  background:var(--surface) !important;
+  color:var(--text-primary) !important;
+
+  border:1px solid var(--border);
+}
+
+body.dark-theme .swal2-input,
+body.dark-theme .swal2-select{
+
+background:var(--surface) !important;
+color:var(--text-primary) !important;
+
+  border:1px solid var(--border) !important;
+}
+
+body.dark-theme .swal2-html-container,
+body.dark-theme .swal2-title{
+
+  background:var(--surface) !important;
+  color:var(--text-primary) !important;
+}
+
+body.dark-theme .swal2-backdrop-show{
+  background: rgba(0,0,0,.75) !important;
+}
+
+/* ==========================
+   BODY
+========================== */
+
+body{
+  font-family:"Inter","Segoe UI",Arial,sans-serif;
+  background:var(--background);
+  color:var(--text-primary);
+  line-height:1.6;
+  transition:
+    background .3s ease,
+    color .3s ease;
+}
+
+/* ==========================
+   THEME TOGGLE
+========================== */
+
+.theme-toggle{
+
+  width:44px;
+  height:44px;
+
+  border:none;
+  border-radius:50%;
+
+  background:var(--surface);
+
+  color:var(--primary);
+
+  cursor:pointer;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  border:1px solid var(--border);
+
+  transition:.3s;
+}
+
+.theme-toggle:hover{
+
+  transform:translateY(-2px);
+
+  background:var(--primary);
+  color:white;
+}
+
+.theme-toggle .material-icons{
+  font-size:22px;
+}
+
+.swal2-popup {
+  background: var(--surface) !important;
+  color: var(--text-primary) !important;
+}
+
+.swal2-actions {
+  background: var(--surface) !important;
+  margin-top: 1rem !important;
+}
+
+.swal2-footer {
+  background: var(--surface) !important;
+  border-top: none !important;
+}
+
+.swal2-html-container {
+  background: var(--surface) !important;
+}
+
+.swal2-container .swal2-popup {
+  overflow: hidden !important;
+}
+
+body.dark-theme .swal2-popup,
+body.dark-theme .swal2-actions,
+body.dark-theme .swal2-footer,
+body.dark-theme .swal2-html-container {
+  background: var(--surface) !important;
+  color: var(--text-primary) !important;
 }

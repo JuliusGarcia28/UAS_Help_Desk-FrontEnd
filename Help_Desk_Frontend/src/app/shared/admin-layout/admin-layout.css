@@ -46,12 +46,21 @@
 /* TOPBAR */
 
 .topbar{
-  background:white;
+  background:var(--surface);
+  color:var(--text-primary);
   padding:15px 20px;
   border-bottom:1px solid var(--border);
   display:flex;
   justify-content:space-between;
   align-items:center;
+}
+
+.topbar-actions{
+  display:flex;
+  flex-direction:row;
+  justify-content: center;
+  align-items: center;
+  gap:15px;
 }
 
 /* PAGE */
@@ -88,7 +97,8 @@
 
 /* CONTENEDOR GENERAL DE CADA VISTA */
 .admin-card{
-  background:white;
+  background:var(--surface);
+  color:var(--text-primary);
   padding:25px;
   border-radius:12px;
   border:1px solid var(--border);

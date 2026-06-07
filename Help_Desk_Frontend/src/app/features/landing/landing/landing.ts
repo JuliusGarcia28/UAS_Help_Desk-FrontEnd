@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { ThemeService } from '../../../core/services/theme.service';
 
 @Component({
   selector: 'app-landing',
@@ -9,4 +10,16 @@ import { RouterLink } from '@angular/router';
 })
 export class Landing {
 
+  constructor(
+    public themeService: ThemeService
+  ) {}
+
+  toggleTheme(): void {
+    this.themeService.toggleTheme();
+  }
+
+  isDark(): boolean {
+    return this.themeService.isDark();
+  }
 }
+

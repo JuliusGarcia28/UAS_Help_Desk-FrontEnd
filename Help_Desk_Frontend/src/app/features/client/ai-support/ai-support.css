@@ -5,7 +5,6 @@
   margin: auto;
 
   padding: 24px;
-
 }
 
 /* HEADER */
@@ -54,7 +53,7 @@
 
   font-weight: 600;
 
-  color: #374151;
+  color: var(--text-primary);
 
 }
 
@@ -70,7 +69,9 @@
 
   font-size: 14px;
 
-  background: white;
+  background: var(--surface);
+
+  color: var(--text-primary);
 
   transition: 0.2s;
 
@@ -90,7 +91,9 @@
 
 .chat-box {
 
-  background: white;
+  background: var(--surface);
+
+  color: var(--text-primary);
 
   border-radius: 24px;
 
@@ -125,6 +128,10 @@
 
   animation: fadeIn 0.25s ease;
 
+  background: var(--surface);
+
+  color: var(--text-primary);
+
 }
 
 /*
@@ -136,6 +143,8 @@
 
   flex-direction: row-reverse;
 
+  color: var(--text-primary);
+
 }
 
 /*
@@ -144,6 +153,8 @@
 .message-wrapper.assistant {
 
   align-self: flex-start;
+
+  color: var(--text-primary);
 
 }
 
@@ -282,12 +293,17 @@
 .chat-input {
 
   margin-top: 20px;
+  border-radius: 14px;
 
   display: flex;
 
   flex-direction: column;
 
   gap: 14px;
+
+  background: var(--surface);
+
+  color: var(--text-primary);
 
 }
 
@@ -297,7 +313,7 @@
 
   resize: none;
 
-  border-radius: 18px;
+  border-radius: 50%;
 
   border: 1px solid #d1d5db;
 
@@ -308,6 +324,10 @@
   line-height: 1.6;
 
   transition: 0.2s;
+
+  background: var(--surface);
+
+  color: var(--text-primary);
 
 }
 
@@ -538,7 +558,7 @@
 .ai-header h2 {
   font-size: 30px;
   font-weight: 700;
-  color: #111827;
+  color: var(--text-primary);
 }
 
 .ai-header p {
@@ -566,12 +586,14 @@
   border: 1px solid #d1d5db;
   padding: 0 14px;
   font-size: 14px;
-  background: white;
+  background: var(--surface);
+  color: var(--text-primary);
 }
 
 /* CHAT */
 .chat-box {
-  background: white;
+  background: var(--surface);
+  color: var(--text-primary);
   border-radius: 24px;
   padding: 24px;
   border: 1px solid #e5e7eb;
@@ -582,16 +604,16 @@
 
   box-shadow: 0 10px 25px rgba(0,0,0,0.04);
 
-  /* 🔥 FIX IMPORTANTE */
   height: 600px;
   overflow-y: auto;
   transition: 0.3s ease;
 }
 
-/* 🔥 CHAT MÁS PEQUEÑO SI ESTÁ VACÍO */
 .chat-box.empty {
   height: 250px;
   opacity: 0.8;
+  background: var(--surface);
+  color: var(--text-primary);
 }
 
 /* MENSAJES */
@@ -668,7 +690,7 @@
 }
 
 .bubble.assistant {
-  background: #f3f4f6;
+  background: #f4f4f4;
   color: #111827;
 }
 
@@ -678,6 +700,8 @@
   display: flex;
   flex-direction: column;
   gap: 14px;
+  background: var(--surface);
+  color: var(--text-primary);
 }
 
 .chat-input textarea {
@@ -747,13 +771,11 @@
 }
 
 .chat-box {
-
-  background: white;
   border-radius: 24px;
   padding: 24px;
 
-  max-height: 600px;   /* antes height fijo */
-  min-height: 200px;   /* 👈 clave */
+  max-height: 600px;   
+  min-height: 200px;   
 
   overflow-y: auto;
 

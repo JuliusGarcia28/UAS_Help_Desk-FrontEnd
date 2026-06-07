@@ -1,6 +1,10 @@
 .table{
   margin-top:20px;
+  background:var(--surface);
+  color:#fff;
 }
+
+.table th{ color:#fff; }
 
 .badge{
   padding:6px 12px;
@@ -11,7 +15,7 @@
 
 /* STATUS */
 .badge.open{
-  background:#fff4e5;
+  background:#fff3e0;
   color:#ff9800;
 }
 
@@ -28,10 +32,12 @@
 /* PRIORITY */
 .badge.low{
   background:#f1f5f9;
+  color:#64748b;
 }
 
 .badge.medium{
   background:#e3f2fd;
+  color:#3FA7D6;
 }
 
 .badge.high{
@@ -53,6 +59,8 @@
 
 .floating-btn{
   position:sticky;
+  background:var(--surface);
+  color:var(--text-primary);
   bottom:30px;
   right:30px;
   height:60px;

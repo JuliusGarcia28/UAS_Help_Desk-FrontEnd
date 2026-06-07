@@ -42,8 +42,13 @@
               [class.active]="s.status === 'active'"
               [class.escalated]="s.status === 'escalated'">
 
-              {{ s.status }}
-
+              @if (s.status === 'solved') {
+                Resuelto
+              } @else if (s.status === 'active') {
+                Activo
+              } @else if (s.status === 'escalated') {
+                Escalado
+              }
             </span>
 
           </td>

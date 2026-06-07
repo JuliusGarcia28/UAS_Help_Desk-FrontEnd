@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterModule, Router } from '@angular/router';
 import { AuthService } from './../../core/services/auth.service';
+import { ThemeService } from '../../core/services/theme.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -16,8 +17,17 @@ export class ClientLayout {
 
   constructor(
     private auth: AuthService,
-    private router: Router
+    private router: Router,
+    private theme: ThemeService
   ) {}
+
+  toggleTheme(): void {
+    this.theme.toggleTheme();
+  }
+
+  isDark(): boolean {
+    return this.theme.isDark();
+  }
 
   logout() {
 

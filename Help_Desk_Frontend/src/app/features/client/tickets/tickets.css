@@ -28,10 +28,12 @@
 /* PRIORITY */
 .badge.low{
   background:#f1f5f9;
+  color:#3FA7D6
 }
 
 .badge.medium{
   background:#e3f2fd;
+  color:#3FA7D6
 }
 
 .badge.high{
@@ -41,7 +43,7 @@
 
 .badge.critical {
   background: #b91c1c;
-  color: white;
+  color: #f45a5a;
   font-weight: bold;
 }
 
@@ -83,7 +85,8 @@
   border: 1px solid var(--border) !important;
 
   font-size: 14px !important;
-  background-color: white !important;
+  background:var(--surface);
+  color:var(--text-primary);
 }
 
 .swal2-actions {
@@ -99,4 +102,6 @@
 .swal2-cancel {
   flex: 1;
   min-width: 120px;
+  background:var(--surface);
+  color:var(--text-primary);
 }

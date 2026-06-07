@@ -24,6 +24,16 @@
 
     <div class="nav-actions">
 
+      <button
+        class="theme-toggle"
+        (click)="toggleTheme()">
+
+        <span class="material-icons">
+          {{ isDark() ? 'light_mode' : 'dark_mode' }}
+        </span>
+
+      </button>
+
       <a routerLink="/login" class="btn btn-outline">
         Iniciar sesión
       </a>

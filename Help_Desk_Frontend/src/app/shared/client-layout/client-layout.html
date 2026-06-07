@@ -46,6 +46,16 @@
           {{ user.first_name }} {{ user.last_name }}
         </span>
 
+            <button
+              class="theme-toggle"
+              (click)="toggleTheme()">
+
+              <span class="material-icons">
+                {{ isDark() ? 'light_mode' : 'dark_mode' }}
+              </span>
+
+            </button>
+
         <button class="btn btn-outline logout-btn" style="display: flex; flex-direction: row; align-items: center;" (click)="logout()">
           <span class="material-icons" style="margin-right: 0.2rem;">logout</span>
           <span>Cerrar Sesión</span>

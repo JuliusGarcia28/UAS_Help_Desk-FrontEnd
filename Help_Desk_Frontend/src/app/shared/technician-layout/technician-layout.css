@@ -31,11 +31,11 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  background: var(--background);
+  background: var(--surface);
 }
 
 .topbar {
-  background: white;
+  background: var(--surface);
   padding: 15px 20px;
   border-bottom: 1px solid var(--border);
   display: flex;
@@ -58,11 +58,11 @@
   max-width: 50%;
 }
 
-/*.logout-btn {
-  border: 0;
-  border-radius: 8px;
-  padding: 10px 14px;
-  background: var(--accent);
-  color: white;
-  cursor: pointer;
-}*/
+.spacer{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.spacer button{ margin-left: 1rem; }
