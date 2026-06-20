@@ -1,0 +1,60 @@
+<section class="auth-section">
+
+  <div class="auth-container">
+
+    <div class="auth-card">
+
+      <h2>Activar cuenta</h2>
+
+      <p class="auth-subtitle">
+        Define tu contraseña para activar tu cuenta.
+      </p>
+
+      <form (ngSubmit)="activate()">
+
+        <div class="form-group">
+          <label>Contraseña</label>
+
+          <input
+            type="password"
+            [(ngModel)]="password"
+            name="password"
+          >
+        </div>
+
+        <div class="form-group">
+          <label>Confirmar contraseña</label>
+
+          <input
+            type="password"
+            [(ngModel)]="confirmPassword"
+            name="confirmPassword"
+          >
+        </div>
+
+        <button
+          class="btn btn-primary btn-full"
+          [disabled]="loading"
+        >
+          {{ loading ? 'Activando...' : 'Activar cuenta' }}
+        </button>
+
+      </form>
+
+      @if(error){
+        <div class="error-box">
+          {{ error }}
+        </div>
+      }
+
+      @if(success){
+        <div class="success-box">
+          {{ success }}
+        </div>
+      }
+
+    </div>
+
+  </div>
+
+</section>

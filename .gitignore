@@ -1,123 +1,162 @@
-# Windows
-.exe
+# ========================================
+# WINDOWS
+# ========================================
+*.exe
+*.dll
+*.pdb
 
-# =========================
-# Dependencias
-# =========================
+# ========================================
+# NODE.JS / ANGULAR / ELECTRON
+# ========================================
 node_modules/
 jspm_packages/
 
-# =========================
-# Build / distribución
-# =========================
-dist/
-out-tsc/
-tmp/
-
-# =========================
-# Angular / CLI
-# =========================
+# Angular
 .angular/
 .angular/cache/
+out-tsc/
 
-# =========================
-# TypeScript
-# =========================
+# Electron
+dist-electron/
+release/
+electron-dist/
+electron-build/
+
+# Build outputs
+dist/
+tmp/
+temp/
+.cache/
+
+# Typescript
 *.tsbuildinfo
 
-# =========================
-# Tests / coverage
-# =========================
-coverage/
-reports/
-
-# =========================
 # Logs
-# =========================
+logs/
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-# =========================
-# Entornos
-# =========================
+# Coverage
+coverage/
+reports/
+
+# Environment
 .env
 .env.*
 !.env.example
 
-# =========================
-# IDEs y editores
-# =========================
-.vscode/*
-!.vscode/extensions.json
-!.vscode/settings.json
-!.vscode/launch.json
-.idea/
+# ========================================
+# ELECTRON BUILDER
+# ========================================
+*.blockmap
+latest.yml
+latest-mac.yml
+latest-linux.yml
+
+# Instaladores generados
+*.msi
+*.deb
+*.rpm
+*.AppImage
+*.dmg
+
+# ========================================
+# .NET / SERVICIO WINDOWS
+# ========================================
+bin/
+obj/
+
+[Bb]uild/
+[Rr]elease/
+[Dd]ebug/
+
+publish/
+
+*.user
+*.rsuser
 *.suo
-*.ntvs*
-*.njsproj
-*.sln
+*.cache
+*.dbmdl
 
-# =========================
-# Sistema operativo
-# =========================
-.DS_Store
-Thumbs.db
+# Visual Studio
+.vs/
 
-# =========================
-# Cache de herramientas
-# =========================
-.cache/
-.eslintcache
-.stylelintcache
-
-# =========================
-# Firebase / Hosting (si aplica)
-# =========================
-.firebase/
-.firebase.json
-
-# See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
-
-# Compiled output
-/dist
-/tmp
-/out-tsc
-/bazel-out
-
-# Node
-/node_modules
-npm-debug.log
-yarn-error.log
-
-# IDEs and editors
-.idea/
-.project
-.classpath
-.c9/
-*.launch
-.settings/
-*.sublime-workspace
-
-# Visual Studio Code
+# ========================================
+# VISUAL STUDIO / IDES
+# ========================================
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
-.history/*
 
-# Miscellaneous
-/.angular/cache
+.idea/
+
+*.ntvs*
+*.njsproj
+*.sln.docstates
+
+.project
+.classpath
+.settings/
+
+.history/
+
+# ========================================
+# TESTING
+# ========================================
+test-results/
+coverage/
+
+# ========================================
+# CACHE
+# ========================================
+.eslintcache
+.stylelintcache
 .sass-cache/
-/connect.lock
-/coverage
-/libpeerconnection.log
-testem.log
-/typings
 
-# System files
+# ========================================
+# FIREBASE (SI APLICA)
+# ========================================
+.firebase/
+.firebase.json
+
+# ========================================
+# SISTEMA OPERATIVO
+# ========================================
 .DS_Store
 Thumbs.db
+desktop.ini
+
+# ========================================
+# ARCHIVOS TEMPORALES
+# ========================================
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+
+# ========================================
+# BAZEL
+# ========================================
+bazel-out/
+
+# ========================================
+# TYPINGS
+# ========================================
+typings/
+
+# ========================================
+# LIBRERÍAS DE RED
+# ========================================
+libpeerconnection.log
+
+# ========================================
+# TESTEM
+# ========================================
+testem.log

@@ -307,7 +307,6 @@ export class Users implements OnInit {
             <option value="">Sin departamento</option>
               ${departmentOptions}
           </select>
-          <input id="password" type="password" class="swal2-input" placeholder="Contraseña">
         </div>
       `,
       showCancelButton: true,
@@ -317,9 +316,8 @@ export class Users implements OnInit {
         const first_name = (document.getElementById('first_name') as HTMLInputElement).value.trim();
         const last_name = (document.getElementById('last_name') as HTMLInputElement).value.trim();
         const email = (document.getElementById('email') as HTMLInputElement).value.trim();
-        const password = (document.getElementById('password') as HTMLInputElement).value;
 
-        if (!first_name || !last_name || !email || !password) {
+        if (!first_name || !last_name || !email) {
           Swal.showValidationMessage('Todos los campos son obligatorios');
           return;
         }
@@ -329,17 +327,11 @@ export class Users implements OnInit {
           return;
         }
 
-        if (password.length < 6) {
-          Swal.showValidationMessage('La contraseña debe tener al menos 6 caracteres');
-          return;
-        }
-
         return {
           username: email,
           first_name,
           last_name,
           email,
-          password,
           role: (document.getElementById('role') as HTMLSelectElement).value,
           department_id: (document.getElementById('department') as HTMLSelectElement).value || null,
           status: 1

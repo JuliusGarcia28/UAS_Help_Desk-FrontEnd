@@ -33,6 +33,62 @@ export class AuthService {
     );
   }
 
+  requestPasswordReset(
+    email: string
+  ): Observable<any> {
+
+    return this.http.post(
+      `${this.API_URL}/request-password-reset/`,
+      { email }
+    );
+  }
+
+  resetPassword(
+    uid: string,
+    token: string,
+    password: string
+  ): Observable<any> {
+
+    return this.http.post(
+      `${this.API_URL}/reset-password/`,
+      {
+        uid,
+        token,
+        password
+      }
+    );
+  }
+
+  changePassword(
+    current_password: string,
+    new_password: string
+  ): Observable<any> {
+
+    return this.http.post(
+      `${this.API_URL}/change-password/`,
+      {
+        current_password,
+        new_password
+      }
+    );
+  }
+
+  activateAccount(
+    uid: string,
+    token: string,
+    password: string
+  ): Observable<any> {
+
+  return this.http.post(
+    `${this.API_URL}/activate-account/`,
+    {
+      uid,
+      token,
+      password
+    }
+  );
+  }
+
   logout(): Observable<any> {
     const refresh = localStorage.getItem('refresh');
 
@@ -53,24 +109,38 @@ export class AuthService {
     return user?.role === 'admin';
   }
 
+  loadUser(): Observable<any> {
+
+    return this.http.get(
+      `${this.API_URL}/user/`
+    );
+  }
+
   private handleError(error: HttpErrorResponse) {
 
     let message = 'Ocurrió un error inesperado';
 
-    if (error.status === 0) {
-      message = 'No se pudo conectar con el servidor.';
-    }
-    else if (error.status === 400) {
-      message = error.error?.non_field_errors?.[0] || 'Datos inválidos';
-    }
-    else if (error.status === 401) {
-      message = 'Credenciales incorrectas';
-    }
-    else if (error.status === 403) {
-      message = 'No autorizado';
-    }
-    else if (error.status >= 500) {
-      message = 'Error del servidor';
+    if (error.error?.error) {
+
+      if (Array.isArray(error.error.error)) {
+        message = error.error.error.join(', ');
+      } else {
+        message = error.error.error;
+      }
+
+    } else if (error.error?.non_field_errors?.length) {
+
+      message = error.error.non_field_errors[0];
+
+    } else if (error.status === 0) {
+
+      message =
+        'No se pudo conectar con el servidor';
+
+    } else if (error.status >= 500) {
+
+      message =
+        'Error interno del servidor';
     }
 
     return throwError(() => message);

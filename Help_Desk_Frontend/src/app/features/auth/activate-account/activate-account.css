@@ -1,0 +1,50 @@
+.auth-section{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--primary);
+}
+
+.auth-container{
+  width:100%;
+  max-width:450px;
+}
+
+.auth-card{
+  background:#fff;
+  padding:40px;
+  border-radius:12px;
+}
+
+.form-group{
+  display:flex;
+  flex-direction:column;
+  margin-bottom:15px;
+}
+
+.form-group input{
+  padding:12px;
+  border:1px solid #ddd;
+  border-radius:8px;
+}
+
+.btn-full{
+  width:100%;
+}
+
+.error-box{
+  margin-top:15px;
+  background:#ffe5e5;
+  color:#b00020;
+  padding:10px;
+  border-radius:6px;
+}
+
+.success-box{
+  margin-top:15px;
+  background:#e8f5e9;
+  color:green;
+  padding:10px;
+  border-radius:6px;
+}

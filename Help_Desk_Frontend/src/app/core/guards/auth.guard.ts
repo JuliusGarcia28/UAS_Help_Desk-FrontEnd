@@ -1,0 +1,20 @@
+import { inject } from '@angular/core';
+import { Router } from '@angular/router';
+
+export const authGuard = () => {
+
+  const router = inject(Router);
+
+  const user = JSON.parse(
+    localStorage.getItem('user') || 'null'
+  );
+
+  if (!user) {
+
+    router.navigate(['/login']);
+
+    return false;
+  }
+
+  return true;
+};

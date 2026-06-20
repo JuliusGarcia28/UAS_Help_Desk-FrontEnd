@@ -2,6 +2,7 @@ import { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError, switchMap, throwError } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
@@ -10,8 +11,13 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const access = localStorage.getItem('access');
   const refresh = localStorage.getItem('refresh');
 
-  // NO enviar token en login
-  if (req.url.includes('/auth/login')) {
+  // NO enviar token en las siguientes rutas
+  if (
+    req.url.includes('/auth/login') ||
+    req.url.includes('/auth/activate-account') ||
+    req.url.includes('/auth/request-password-reset') ||
+    req.url.includes('/auth/reset-password')
+  ) {
     return next(req);
   }
 
@@ -31,7 +37,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       // TOKEN REFRESH
       if (error.status === 401 && refresh) {
 
-        return http.post<any>('http://127.0.0.1:8000/auth/refresh/', {
+        return http.post<any>(`${environment.apiUrl}/auth/refresh/`, {
           refresh
         }).pipe(
 
@@ -52,7 +58,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
           catchError(() => {
             // LOGOUT FORZADO
             localStorage.clear();
-            window.location.href = '/login';
+            location.replace('/login');
             return throwError(() => error);
           })
         );

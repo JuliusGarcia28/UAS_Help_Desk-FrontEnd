@@ -1,6 +1,8 @@
 import { routes } from "../../app.routes";
 import { Login } from "./login/login";
-import { Register } from "./register/register";
+import { ActivateAccountComponent } from "./activate-account/activate-account";
+import { ResetPasswordComponent } from "./reset-password/reset-password";
+import { ForgotPassword } from "./forgot-password/forgot-password";
 
 export const loginRoutes = [
     {
@@ -8,7 +10,15 @@ export const loginRoutes = [
         component: Login
     },
     {
-        path: 'register',
-        component: Register
+        path: 'activate-account',
+        component: ActivateAccountComponent
     },
+    {
+        path: 'reset-password',
+        component: ResetPasswordComponent
+    },
+    {
+        path: 'forgot-password',
+        component: ForgotPassword
+    }
 ];
