@@ -1,0 +1,61 @@
+<div class="dashboard">
+
+  <h2>Dashboard Administrativo</h2>
+
+  <div class="stats-grid">
+
+    <div class="stat-card">
+      <span class="material-icons">group</span>
+      <h3>Usuarios</h3>
+      <p>{{ users.length }}</p>
+    </div>
+
+    <div class="stat-card">
+      <span class="material-icons">confirmation_number</span>
+      <h3>Tickets</h3>
+      <p>{{ tickets.length }}</p>
+    </div>
+
+    <div class="stat-card">
+      <span class="material-icons">inventory_2</span>
+      <h3>Activos</h3>
+      <p>{{ assets.length }}</p>
+    </div>
+
+    <div class="stat-card">
+      <span class="material-icons">apartment</span>
+      <h3>Departamentos</h3>
+      <p>{{ departments.length }}</p>
+    </div>
+
+  </div>
+
+  <div class="charts">
+
+    <div class="chart-card">
+
+      <h3>Estado de Tickets</h3>
+
+      <canvas
+        baseChart
+        [data]="ticketChartData"
+        [type]="ticketChartType">
+      </canvas>
+
+    </div>
+
+    <div class="chart-card">
+
+      <h3>Usuarios por Rol</h3>
+
+      <canvas
+        baseChart
+        [data]="roleChartData"
+        [type]="roleChartType">
+      </canvas>
+
+    </div>
+
+  </div>
+
+</div>

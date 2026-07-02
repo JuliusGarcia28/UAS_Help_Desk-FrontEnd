@@ -48,3 +48,9 @@
   padding:10px;
   border-radius:6px;
 }
+
+h2 { color: var(--primary); }
+
+p { color: var(--primary); }
+
+label { color: var(--primary); }

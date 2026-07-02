@@ -22,6 +22,20 @@ export class AdminLayout {
     public themeService: ThemeService
   ) {}
 
+  sidebarOpen = false;
+
+  toggleSidebar(): void {
+
+    this.sidebarOpen = !this.sidebarOpen;
+
+  }
+
+  closeSidebar(): void {
+
+    this.sidebarOpen = false;
+
+  }
+
   toggleTheme(): void {
     this.themeService.toggleTheme();
   }

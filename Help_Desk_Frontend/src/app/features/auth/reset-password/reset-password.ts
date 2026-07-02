@@ -11,7 +11,7 @@ import { AuthService } from '../../../core/services/auth.service';
     FormsModule
   ],
   templateUrl: './reset-password.html',
-  styleUrl: './reset-password.css'
+  styleUrl: './../activate-account/activate-account.css'
 })
 export class ResetPasswordComponent
 implements OnInit {

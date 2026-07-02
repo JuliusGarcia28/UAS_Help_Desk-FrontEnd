@@ -1,117 +1,395 @@
-.client-container {
-  display: flex;
-  min-height: 100vh;
-  background:var(--surface);
-  color:var(--text-primary);
+/* ==========================================================
+   CLIENT LAYOUT
+========================================================== */
+
+.client-container{
+    display:flex;
+    min-height:100vh;
+    background:var(--background);
 }
 
-/* SIDEBAR */
-.sidebar {
-  width: 220px;
-  background: var(--primary);
-  color: white;
-  padding: 20px;
-}
-
-.sidebar nav a {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px;
-  border-radius: 8px;
-  color: white;
-  text-decoration: none;
-  margin-bottom: 10px;
-  transition: 0.2s;
-}
-
-.sidebar nav a.active,
-.sidebar nav a:hover {
-  background: var(--accent);
-}
-
-/* CONTENT */
-.content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  background: var(--background);
-}
-
-/* TOPBAR */
-.topbar {
-  background:var(--surface);
-  color:var(--text-primary);
-  padding: 15px 20px;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-/* USER */
-.user-info {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-/* PAGE */
-.page {
-  padding: 20px;
-}
-
-/* LOGO */
-.logo {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-}
-
-.logo img {
-  max-width: 50%;
-}
-
-/* MOBILE */
-@media (max-width: 768px) {
-
-  .client-container {
-    flex-direction: column;
-  }
-
-  .sidebar {
-    width: 100%;
-    display: flex;
-    overflow-x: auto;
-  }
-
-  .sidebar nav {
-    display: flex;
-    gap: 10px;
-  }
-}
-
-/*Side Bar*/
+/* ==========================================================
+   SIDEBAR
+========================================================== */
 
 .sidebar{
-  box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+
+    width:260px;
+    flex-shrink:0;
+
+    background:var(--primary);
+
+    color:#fff;
+
+    display:flex;
+    flex-direction:column;
+
+    padding:24px 18px;
+
+    transition:.35s ease;
+
+    box-shadow:2px 0 18px rgba(0,0,0,.08);
+}
+
+/* ==========================================================
+   LOGO
+========================================================== */
+
+.logo{
+
+    display:flex;
+    flex-direction:column;
+
+    align-items:center;
+
+    margin-bottom:35px;
+}
+
+.logo img{
+
+    width:110px;
+
+    max-width:100%;
+
+    object-fit:contain;
+
+    margin-bottom:10px;
+}
+
+.logo span{
+
+    color:#fff;
+
+    font-size:24px;
+
+    font-weight:700;
+}
+
+/* ==========================================================
+   NAVIGATION
+========================================================== */
+
+.sidebar nav{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:8px;
 }
 
 .sidebar nav a{
-  font-size:14px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    padding:14px;
+
+    border-radius:12px;
+
+    text-decoration:none;
+
+    color:#fff;
+
+    font-size:.95rem;
+
+    font-weight:500;
+
+    transition:.25s;
 }
 
 .sidebar nav a span{
-  font-size:20px;
+
+    font-size:22px;
 }
 
-/*Top Bar*/
+.sidebar nav a:hover{
+
+    background:rgba(255,255,255,.12);
+
+    transform:translateX(4px);
+}
+
+.sidebar nav a.active{
+
+    background:var(--accent);
+
+    box-shadow:0 6px 16px rgba(0,0,0,.15);
+}
+
+/* ==========================================================
+   CONTENT
+========================================================== */
+
+.content{
+
+    flex:1;
+
+    display:flex;
+
+    flex-direction:column;
+
+    background:var(--background);
+
+    min-width:0;
+}
+
+/* ==========================================================
+   TOPBAR
+========================================================== */
+
+.topbar{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    gap:20px;
+
+    background:var(--surface);
+
+    border-bottom:1px solid var(--border);
+
+    padding:18px 28px;
+
+    position:sticky;
+
+    top:0;
+
+    z-index:10;
+}
 
 .topbar h1{
-  font-size:20px;
+
+    font-size:clamp(1.3rem,2vw,1.8rem);
+
+    color:var(--text-primary);
 }
 
-.user-info span{
-  font-weight:500;
+.user-info{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:14px;
+
+    flex-wrap:wrap;
+}
+
+.user-info>span{
+
+    font-weight:600;
+
+    color:var(--text-primary);
+}
+
+/* ==========================================================
+   PAGE
+========================================================== */
+
+.page{
+
+    flex:1;
+
+    overflow:auto;
+
+    padding:28px;
+}
+
+/* ==========================================================
+   RESPONSIVE 1100
+========================================================== */
+
+@media (max-width:1100px){
+
+    .sidebar{
+
+        width:220px;
+    }
+
+    .logo img{
+
+        width:90px;
+    }
+
+}
+
+/* ==========================================================
+   RESPONSIVE 900
+========================================================== */
+
+@media (max-width:900px){
+
+    .topbar{
+
+        padding:18px;
+    }
+
+    .page{
+
+        padding:20px;
+    }
+
+}
+
+/* ==========================================================
+   RESPONSIVE 768
+========================================================== */
+
+@media (max-width:768px){
+
+    .client-container{
+
+        flex-direction:column;
+    }
+
+    .sidebar{
+
+        width:100%;
+
+        padding:15px;
+
+        box-shadow:none;
+    }
+
+    .logo{
+
+        flex-direction:row;
+
+        justify-content:center;
+
+        margin-bottom:18px;
+    }
+
+    .logo img{
+
+        width:55px;
+
+        margin-bottom:0;
+    }
+
+    .logo span{
+
+        font-size:22px;
+    }
+
+    .sidebar nav{
+
+        flex-direction:row;
+
+        overflow-x:auto;
+
+        gap:10px;
+
+        scrollbar-width:none;
+    }
+
+    .sidebar nav::-webkit-scrollbar{
+
+        display:none;
+    }
+
+    .sidebar nav a{
+
+        white-space:nowrap;
+
+        flex-shrink:0;
+
+        padding:12px 16px;
+
+        font-size:.88rem;
+    }
+
+    .sidebar nav a:hover{
+
+        transform:none;
+    }
+
+    .topbar{
+
+        flex-direction:column;
+
+        align-items:flex-start;
+    }
+
+    .user-info{
+
+        width:100%;
+
+        justify-content:flex-end;
+    }
+
+    .page{
+
+        padding:16px;
+    }
+
+}
+
+/* ==========================================================
+   RESPONSIVE 576
+========================================================== */
+
+@media (max-width:576px){
+
+    .topbar h1{
+
+        font-size:1.2rem;
+    }
+
+    .user-info{
+
+        flex-direction:column;
+
+        align-items:stretch;
+    }
+
+    .user-info button{
+
+        width:100%;
+    }
+
+    .theme-toggle{
+
+        width:100%;
+
+        border-radius:10px;
+    }
+
+    .logout-btn{
+
+        width:100%;
+    }
+
+    .page{
+
+        padding:14px;
+    }
+
+}
+
+/* ==========================================================
+   RESPONSIVE 400
+========================================================== */
+
+@media (max-width:400px){
+
+    .sidebar nav a{
+
+        font-size:.8rem;
+
+        padding:10px 14px;
+    }
+
+    .sidebar nav a span{
+
+        font-size:18px;
+    }
+
 }

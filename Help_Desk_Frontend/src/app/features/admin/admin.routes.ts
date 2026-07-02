@@ -4,6 +4,8 @@ import { Users } from './users/users';
 import { Assets } from './assets/assets';
 import { Departments } from './departments/departments';
 import { Tickets } from './tickets/tickets';
+import { Dashboard } from './dashboard/dashboard';
+import { Reports } from './reports/reports';
 
 
 export const AdminRoutes: Routes = [
@@ -28,8 +30,18 @@ export const AdminRoutes: Routes = [
     component: Tickets
   },
   {
+    path: 'dashboard',
+    canActivate: [adminGuard],
+    component: Dashboard
+  },
+  {
+    path: 'reports',
+    canActivate: [adminGuard],
+    component: Reports
+  },
+  {
     path: '',
-    redirectTo: 'users',
+    redirectTo: 'dashboard',
     pathMatch: 'full'
   }
 ];

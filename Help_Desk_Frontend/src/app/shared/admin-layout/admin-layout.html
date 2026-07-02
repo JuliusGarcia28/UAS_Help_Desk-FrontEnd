@@ -1,79 +1,178 @@
 <div class="admin-container">
 
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
+  <!-- ==========================
+       SIDEBAR
+  =========================== -->
+
+  <aside
+    class="sidebar"
+    [class.open]="sidebarOpen">
 
     <div class="logo">
-      <img src="img/Help_Desk_Logo_White.png" alt="HelpDesk">
+
+      <img
+        src="img/Help_Desk_Logo_White.png"
+        alt="HelpDesk">
+
       <span>HelpDesk</span>
+
     </div>
 
     <nav>
 
-      <a routerLink="/admin/users" routerLinkActive="active">
-        <span class="material-icons">group</span>
+      <a
+        routerLink="/admin/dashboard"
+        routerLinkActive="active"
+        (click)="closeSidebar()">
+
+        <span class="material-icons">
+          dashboard
+        </span>
+
+        Dashboard
+
+      </a>
+
+      <a
+        routerLink="/admin/reports"
+        routerLinkActive="active"
+        (click)="closeSidebar()">
+
+        <span class="material-icons">
+          analytics
+        </span>
+
+        Reportes
+
+      </a>
+
+      <a
+        routerLink="/admin/users"
+        routerLinkActive="active"
+        (click)="closeSidebar()">
+
+        <span class="material-icons">
+          group
+        </span>
+
         Usuarios
+
       </a>
 
-      <a routerLink="/admin/assets" routerLinkActive="active">
-        <span class="material-icons">inventory_2</span>
+      <a
+        routerLink="/admin/assets"
+        routerLinkActive="active"
+        (click)="closeSidebar()">
+
+        <span class="material-icons">
+          inventory_2
+        </span>
+
         Inventario
+
       </a>
 
-      <a routerLink="/admin/departments" routerLinkActive="active">
-        <span class="material-icons">apartment</span>
+      <a
+        routerLink="/admin/departments"
+        routerLinkActive="active"
+        (click)="closeSidebar()">
+
+        <span class="material-icons">
+          apartment
+        </span>
+
         Departamentos
+
       </a>
 
-      <a routerLink="/admin/tickets" routerLinkActive="active">
-        <span class="material-icons">confirmation_number</span>
+      <a
+        routerLink="/admin/tickets"
+        routerLinkActive="active"
+        (click)="closeSidebar()">
+
+        <span class="material-icons">
+          confirmation_number
+        </span>
+
         Tickets
+
       </a>
 
     </nav>
 
   </aside>
 
-  <!-- CONTENT -->
+  <!-- ==========================
+       OVERLAY
+  =========================== -->
+  @if(sidebarOpen){
+    <div
+    class="sidebar-overlay"
+    (click)="closeSidebar()">
+
+    </div>
+  }
+
+  <!-- ==========================
+       CONTENT
+  =========================== -->
+
   <main class="content">
 
-  <header class="topbar">
+    <header class="topbar">
 
-  <h1>Admin Panel</h1>
+      <div class="topbar-left">
 
-  <div class="topbar-actions">
+        <button
+          class="menu-btn"
+          (click)="toggleSidebar()">
 
-    <button
-      class="theme-toggle"
-      (click)="toggleTheme()">
+          <span class="material-icons">
+            menu
+          </span>
 
-      <span class="material-icons">
-        {{ isDark() ? 'light_mode' : 'dark_mode' }}
-      </span>
+        </button>
 
-    </button>
+        <h1>
+          Admin Panel
+        </h1>
 
-    <button
-      class="btn btn-outline"
-      style="display:flex;align-items:center;"
-      (click)="logout()">
+      </div>
 
-      <span
-        class="material-icons"
-        style="margin-right:.2rem">
-        logout
-      </span>
+      <div class="topbar-actions">
 
-      <span>Cerrar sesión</span>
+        <button
+          class="theme-toggle"
+          (click)="toggleTheme()">
 
-    </button>
+          <span class="material-icons">
+            {{ isDark() ? 'light_mode' : 'dark_mode' }}
+          </span>
 
-  </div>
+        </button>
 
-  </header>
+        <button
+          class="btn btn-outline logout"
+          (click)="logout()">
+
+          <span class="material-icons">
+            logout
+          </span>
+
+          <span>
+            Cerrar sesión
+          </span>
+
+        </button>
+
+      </div>
+
+    </header>
 
     <section class="page">
+
       <router-outlet></router-outlet>
+
     </section>
 
   </main>

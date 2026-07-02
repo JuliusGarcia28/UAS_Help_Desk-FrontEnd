@@ -1,5 +1,6 @@
 <div class="technician-container">
 
+  <!-- SIDEBAR -->
   <aside class="sidebar">
 
     <div class="logo">
@@ -8,6 +9,7 @@
     </div>
 
     <nav>
+
       <a routerLink="/technician/dashboard" routerLinkActive="active">
         <span class="material-icons">dashboard</span>
         Panel Técnico
@@ -17,33 +19,51 @@
         <span class="material-icons">confirmation_number</span>
         Tickets Asignados
       </a>
+
     </nav>
 
   </aside>
 
+  <!-- CONTENT -->
   <main class="content">
 
     <header class="topbar">
-      <h1>Tech Panel</h1>
 
-      <div class="spacer">
+      <h1>Panel Técnico</h1>
 
-      <button
-        class="theme-toggle"
-        (click)="toggleTheme()">
+      <div class="user-info">
 
-        <span class="material-icons">
-          {{ isDark() ? 'light_mode' : 'dark_mode' }}
+        <span>
+          {{ user.first_name }} {{ user.last_name }}
         </span>
 
-      </button>
+        <button
+          class="theme-toggle"
+          (click)="toggleTheme()">
 
-      <button class="btn btn-outline logout-btn" style="display: flex; flex-direction: row; align-items: center;" (click)="logout()">
-          <span class="material-icons" style="margin-right: 0.2rem;">logout</span>
+          <span class="material-icons">
+            {{ isDark() ? 'light_mode' : 'dark_mode' }}
+          </span>
+
+        </button>
+
+        <button
+          class="btn btn-outline logout-btn"
+          style="display:flex;align-items:center;"
+          (click)="logout()">
+
+          <span
+            class="material-icons"
+            style="margin-right:.2rem;">
+            logout
+          </span>
+
           <span>Cerrar Sesión</span>
-      </button>
+
+        </button>
 
       </div>
+
     </header>
 
     <section class="page">
