@@ -10,12 +10,16 @@ import { environment } from '../../environments/environment';
 })
 export class ReportService {
 
-  private API =
+  private readonly API =
     `${environment.apiUrl}/reports/`;
 
   constructor(
     private http: HttpClient
   ) {}
+
+  /* ==========================================================
+      DASHBOARD
+  ========================================================== */
 
   getDashboard(): Observable<any> {
 
@@ -25,29 +29,86 @@ export class ReportService {
 
   }
 
-  getTicketsReport(filters?: any): Observable<any> {
+  /* ==========================================================
+      TICKETS POR ESTADO
+  ========================================================== */
 
-    return this.http.get(
-      `${this.API}tickets/`,
-      {
-        params: filters || {}
-      }
+  getTicketsByStatus(): Observable<any[]> {
+
+    return this.http.get<any[]>(
+      `${this.API}tickets-status/`
     );
 
   }
 
-  getUsersReport(): Observable<any> {
+  /* ==========================================================
+      TICKETS POR CATEGORÍA
+  ========================================================== */
 
-    return this.http.get(
-      `${this.API}users/`
+  getTicketsByCategory(): Observable<any[]> {
+
+    return this.http.get<any[]>(
+      `${this.API}tickets-category/`
     );
 
   }
 
-  getAssetsReport(): Observable<any> {
+  /* ==========================================================
+      TICKETS POR PRIORIDAD
+  ========================================================== */
+
+  getTicketsByPriority(): Observable<any[]> {
+
+    return this.http.get<any[]>(
+      `${this.API}tickets-priority/`
+    );
+
+  }
+
+  /* ==========================================================
+      TICKETS POR TÉCNICO
+  ========================================================== */
+
+  getTicketsByTechnician(): Observable<any[]> {
+
+    return this.http.get<any[]>(
+      `${this.API}tickets-technician/`
+    );
+
+  }
+
+  /* ==========================================================
+      TICKETS POR DEPARTAMENTO
+  ========================================================== */
+
+  getTicketsByDepartment(): Observable<any[]> {
+
+    return this.http.get<any[]>(
+      `${this.API}tickets-department/`
+    );
+
+  }
+
+  /* ==========================================================
+      TICKETS POR MES
+  ========================================================== */
+
+  getTicketsByMonth(): Observable<any[]> {
+
+    return this.http.get<any[]>(
+      `${this.API}tickets-month/`
+    );
+
+  }
+
+  /* ==========================================================
+      TIEMPO PROMEDIO DE RESOLUCIÓN
+  ========================================================== */
+
+  getAverageResolution(): Observable<any> {
 
     return this.http.get(
-      `${this.API}assets/`
+      `${this.API}avg-resolution/`
     );
 
   }

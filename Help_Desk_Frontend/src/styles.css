@@ -136,6 +136,23 @@ body{
   color:var(--text-primary);
 }
 
+.table-container::-webkit-scrollbar{
+  height:8px;
+}
+
+.table-container::-webkit-scrollbar-track{
+  background:transparent;
+}
+
+.table-container::-webkit-scrollbar-thumb{
+  background:var(--accent);
+  border-radius:20px;
+}
+
+.table-container::-webkit-scrollbar-thumb:hover{
+  background:var(--secondary);
+}
+
 /* ==========================
    SWEETALERT CUSTOM THEME
 ========================== */
