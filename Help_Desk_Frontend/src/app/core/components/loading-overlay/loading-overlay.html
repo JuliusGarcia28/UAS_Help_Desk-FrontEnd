@@ -1,0 +1,15 @@
+@if (loadingService.isLoading()) {
+
+  <div class="loading-overlay">
+
+    <div class="loading-content">
+
+      <div class="spinner"></div>
+
+      <p>{{ loadingService.loadingMessage() }}</p>
+
+    </div>
+
+  </div>
+
+}

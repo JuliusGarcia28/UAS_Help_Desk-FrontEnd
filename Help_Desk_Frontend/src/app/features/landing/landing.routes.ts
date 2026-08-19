@@ -6,6 +6,6 @@ export const LandingRoutes: Routes = [
     {
         path: '',
         component: Landing,
-        //canActivate: [LandingGuard]
+        canActivate: [LandingGuard]
     },
 ];
