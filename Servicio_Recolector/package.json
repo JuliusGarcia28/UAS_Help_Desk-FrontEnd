@@ -1,0 +1,25 @@
+{
+  "name": "servicio_recolector",
+  "version": "1.0.0",
+  "description": "Servicio de inventario HelpDesk",
+  "main": "service.js",
+  "type": "commonjs",
+  "bin": "service.js",
+  "scripts": {
+    "build": "pkg . --targets node18-win-x64 --output InventoryService.exe --options no-warnings"
+  },
+  "pkg": {
+    "assets": [
+      "node_modules/axios/**/*"
+    ]
+  },
+  "dependencies": {
+    "axios": "^1.13.6",
+    "node-machine-id": "^1.1.12",
+    "systeminformation": "^5.31.4"
+  },
+  "devDependencies": {
+    "pkg": "^5.8.1",
+    "winresourcer": "^0.9.0"
+  }
+}

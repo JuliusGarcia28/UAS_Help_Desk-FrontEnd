@@ -1,0 +1,21 @@
+<service>
+
+    <id>HelpDeskInventory</id>
+
+    <name>HelpDesk Inventory Agent</name>
+
+    <description>
+        Servicio de inventario HelpDesk
+    </description>
+
+    <executable>InventoryService.exe</executable>
+
+    <workingdirectory>%BASE%</workingdirectory>
+
+    <startmode>Automatic</startmode>
+
+    <onfailure action="restart" delay="10 sec"/>
+
+    <log mode="roll"/>
+
+</service>

@@ -160,3 +160,81 @@ libpeerconnection.log
 # TESTEM
 # ========================================
 testem.log
+
+# Angular
+/dist
+/.angular
+/out-tsc
+/tmp
+/bazel-out
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Electron
+release/
+releases/
+build/
+*.asar
+*.blockmap
+
+# electron-builder
+win-unpacked/
+linux-unpacked/
+mac/
+*.exe
+*.msi
+*.AppImage
+*.dmg
+latest.yml
+
+# Logs
+logs/
+*.log
+
+# Coverage
+coverage/
+
+# Cache
+.cache/
+.eslintcache
+
+# IDE
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/extensions.json
+
+.idea/
+*.iml
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# Mac
+.DS_Store
+
+# Linux
+*~
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Service
+windows-agent/node_modules/
+windows-agent/logs/
+
+# Electron
+electron/node_modules/
+
+# Certificates
+*.pfx
+*.pem
+*.key

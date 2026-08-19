@@ -91,7 +91,11 @@
   gap:12px;
 
   flex-shrink:0;
+
+  
 }
+
+.nav-actions a{ color:var(--text-secondary); }
 
 /* ==========================
    RESPONSIVE
@@ -343,6 +347,11 @@
     transition:.3s;
 
     box-shadow:0 10px 24px rgba(0,0,0,.06);
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
 }
 
 .download-card:hover{
@@ -383,6 +392,7 @@
 .btn-full{
 
     width:100%;
+    text-align:center;
 }
 
 /* Responsive para tablets */

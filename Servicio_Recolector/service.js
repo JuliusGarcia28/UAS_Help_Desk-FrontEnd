@@ -1,7 +1,23 @@
+// Manejo de errores globales
+process.on("uncaughtException", (err) => {
+    console.error("UNCAUGHT EXCEPTION");
+    console.error(err);
+});
+
+process.on("unhandledRejection", (reason) => {
+    console.error("UNHANDLED PROMISE");
+    console.error(reason);
+});
+
+console.log("================================");
+console.log("Inventory Service iniciado");
+console.log("Node:", process.version);
+console.log("================================");
+
 const si = require('systeminformation');
 const axios = require('axios');
 
-const API_URL = "http://localhost:8000/assets/agent";
+const API_URL = "https://uas-helpdesk-backend.onrender.com/assets/agent";
 
 // =============================
 // Obtener inventario
@@ -110,11 +126,11 @@ async function syncInventory() {
 }
 
 // =============================
-// Inicio del agente
+// Inicio del servicio
 // =============================
-async function startAgent() {
+async function startService() {
 
-    console.log("Agente iniciado");
+    console.log("Servicio iniciado");
 
     // Primera ejecución
     await syncInventory();
@@ -163,4 +179,4 @@ async function startAgent() {
     }, 1000 * 60 * 60 * 24);
 }
 
-startAgent();
+startService();
