@@ -1,7 +1,7 @@
 {
   "name": "helpdesk-desktop",
   "productName": "HelpDesk",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Sistema HelpDesk",
   "main": "main.js",
   "author": "UAS",

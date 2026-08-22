@@ -460,6 +460,10 @@ Ejemplo:
 
 ```bash
 npm run electron:build
+
+o
+
+npx electron-builder --win nsis
 ```
 
 El instalador generado puede distribuirse para su instalación en equipos Windows.
