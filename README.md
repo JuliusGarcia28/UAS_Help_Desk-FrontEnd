@@ -47,6 +47,7 @@ Interfaz para gestionar las solicitudes de soporte:
 
 La aplicación permite consultar y administrar información relacionada con los activos tecnológicos:
 
+```text
 Inventario
 │
 ├── Equipos
@@ -54,6 +55,7 @@ Inventario
 ├── Software
 ├── Usuarios
 └── Estado del dispositivo
+```
 
 La información puede ser obtenida desde la API y, en el caso de la aplicación de escritorio, complementada mediante información proporcionada por el Windows Service.
 
@@ -63,6 +65,7 @@ La información puede ser obtenida desde la API y, en el caso de la aplicación 
 
 El frontend incorpora una interfaz conversacional para interactuar con el asistente de soporte.
 
+```text
 ┌──────────────┐
 │    Usuario   │
 └──────┬───────┘
@@ -82,6 +85,7 @@ El frontend incorpora una interfaz conversacional para interactuar con el asiste
 ┌──────────────┐
 │ Gemini API   │
 └──────────────┘
+```
 
 La aplicación cliente no maneja directamente las credenciales de Gemini. La comunicación con el servicio de IA se realiza a través del backend.
 
@@ -91,6 +95,7 @@ La aplicación cliente no maneja directamente las credenciales de Gemini. La com
 
 El frontend forma parte de un ecosistema compuesto por varios componentes:
 
+```text
     [Angular Frontend Frontend] - [Electron Desktop App] ────► [Windows Service] 
                             │                                          ├
                             ├──────────────────────────────────────────├                                       
@@ -102,11 +107,13 @@ El frontend forma parte de un ecosistema compuesto por varios componentes:
                             │
                             ▼ 
                  [PostgreSQL / Supabase] 
+```
 
 ### Arquitectura de escritorio
 
 Cuando la aplicación se ejecuta como aplicación de escritorio, Electron actúa como contenedor de la aplicación Angular.
 
+```text
 ┌──────────────────────────────────────┐
 │            Electron                  │
 │                                      │
@@ -126,6 +133,7 @@ Cuando la aplicación se ejecuta como aplicación de escritorio, Electron actúa
                    │
                    ▼
         Windows Operating System
+```
 
 ---
 
@@ -147,6 +155,7 @@ Cuando la aplicación se ejecuta como aplicación de escritorio, Electron actúa
 
 # Estructura del proyecto
 
+```text
 UAS_Help_Desk_Frontend/
 │
 ├── Help_Desk_Frontend/
@@ -255,6 +264,7 @@ UAS_Help_Desk_Frontend/
 ├── tsconfig.json
 ├── .env.example
 └── README.md
+```
 
 La estructura está separada por responsabilidades para facilitar el mantenimiento y permitir reutilizar componentes entre la aplicación web y la aplicación de escritorio.
 
@@ -300,6 +310,7 @@ La aplicación utiliza el mecanismo de autenticación proporcionado por el backe
 
 El flujo general es:
 
+```text
 Login
   │
   ▼
@@ -315,6 +326,7 @@ Angular
   │
   ▼
 Protected Routes
+```
 
 Las rutas protegidas se gestionan mediante guards y los servicios correspondientes.
 
@@ -328,6 +340,7 @@ Electron permite ejecutar la aplicación Angular dentro de un entorno de escrito
 
 ### Flujo
 
+```text
 Angular
    │
    ▼
@@ -336,6 +349,7 @@ Electron
    ├── Aplicación de escritorio
    │
    └── Comunicación con Windows Service
+```
 
 ---
 
@@ -355,6 +369,7 @@ Ejemplos de responsabilidades:
 
 Arquitectura:
 
+```text
 ┌─────────────────────┐
 │   Electron App      │
 │                     │
@@ -373,6 +388,7 @@ Arquitectura:
 │ Windows SO          │
 │                     │
 └─────────────────────┘
+```
 
 ---
 
@@ -474,6 +490,7 @@ El servicio de windows hecho con Node.js se instala junto con la aplicación de 
 
 El proceso conceptual es:
 
+```text
 Instalador
    │
    ├── Instala Electron Application
@@ -482,6 +499,7 @@ Instalador
             │
             ▼
        Windows Service Manager
+```      
 
 Una vez instalado, el servicio puede ejecutarse en segundo plano independientemente de la interfaz gráfica.
 
