@@ -4,62 +4,115 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { CommonModule } from '@angular/common';
 
+
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [
+    FormsModule,
+    CommonModule,
+  ],
   templateUrl: './login.html',
   styleUrl: './login.css'
 })
 export class Login {
 
   email: string = '';
+
   password: string = '';
 
   loading: boolean = false;
+
   error: string = '';
+
+  showPassword: boolean = false;
 
   constructor(
     private authService: AuthService,
     private router: Router
   ) {}
 
-  login() {
+  togglePasswordVisibility(): void {
+
+    this.showPassword =
+      !this.showPassword;
+
+  }
+
+  login(): void {
 
     this.error = '';
 
     if (!this.email || !this.password) {
-      this.error = 'Todos los campos son obligatorios';
+
+      this.error =
+        'Todos los campos son obligatorios';
+
       return;
+
     }
 
     this.loading = true;
 
-    this.authService.login(this.email, this.password).subscribe({
-      next: (res) => {
-        this.loading = false;
+    this.authService
+      .login(
+        this.email,
+        this.password
+      )
+      .subscribe({
 
-        const user = res.user;
+        next: (res) => {
 
-        //  REDIRECCIÓN POR ROL
-        if (user.role === 'admin') {
-          this.router.navigate(['/admin']);
-        }else if (user.role === 'client') {
-          this.router.navigate(['/client/dashboard']);
-        } else if (user.role === 'technician') {
-          this.router.navigate(['/technician/dashboard']);
-        } else {
-          this.router.navigate(['/']);
+          this.loading = false;
+
+          const user = res.user;
+
+          // REDIRECCIÓN POR ROL
+
+          if (user.role === 'admin') {
+
+            this.router.navigate([
+              '/admin'
+            ]);
+
+          } else if (user.role === 'client') {
+
+            this.router.navigate([
+              '/client/dashboard'
+            ]);
+
+          } else if (user.role === 'technician') {
+
+            this.router.navigate([
+              '/technician/dashboard'
+            ]);
+
+          } else {
+
+            this.router.navigate([
+              '/'
+            ]);
+
+          }
+
+        },
+
+        error: (err) => {
+
+          this.loading = false;
+
+          this.error = err;
+
+          setTimeout(() => {
+
+            this.error = '';
+
+          }, 4000);
+
         }
-      },
-      error: (err) => {
-        this.loading = false;
-        this.error = err;
 
-        setTimeout(() => {
-          this.error = '';
-        }, 4000);
-      }
-    });
+      });
+
   }
+
 }

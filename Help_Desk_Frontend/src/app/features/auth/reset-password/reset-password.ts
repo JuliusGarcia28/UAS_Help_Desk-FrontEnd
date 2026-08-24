@@ -22,6 +22,9 @@ implements OnInit {
   password = '';
   confirmPassword = '';
 
+  showPassword = false;
+  showConfirmPassword = false;
+
   loading = false;
 
   error = '';
@@ -32,6 +35,20 @@ implements OnInit {
     private route: ActivatedRoute,
     private authService: AuthService
   ) {}
+
+  togglePasswordVisibility(): void {
+
+    this.showPassword =
+      !this.showPassword;
+
+  }
+
+  toggleConfirmPasswordVisibility(): void {
+
+    this.showConfirmPassword =
+      !this.showConfirmPassword;
+
+  }
 
   ngOnInit() {
 
