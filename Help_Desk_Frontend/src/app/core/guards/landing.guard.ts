@@ -1,29 +1,33 @@
 import { inject } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, CanActivateFn } from '@angular/router';
 
-export const LandingGuard = () => {
-    const router = inject(Router);
-    const user = JSON.parse(localStorage.getItem('user') || 'null');
+export const LandingGuard: CanActivateFn = () => {
+  const router = inject(Router);
 
-    if (!user) {
-        router.navigate(['/login']);
-        return false;
-    }
+  const user = JSON.parse(localStorage.getItem('user') || 'null');
 
-    if (user.role === 'admin') {
-        router.navigate(['admin/dashboard']);
-        return false;
-    }
-
-    if (user.role === 'client') {
-        router.navigate(['client/dashboard']);
-        return false;
-    }
-
-    if (user.role === 'technician') {
-        router.navigate(['technician/dashboard']);
-        return false;
-    }
-
+  // No hay sesión -> puede entrar al Landing
+  if (!user) {
     return true;
+  }
+
+  // Hay sesión -> mandar al dashboard correspondiente
+  switch (user.role) {
+    case 'admin':
+      router.navigate(['/admin/dashboard']);
+      return false;
+
+    case 'client':
+      router.navigate(['/client/dashboard']);
+      return false;
+
+    case 'technician':
+      router.navigate(['/technician/dashboard']);
+      return false;
+
+    default:
+      // Sesión inválida
+      localStorage.removeItem('user');
+      return true;
+  }
 };

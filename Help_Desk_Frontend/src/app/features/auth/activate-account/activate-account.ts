@@ -7,7 +7,10 @@ import { AuthService } from '../../../core/services/auth.service';
 @Component({
   selector: 'app-activate-account',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [
+    CommonModule,
+    FormsModule
+  ],
   templateUrl: './activate-account.html',
   styleUrl: './activate-account.css'
 })
@@ -19,6 +22,9 @@ export class ActivateAccountComponent implements OnInit {
   password = '';
   confirmPassword = '';
 
+  showPassword = false;
+  showConfirmPassword = false;
+
   loading = false;
   error = '';
   success = '';
@@ -29,54 +35,101 @@ export class ActivateAccountComponent implements OnInit {
     private router: Router
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
 
     this.uid =
       this.route.snapshot.queryParamMap.get('uid') || '';
 
     this.token =
       this.route.snapshot.queryParamMap.get('token') || '';
+
   }
 
-  activate() {
+  togglePasswordVisibility(): void {
+
+    this.showPassword =
+      !this.showPassword;
+
+  }
+
+  toggleConfirmPasswordVisibility(): void {
+
+    this.showConfirmPassword =
+      !this.showConfirmPassword;
+
+  }
+
+  activate(): void {
 
     this.error = '';
 
-    if (!this.password || !this.confirmPassword) {
-      this.error = 'Todos los campos son obligatorios';
+    if (
+      !this.password ||
+      !this.confirmPassword
+    ) {
+
+      this.error =
+        'Todos los campos son obligatorios';
+
       return;
+
+    }
+
+    if (this.password.length < 6) {
+
+      this.error =
+        'La contraseña debe tener al menos 6 caracteres';
+
+      return;
+
     }
 
     if (this.password !== this.confirmPassword) {
-      this.error = 'Las contraseñas no coinciden';
+
+      this.error =
+        'Las contraseñas no coinciden';
+
       return;
+
     }
 
     this.loading = true;
 
-    this.authService.activateAccount(
-      this.uid,
-      this.token,
-      this.password
-    )
-    .subscribe({
-      next: () => {
+    this.authService
+      .activateAccount(
+        this.uid,
+        this.token,
+        this.password
+      )
+      .subscribe({
 
-        this.loading = false;
+        next: () => {
 
-        this.success =
-          'Cuenta activada correctamente';
+          this.loading = false;
 
-        setTimeout(() => {
-          this.router.navigate(['/login']);
-        }, 2000);
-      },
+          this.success =
+            'Cuenta activada correctamente';
 
-      error: (err) => {
+          setTimeout(() => {
 
-        this.loading = false;
-        this.error = err;
-      }
-    });
+            this.router.navigate([
+              '/login'
+            ]);
+
+          }, 2000);
+
+        },
+
+        error: (err) => {
+
+          this.loading = false;
+
+          this.error = err;
+
+        }
+
+      });
+
   }
+
 }

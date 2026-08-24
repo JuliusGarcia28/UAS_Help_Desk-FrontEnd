@@ -1,194 +1,303 @@
 .auth-section{
+
   min-height:100vh;
+
   display:flex;
+
   align-items:center;
+
   justify-content:center;
+
   background:var(--primary);
+
 }
 
 .auth-container{
+
   width:100%;
+
   max-width:420px;
+
   padding:20px;
+
+  box-sizing:border-box;
+
 }
 
 .auth-card{
+
   background:var(--white);
+
   border:1px solid var(--border);
+
   border-radius:12px;
+
   padding:40px;
+
   box-shadow:0 8px 25px rgba(0,0,0,.05);
+
 }
 
 .auth-card h2{
+
   text-align:center;
+
   margin-bottom:10px;
+
 }
 
 .auth-subtitle{
+
   text-align:center;
+
   color:var(--text-secondary);
+
   font-size:14px;
+
   margin-bottom:30px;
+
 }
 
 .form-group{
+
   display:flex;
+
   flex-direction:column;
+
   margin-bottom:20px;
+
 }
 
 .form-group label{
+
   font-weight:600;
+
   margin-bottom:6px;
+
   font-size:14px;
+
 }
 
 .form-group input{
+
+  width:100%;
+
+  box-sizing:border-box;
+
   padding:12px;
+
   border-radius:8px;
+
   border:1px solid var(--border);
+
   font-size:14px;
+
   transition:.2s;
+
 }
 
 .form-group input:focus{
+
   outline:none;
+
   border-color:var(--accent);
+
 }
 
-.btn-full{
+/* PASSWORD */
+
+.password-container{
+
+  position:relative;
+
   width:100%;
-  margin-top:10px;
+
 }
 
-.auth-footer{
-  text-align:center;
-  margin-top:20px;
-  font-size:14px;
+.password-container input{
+
+  padding-right:50px;
+
 }
 
-.auth-footer a{
-  color:var(--accent);
-  font-weight:600;
-  text-decoration:none;
-}
+.password-toggle{
 
-.auth-footer a:hover{
-  text-decoration:underline;
-}
+  position:absolute;
 
-/**/
+  top:50%;
 
-.auth-section{
-  min-height:100vh;
+  right:5px;
+
+  transform:translateY(-50%);
+
+  width:40px;
+
+  height:40px;
+
   display:flex;
+
   align-items:center;
+
   justify-content:center;
-  background:var(--primary);
-}
 
-.auth-container{
-  width:100%;
-  max-width:420px;
-  padding:20px;
-}
+  border:none;
 
-.auth-card{
-  background:var(--white);
-  border:1px solid var(--border);
-  border-radius:12px;
-  padding:40px;
-  box-shadow:0 8px 25px rgba(0,0,0,.05);
-}
+  background:transparent;
 
-.auth-card h2{
-  text-align:center;
-  margin-bottom:10px;
-}
-
-.auth-subtitle{
-  text-align:center;
   color:var(--text-secondary);
-  font-size:14px;
-  margin-bottom:30px;
+
+  cursor:pointer;
+
+  border-radius:50%;
+
+  padding:0;
+
 }
 
-.form-group{
-  display:flex;
-  flex-direction:column;
-  margin-bottom:20px;
+.password-toggle:hover{
+
+  background:rgba(0,0,0,.05);
+
 }
 
-.form-group label{
-  font-weight:600;
-  margin-bottom:6px;
-  font-size:14px;
-}
+.password-toggle:focus{
 
-.form-group input{
-  padding:12px;
-  border-radius:8px;
-  border:1px solid var(--border);
-  font-size:14px;
-  transition:.2s;
-}
-
-.form-group input:focus{
   outline:none;
-  border-color:var(--accent);
+
+  background:rgba(0,0,0,.05);
+
 }
+
+.password-toggle mat-icon{
+
+  font-size:22px;
+
+  width:22px;
+
+  height:22px;
+
+}
+
+/* BOTÓN */
 
 .btn-full{
+
   width:100%;
+
   margin-top:10px;
+
 }
 
+/* FOOTER */
+
 .auth-footer{
+
   text-align:center;
+
   margin-top:20px;
+
   font-size:14px;
+
 }
 
 .auth-footer a{
+
   color:var(--accent);
+
   font-weight:600;
+
   text-decoration:none;
+
 }
 
 .auth-footer a:hover{
+
   text-decoration:underline;
+
+}
+
+/* VOLVER */
+
+.back-button{
+
+  display:inline-flex;
+
+  align-items:center;
+
+  gap:6px;
+
+  margin-bottom:20px;
+
+  text-decoration:none;
+
+  color:var(--text-secondary);
+
+}
+
+.back-button mat-icon{
+
+  font-size:20px;
+
+  width:20px;
+
+  height:20px;
+
 }
 
 /* ERROR */
+
 .error-box{
+
   margin-top:15px;
+
   background:#ffe5e5;
+
   color:#b00020;
+
   padding:10px;
+
   border-radius:6px;
+
   font-size:14px;
+
   text-align:center;
+
 }
 
 .input-error{
+
   margin-top:6px;
+
   color:#b00020;
+
   font-size:13px;
+
 }
 
 .input-error span{
+
   display:block;
+
 }
 
-.logo {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+/* LOGO */
+
+.logo{
+
+  display:flex;
+
+  flex-direction:column;
+
+  justify-content:center;
+
+  align-items:center;
+
 }
 
-.logo img {
-  max-width: 100%;
-  margin: 0 auto;
+.logo img{
+
+  max-width:100%;
+
+  margin:0 auto;
+
 }
