@@ -13,7 +13,7 @@ export const loadingInterceptor: HttpInterceptorFn = (req, next) => {
   switch (req.method) {
 
     case 'POST':
-      message = 'Guardando...';
+      message = 'Procesando...';
       break;
 
     case 'PUT':
