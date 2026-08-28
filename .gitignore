@@ -31,6 +31,10 @@ temp/
 # Typescript
 *.tsbuildinfo
 
+# Environments
+environments/
+environment.ts
+
 # Logs
 logs/
 *.log
