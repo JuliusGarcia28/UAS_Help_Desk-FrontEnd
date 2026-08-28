@@ -106,6 +106,32 @@ export class Tickets implements OnInit {
 
   }
 
+  formatResolutionTime(resolutionTime: number | string | null | undefined): string { 
+    if ( resolutionTime === null || resolutionTime === undefined || resolutionTime === '' ) { 
+      return 'No disponible'; 
+    } 
+    
+    const hours = Number(resolutionTime); 
+    
+    if (isNaN(hours)) {
+       return 'No disponible'; 
+    } 
+    
+    const wholeHours = Math.floor(hours); 
+    
+    const minutes = Math.round( (hours - wholeHours) * 60 ); 
+    
+    if (wholeHours === 0 && minutes === 0) { 
+      return '0 minutos'; } if (wholeHours === 0) { 
+        return `${minutes} min`; 
+      } 
+      if (minutes === 0) {
+        return `${wholeHours} h`; 
+      } 
+      
+      return `${wholeHours} h ${minutes} min`; 
+    }
+
   getTechnicians() {
 
     this.adminService
@@ -212,7 +238,7 @@ export class Tickets implements OnInit {
         return 'active';
 
       case 2:
-        return 'maintenance';
+        return 'active';
 
       case 3:
         return 'inactive';
@@ -304,7 +330,7 @@ export class Tickets implements OnInit {
         </p>
 
         <p><b>Tiempo resolución:</b>
-          ${ticket.resolution_time || 'N/A'}
+          ${this.formatResolutionTime(ticket.resolution_time)}
         </p>
 
       </div>
