@@ -56,7 +56,6 @@ export class Dashboard implements OnInit {
   }
 
   private unwrap(res: any): any[] {
-    // 🔥 Soporta API tipo [] o {results: []}
     return Array.isArray(res) ? res : (res?.results ?? []);
   }
 
