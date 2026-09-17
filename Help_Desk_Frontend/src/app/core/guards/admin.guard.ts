@@ -1,26 +1,3 @@
-/*import { inject } from '@angular/core';
-import { CanActivateFn, Router } from '@angular/router';
-
-export const adminGuard: CanActivateFn = () => {
-
-  const router = inject(Router);
-
-  const user = JSON.parse(localStorage.getItem('user') || 'null');
-
-  // VALIDACIONES
-  if (!user) {
-    router.navigate(['/login']);
-    return false;
-  }
-
-  if (user.role !== 'admin') {
-    router.navigate(['/']);
-    return false;
-  }
-
-  return true;
-};*/
-
 import { inject } from '@angular/core';
 import {
   CanActivateFn,
@@ -42,10 +19,7 @@ export const adminGuard: CanActivateFn = (): Observable<boolean> => {
   const router = inject(Router);
   const authService = inject(AuthService);
 
-  /*
-   * Si ya tenemos usuario y token en memoria,
-   * podemos validar directamente.
-   */
+  // Si ya tenemos usuario y token en memoria, podemos validar directamente.
   const currentUser = authService.getUser();
   const accessToken = authService.getAccessToken();
 
@@ -62,10 +36,7 @@ export const adminGuard: CanActivateFn = (): Observable<boolean> => {
     return of(false);
   }
 
-  /*
-   * Si no hay sesión en memoria, intentamos
-   * restaurarla utilizando la cookie HttpOnly.
-   */
+  // Si no hay sesión en memoria, intentamos restaurarla utilizando la cookie HttpOnly.
   return authService.restoreSession().pipe(
 
     map(user => {

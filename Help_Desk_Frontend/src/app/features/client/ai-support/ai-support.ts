@@ -85,32 +85,31 @@ export class AiSupport implements OnInit {
   // =========================
   // LOAD ASSETS
   // =========================
-  loadAssets() {
+  loadAssets(): void {
 
-    const user = JSON.parse(
-      localStorage.getItem('user') || '{}'
-    );
+  this.assetService.getAssets().subscribe({
 
-    this.assetService.getAssets().subscribe({
+    next: (res: Asset[]) => {
 
-      next: (res) => {
+      console.log('Assets recibidos:', res);
 
-        this.assets = res.filter(
-          (asset: Asset) =>
-            asset.responsible?.id === user.id
-        );
+      this.assets = res;
 
-      },
+      console.log('Assets asignados:', this.assets);
 
-      error: () => {
+    },
 
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'No se pudieron cargar los equipos'
-        });
+    error: (error) => {
 
-      }
+      console.error('Error cargando assets:', error);
+
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se pudieron cargar los equipos'
+      });
+
+    }
 
     });
 
@@ -203,9 +202,9 @@ export class AiSupport implements OnInit {
 
   }
 
-  // =========================
-  // ERROR HANDLER (FALTABA)
-  // =========================
+  // ================
+  // ERROR HANDLER
+  // ================
   showAiErrorOptions() {
 
     Swal.fire({
@@ -335,6 +334,8 @@ export class AiSupport implements OnInit {
             text: `Ticket ${res.code} creado`
 
           });
+
+          this.router.navigate(['/client/dashboard']);
 
         }
 

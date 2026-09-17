@@ -1,152 +1,3 @@
-/*import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable, throwError, tap } from 'rxjs';
-import { catchError } from 'rxjs/operators';
-import { environment } from '../../environments/environment';
-
-interface LoginResponse {
-  user: any;
-  access: string;
-  refresh: string;
-}
-
-@Injectable({
-  providedIn: 'root'
-})
-export class AuthService {
-
-  private API_URL = `${environment.apiUrl}/auth`;
-
-  constructor(private http: HttpClient) {}
-
-  login(email: string, password: string): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.API_URL}/login/`, {
-      email,
-      password
-    }).pipe(
-      tap(res => {
-        localStorage.setItem('access', res.access);
-        localStorage.setItem('refresh', res.refresh);
-        localStorage.setItem('user', JSON.stringify(res.user));
-      }),
-      catchError(this.handleError)
-    );
-  }
-
-  requestPasswordReset(
-    email: string
-  ): Observable<any> {
-
-    return this.http.post(
-      `${this.API_URL}/request-password-reset/`,
-      { email }
-    );
-  }
-
-  resetPassword(
-    uid: string,
-    token: string,
-    password: string
-  ): Observable<any> {
-
-    return this.http.post(
-      `${this.API_URL}/reset-password/`,
-      {
-        uid,
-        token,
-        password
-      }
-    );
-  }
-
-  changePassword(
-    current_password: string,
-    new_password: string
-  ): Observable<any> {
-
-    return this.http.post(
-      `${this.API_URL}/change-password/`,
-      {
-        current_password,
-        new_password
-      }
-    );
-  }
-
-  activateAccount(
-    uid: string,
-    token: string,
-    password: string
-  ): Observable<any> {
-
-  return this.http.post(
-    `${this.API_URL}/activate-account/`,
-    {
-      uid,
-      token,
-      password
-    }
-  );
-  }
-
-  logout(): Observable<any> {
-    const refresh = localStorage.getItem('refresh');
-
-    return this.http.post(`${this.API_URL}/logout/`, { refresh }).pipe(
-      tap(() => {
-        localStorage.clear();
-      }),
-      catchError(this.handleError)
-    );
-  }
-
-  getUser() {
-    return JSON.parse(localStorage.getItem('user') || 'null');
-  }
-
-  isAdmin(): boolean {
-    const user = this.getUser();
-    return user?.role === 'admin';
-  }
-
-  loadUser(): Observable<any> {
-
-    return this.http.get(
-      `${this.API_URL}/user/`
-    );
-  }
-
-  private handleError(error: HttpErrorResponse) {
-
-    let message = 'Ocurrió un error inesperado';
-
-    if (error.error?.error) {
-
-      if (Array.isArray(error.error.error)) {
-        message = error.error.error.join(', ');
-      } else {
-        message = error.error.error;
-      }
-
-    } else if (error.error?.non_field_errors?.length) {
-
-      message = error.error.non_field_errors[0];
-
-    } else if (error.status === 0) {
-
-      message =
-        'No se pudo conectar con el servidor';
-
-    } else if (error.status >= 500) {
-
-      message =
-        'Error interno del servidor';
-    }
-
-    return throwError(() => message);
-  }
-}*/
-
 import { Injectable } from '@angular/core';
 import {
   HttpClient,
@@ -176,44 +27,21 @@ export class AuthService {
 
   private API_URL = `${environment.apiUrl}/auth`;
 
-  /**
-   * El access token se mantiene solamente en memoria.
-   *
-   * NO se guarda en localStorage.
-   *
-   * El refresh token está almacenado por Django
-   * en una cookie HttpOnly.
-   */
+  // El access token se mantiene solamente en memoria.
+   
+  // El refresh token está almacenado por Django en una cookie HttpOnly.
   private accessToken: string | null = null;
 
-  /**
-   * Usuario actualmente autenticado.
-   */
+  // Usuario actualmente autenticado.
   private currentUser: any = null;
 
-  /**
-   * Indica si ya intentamos restaurar la sesión
-   * al iniciar la aplicación.
-   */
+  // Indica si ya intentamos restaurar la sesión al iniciar la aplicación.
   private sessionInitialized = false;
 
   constructor(
     private http: HttpClient
   ) {}
 
-  /**
-   * LOGIN
-   *
-   * Django devuelve:
-   *
-   * {
-   *   user: {...},
-   *   access: "..."
-   * }
-   *
-   * El refresh token NO viene en el JSON.
-   * Django lo guarda en una cookie HttpOnly.
-   */
   login(
     email: string,
     password: string
@@ -232,11 +60,6 @@ export class AuthService {
 
       tap(res => {
 
-        console.log(
-          'AUTH SERVICE - LOGIN RESPONSE:',
-          res
-        );
-
         this.accessToken = res.access;
 
         this.currentUser = res.user;
@@ -249,27 +72,9 @@ export class AuthService {
     );
   }
 
-  /**
-   * RESTAURAR SESIÓN
-   *
-   * Se utiliza cuando Angular inicia o cuando
-   * se recarga la página.
-   *
-   * Como el refresh token está en una cookie HttpOnly,
-   * Angular no necesita leerlo.
-   *
-   * Simplemente llama:
-   *
-   * POST /auth/refresh/
-   *
-   * Django recibe automáticamente la cookie.
-   */
   restoreSession(): Observable<any> {
-
-    /**
-     * Si ya inicializamos la sesión,
-     * no hacemos otra petición.
-     */
+    // Si ya inicializamos la sesión, no hacemos otra petición.
+     
     if (this.sessionInitialized) {
 
       if (this.currentUser) {
@@ -281,10 +86,7 @@ export class AuthService {
 
     return this.refreshToken().pipe(
 
-      /**
-       * Una vez obtenido el nuevo access token,
-       * solicitamos los datos del usuario.
-       */
+      // Una vez obtenido el nuevo access token, solicitamos los datos del usuario.
       switchMap(() => {
 
         return this.loadUser();
@@ -317,16 +119,6 @@ export class AuthService {
     );
   }
 
-  /**
-   * REFRESH TOKEN
-   *
-   * No enviamos el refresh token manualmente.
-   *
-   * El navegador lo envía mediante la cookie HttpOnly
-   * gracias a:
-   *
-   * withCredentials: true
-   */
   refreshToken(): Observable<{ access: string }> {
 
     return this.http.post<{ access: string }>(
@@ -339,45 +131,28 @@ export class AuthService {
 
       tap(res => {
 
-        console.log(
-          'AUTH SERVICE - NUEVO ACCESS TOKEN'
-        );
-
         this.accessToken = res.access;
-
       }),
 
       catchError(this.handleError)
     );
   }
 
-  /**
-   * Obtener access token actual.
-   */
+  // Obtener access token actual.
   getAccessToken(): string | null {
 
     return this.accessToken;
 
   }
 
-  /**
-   * Establecer access token.
-   */
+  // Establecer access token.
   setAccessToken(token: string): void {
 
     this.accessToken = token;
 
   }
 
-  /**
-   * Limpiar sesión local.
-   *
-   * Importante:
-   * esto NO elimina directamente la cookie HttpOnly.
-   *
-   * Para eliminar la cookie correctamente se debe llamar
-   * al endpoint /auth/logout/.
-   */
+  // Limpiar sesión local.
   clearSession(): void {
 
     this.accessToken = null;
@@ -388,9 +163,7 @@ export class AuthService {
 
   }
 
-  /**
-   * Solicitar recuperación de contraseña.
-   */
+  // Solicitar recuperación de contraseña.
   requestPasswordReset(
     email: string
   ): Observable<any> {
@@ -404,9 +177,7 @@ export class AuthService {
 
   }
 
-  /**
-   * Restablecer contraseña.
-   */
+  // Restablecer contraseña.
   resetPassword(
     uid: string,
     token: string,
@@ -424,9 +195,7 @@ export class AuthService {
 
   }
 
-  /**
-   * Cambiar contraseña.
-   */
+  // Cambiar contraseña.
   changePassword(
     current_password: string,
     new_password: string
@@ -442,9 +211,7 @@ export class AuthService {
 
   }
 
-  /**
-   * Activar cuenta.
-   */
+  // Activar cuenta.
   activateAccount(
     uid: string,
     token: string,
@@ -462,12 +229,6 @@ export class AuthService {
 
   }
 
-  /**
-   * LOGOUT
-   *
-   * Django recibe la cookie HttpOnly,
-   * invalida el refresh token y elimina la cookie.
-   */
   logout(): Observable<any> {
 
     return this.http.post(
@@ -486,10 +247,7 @@ export class AuthService {
 
       catchError(error => {
 
-        /**
-         * Aunque Django responda con error,
-         * limpiamos la sesión local.
-         */
+        // Aunque Django responda con error, limpiamos la sesión local.
         this.clearSession();
 
         return this.handleError(error);
@@ -498,30 +256,21 @@ export class AuthService {
     );
   }
 
-  /**
-   * Obtener usuario actual.
-   */
+  // Obtener usuario actual.   
   getUser(): any {
 
     return this.currentUser;
 
   }
 
-  /**
-   * Comprobar si el usuario es administrador.
-   */
+  // Comprobar si el usuario es administrador.
   isAdmin(): boolean {
 
     return this.currentUser?.role === 'admin';
 
   }
 
-  /**
-   * Obtener usuario nuevamente desde Django.
-   *
-   * El interceptor agregará automáticamente
-   * Authorization: Bearer <access>
-   */
+  // Obtener usuario nuevamente desde Django.
   loadUser(): Observable<any> {
 
     return this.http.get(
@@ -541,27 +290,21 @@ export class AuthService {
 
   }
 
-  /**
-   * Saber si tenemos access token.
-   */
+  // Saber si tenemos access token.
   isAuthenticated(): boolean {
 
     return !!this.accessToken;
 
   }
 
-  /**
-   * Saber si la sesión ya fue inicializada.
-   */
+  // Saber si la sesión ya fue inicializada.
   isSessionInitialized(): boolean {
 
     return this.sessionInitialized;
 
   }
 
-  /**
-   * Manejo de errores.
-   */
+  // Manejo de errores.   
   private handleError(
     error: HttpErrorResponse
   ) {

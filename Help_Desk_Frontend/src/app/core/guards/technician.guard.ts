@@ -1,24 +1,3 @@
-/*import { inject } from '@angular/core';
-import { Router } from '@angular/router';
-
-export const technicianGuard = () => {
-
-  const router = inject(Router);
-  const user = JSON.parse(localStorage.getItem('user') || 'null');
-
-  if (!user) {
-    router.navigate(['/login']);
-    return false;
-  }
-
-  if (user.role !== 'technician') {
-    router.navigate(['/']);
-    return false;
-  }
-
-  return true;
-};*/
-
 import { inject } from '@angular/core';
 import {
   CanActivateFn,
@@ -40,10 +19,7 @@ export const technicianGuard: CanActivateFn = (): Observable<boolean> => {
   const router = inject(Router);
   const authService = inject(AuthService);
 
-  /*
-   * Revisar primero si ya tenemos la sesión
-   * disponible en memoria.
-   */
+  // Revisar primero si ya tenemos la sesión disponible en memoria.
   const currentUser = authService.getUser();
   const accessToken = authService.getAccessToken();
 
@@ -60,10 +36,7 @@ export const technicianGuard: CanActivateFn = (): Observable<boolean> => {
     return of(false);
   }
 
-  /*
-   * Si se recargó la aplicación, intentamos
-   * restaurar la sesión mediante la cookie HttpOnly.
-   */
+  // Si se recargó la aplicación, intentamos restaurar la sesión mediante la cookie HttpOnly.
   return authService.restoreSession().pipe(
 
     map(user => {

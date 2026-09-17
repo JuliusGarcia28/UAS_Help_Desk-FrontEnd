@@ -1,122 +1,3 @@
-/*import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
-import { AuthService } from '../../../core/services/auth.service';
-import { CommonModule } from '@angular/common';
-
-
-@Component({
-  selector: 'app-login',
-  standalone: true,
-  imports: [
-    FormsModule,
-    CommonModule,
-  ],
-  templateUrl: './login.html',
-  styleUrl: './login.css'
-})
-export class Login {
-
-  email: string = '';
-
-  password: string = '';
-
-  loading: boolean = false;
-
-  error: string = '';
-
-  showPassword: boolean = false;
-
-  constructor(
-    private authService: AuthService,
-    private router: Router
-  ) {}
-
-  togglePasswordVisibility(): void {
-
-    this.showPassword =
-      !this.showPassword;
-
-  }
-
-  login(): void {
-
-    this.error = '';
-
-    if (!this.email || !this.password) {
-
-      this.error =
-        'Todos los campos son obligatorios';
-
-      return;
-
-    }
-
-    this.loading = true;
-
-    this.authService
-      .login(
-        this.email,
-        this.password
-      )
-      .subscribe({
-
-        next: (res) => {
-
-          this.loading = false;
-
-          const user = res.user;
-
-          // REDIRECCIÓN POR ROL
-
-          if (user.role === 'admin') {
-
-            this.router.navigate([
-              '/admin'
-            ]);
-
-          } else if (user.role === 'client') {
-
-            this.router.navigate([
-              '/client/dashboard'
-            ]);
-
-          } else if (user.role === 'technician') {
-
-            this.router.navigate([
-              '/technician/dashboard'
-            ]);
-
-          } else {
-
-            this.router.navigate([
-              '/'
-            ]);
-
-          }
-
-        },
-
-        error: (err) => {
-
-          this.loading = false;
-
-          this.error = err;
-
-          setTimeout(() => {
-
-            this.error = '';
-
-          }, 4000);
-
-        }
-
-      });
-
-  }
-
-}*/
-
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -154,9 +35,7 @@ export class Login {
   ) {}
 
 
-  /**
-   * Mostrar / ocultar contraseña.
-   */
+  // Mostrar / ocultar contraseña.
   togglePasswordVisibility(): void {
 
     this.showPassword =
@@ -164,21 +43,13 @@ export class Login {
 
   }
 
-
-  /**
-   * Realizar login.
-   */
+  // Realizar login.
   login(): void {
 
-    /**
-     * Limpiar error anterior.
-     */
+    // Limpiar error anterior.
     this.error = '';
 
-
-    /**
-     * Validación básica.
-     */
+    // Validación básica
     if (
       !this.email.trim()
       ||
@@ -192,16 +63,10 @@ export class Login {
 
     }
 
-
-    /**
-     * Activar loading.
-     */
+    // Activar loading.
     this.loading = true;
 
-
-    /**
-     * Ejecutar login.
-     */
+    // Ejecutar login.
     this.authService
       .login(
         this.email.trim(),
@@ -209,26 +74,17 @@ export class Login {
       )
       .subscribe({
 
-        /**
-         * LOGIN EXITOSO
-         */
+        // LOGIN EXITOSO
         next: (res) => {
 
-          /**
-           * Detener loading.
-           */
+          // Detener loading.
           this.loading = false;
 
 
-          /**
-           * Usuario recibido desde Django.
-           */
+          //  Usuario recibido desde Django.
           const user = res.user;
 
-
-          /**
-           * Verificación de seguridad.
-           */
+          // Verificación de seguridad.
           if (!user) {
 
             this.error =
@@ -238,11 +94,7 @@ export class Login {
 
           }
 
-
-          /**
-           * REDIRECCIÓN SEGÚN ROL
-           */
-
+          // REDIRECCIÓN SEGÚN ROL
           if (
             user.role === 'admin'
           ) {
@@ -281,24 +133,13 @@ export class Login {
 
           }
 
-
-          // Si el rol no coincide
-           
-          console.warn(
-            'ROL NO RECONOCIDO:',
-            user.role
-          );
-
           this.router.navigate([
             '/'
           ]);
 
         },
 
-
-        /**
-         * LOGIN CON ERROR
-         */
+        // LOGIN CON ERROR
         error: (err) => {
 
           console.error(
@@ -306,25 +147,17 @@ export class Login {
             err
           );
 
-
-          /**
-           * Detener loading.
-           */
+          // Detener loading.
           this.loading = false;
 
-
-          /**
-           * Mostrar mensaje.
-           */
+          // Mostrar mensaje.
           this.error =
             typeof err === 'string'
               ? err
               : 'No se pudo iniciar sesión';
 
 
-          /**
-           * Ocultar mensaje después de 4 segundos.
-           */
+          // Ocultar mensaje después de 4 segundos.
           setTimeout(() => {
 
             this.error = '';

@@ -46,7 +46,6 @@ lerna-debug.log*
 
 # Coverage
 coverage/
-reports/
 
 # Environment
 .env

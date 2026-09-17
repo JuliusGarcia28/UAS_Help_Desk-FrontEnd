@@ -1,0 +1,253 @@
+<div class="reports-container">
+
+  <!-- =========================
+        HEADER
+  ========================== -->
+
+  <div class="reports-header">
+
+    <h2>Centro de Reportes</h2>
+
+    <p>
+      Análisis general del sistema de tickets y rendimiento operativo
+    </p>
+
+  </div>
+
+  <!-- =========================
+        KPI CARDS
+  ========================== -->
+
+  <div class="kpi-grid">
+
+    <div class="kpi-card primary">
+
+      <h3>Total Tickets</h3>
+
+      <p>{{ dashboard?.total_tickets || 0 }}</p>
+
+    </div>
+
+    <div class="kpi-card success">
+
+      <h3>Resueltos</h3>
+
+      <p>{{ dashboard?.resolved || 0 }}</p>
+
+    </div>
+
+    <div class="kpi-card warning">
+
+      <h3>En proceso</h3>
+
+      <p>{{ dashboard?.in_progress || 0 }}</p>
+
+    </div>
+
+    <div class="kpi-card danger">
+
+      <h3>Abiertos</h3>
+
+      <p>{{ dashboard?.open_tickets || 0 }}</p>
+
+    </div>
+
+    <div class="kpi-card info">
+
+      <h3>Usuarios</h3>
+
+      <p>{{ dashboard?.total_users || 0 }}</p>
+
+    </div>
+
+    <div class="kpi-card info">
+
+      <h3>Departamentos</h3>
+
+      <p>{{ dashboard?.total_departments || 0 }}</p>
+
+    </div>
+
+    <div class="kpi-card info">
+
+      <h3>IA Sessions</h3>
+
+      <p>{{ dashboard?.ai_sessions || 0 }}</p>
+
+    </div>
+
+    <div class="kpi-card secondary">
+
+      <h3>Prom. Resolución</h3>
+
+      <p>{{ formatResolutionTime(averageResolution) }}</p>
+
+    </div>
+
+  </div>
+
+  <!-- =========================
+        GRÁFICOS
+  ========================== -->
+
+  <div class="charts-grid">
+
+    <div class="chart-card">
+
+      <h3>Tickets por Estado</h3>
+
+      <canvas id="chartStatus"></canvas>
+
+    </div>
+
+    <div class="chart-card">
+
+      <h3>Tickets por Prioridad</h3>
+
+      <canvas id="chartPriority"></canvas>
+
+    </div>
+
+    <div class="chart-card">
+
+      <h3>Tickets por Categoría</h3>
+
+      <canvas id="chartCategory"></canvas>
+
+    </div>
+
+    <div class="chart-card">
+
+      <h3>Tickets por Técnico</h3>
+
+      <canvas id="chartTechnician"></canvas>
+
+    </div>
+
+    <div class="chart-card">
+
+      <h3>Tickets por Departamento</h3>
+
+      <canvas id="chartDepartment"></canvas>
+
+    </div>
+
+    <div class="chart-card">
+
+      <h3>Tickets por Mes</h3>
+
+      <canvas id="chartMonth"></canvas>
+
+    </div>
+
+  </div>
+
+    <!-- =========================
+        FILTROS + EXPORT
+  ========================== -->
+
+  <div class="reports-filters">
+
+    <select [(ngModel)]="status" (change)="applyFilters()">
+
+      <option value="">Todos los estados</option>
+
+      <option value="1">Abiertos</option>
+
+      <option value="2">En proceso</option>
+
+      <option value="3">Resueltos</option>
+
+    </select>
+
+    <select [(ngModel)]="department" (change)="applyFilters()">
+
+      <option value="">Todos los departamentos</option>
+
+      <option *ngFor="let dep of departments" [value]="dep.id">
+
+        {{ dep.name }}
+
+      </option>
+
+    </select>
+
+    <button class="btn btn-primary" (click)="exportExcel()">
+
+      Exportar Excel
+
+    </button>
+
+    <button class="btn btn-outline" (click)="exportPDF()">
+
+      Exportar PDF
+
+    </button>
+
+  </div>
+
+  <!-- =========================
+        TABLA
+  ========================== -->
+
+  <div class="table-container">
+
+    <table class="table">
+
+      <thead>
+
+        <tr>
+
+          <th>Código</th>
+
+          <th>Descripción</th>
+
+          <th>Estado</th>
+
+          <th>Departamento</th>
+
+        </tr>
+
+      </thead>
+
+      <tbody>
+
+        <tr *ngFor="let ticket of filteredTickets">
+
+          <td>{{ ticket.code }}</td>
+
+          <td>{{ ticket.description }}</td>
+
+          <td>
+
+            {{
+
+              ticket.status === 1
+
+              ? 'Abierto'
+
+              : ticket.status === 2
+
+              ? 'En proceso'
+
+              : 'Resuelto'
+
+            }}
+
+          </td>
+
+          <td>
+
+            {{ ticket.client?.department?.name || 'N/A' }}
+
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+</div>
