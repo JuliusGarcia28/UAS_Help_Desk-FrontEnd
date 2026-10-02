@@ -481,6 +481,14 @@ o
 
 npx electron-builder --win nsis
 ```
+```bash
+npm run build
+```
+
+```bash
+npm run dist
+```
+
 
 El instalador generado puede distribuirse para su instalación en equipos Windows.
 

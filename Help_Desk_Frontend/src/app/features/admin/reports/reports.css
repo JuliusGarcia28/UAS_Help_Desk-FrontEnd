@@ -1,0 +1,247 @@
+/* ==========================================================
+   REPORTS DASHBOARD
+========================================================== */
+
+.reports-container{
+  display:flex;
+  flex-direction:column;
+  gap:24px;
+  padding:20px;
+}
+
+/* ==========================================================
+   HEADER
+========================================================== */
+
+.reports-header{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:20px;
+}
+
+.reports-header h2{
+  font-size:22px;
+  color:var(--text-primary);
+  margin-bottom:6px;
+}
+
+.reports-header p{
+  color:var(--text-secondary);
+  font-size:14px;
+}
+
+/* ==========================================================
+   KPI GRID
+========================================================== */
+
+.kpi-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:16px;
+}
+
+.kpi-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:18px;
+  transition:.25s;
+  box-shadow:0 4px 14px rgba(0,0,0,.04);
+}
+
+.kpi-card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 10px 22px rgba(0,0,0,.08);
+}
+
+.kpi-card h3{
+  font-size:13px;
+  color:var(--text-secondary);
+  margin-bottom:8px;
+}
+
+.kpi-card p{
+  font-size:22px;
+  font-weight:700;
+  color:var(--text-primary);
+}
+
+/* COLORES KPI */
+
+.kpi-card.primary{
+  border-left:4px solid var(--primary);
+}
+
+.kpi-card.success{
+  border-left:4px solid #22c55e;
+}
+
+.kpi-card.warning{
+  border-left:4px solid #f59e0b;
+}
+
+.kpi-card.danger{
+  border-left:4px solid #ef4444;
+}
+
+.kpi-card.info{
+  border-left:4px solid var(--accent);
+}
+
+.kpi-card.secondary{
+  border-left:4px solid var(--secondary);
+}
+
+/* ==========================================================
+   FILTERS
+========================================================== */
+
+.reports-filters{
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+  align-items:center;
+  background:var(--surface);
+  padding:14px;
+  border-radius:14px;
+  border:1px solid var(--border);
+}
+
+.reports-filters select{
+  padding:10px 12px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background:var(--background);
+  color:var(--text-primary);
+  outline:none;
+  min-width:180px;
+}
+
+.reports-filters button{
+  min-width:160px;
+}
+
+/* ==========================================================
+   CHARTS GRID
+========================================================== */
+
+.charts-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:16px;
+}
+
+.chart-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:16px;
+  box-shadow:0 4px 14px rgba(0,0,0,.04);
+  transition:.25s;
+}
+
+.chart-card:hover{
+  transform:translateY(-3px);
+}
+
+.chart-card h3{
+  font-size:14px;
+  color:var(--text-primary);
+  margin-bottom:10px;
+}
+
+/* CANVAS */
+.chart-card canvas{
+  width:100% !important;
+  /*height:260px !important;*/
+  height:85% !important;
+}
+
+/* ==========================================================
+   TABLE
+========================================================== */
+
+.table-container{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:14px;
+  overflow:hidden;
+}
+
+.table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+.table th{
+  background:var(--primary);
+  color:white;
+  text-align:left;
+  padding:12px;
+  font-size:13px;
+}
+
+.table td{
+  padding:12px;
+  border-bottom:1px solid var(--border);
+  color:var(--text-primary);
+  font-size:13px;
+}
+
+.table tr:hover{
+  background:rgba(63,167,214,.08);
+}
+
+/* ==========================================================
+   RESPONSIVE
+========================================================== */
+
+/* TABLET */
+@media (max-width:1024px){
+
+  .charts-grid{
+    grid-template-columns:1fr;
+  }
+
+}
+
+/* MOBILE */
+@media (max-width:768px){
+
+  .reports-container{
+    padding:12px;
+  }
+
+  .kpi-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .reports-filters{
+    flex-direction:column;
+    align-items:stretch;
+  }
+
+  .reports-filters select,
+  .reports-filters button{
+    width:100%;
+  }
+
+}
+
+/* SMALL MOBILE */
+@media (max-width:480px){
+
+  .kpi-grid{
+    grid-template-columns:1fr;
+  }
+
+  .chart-card canvas{
+    height:220px !important;
+  }
+
+  .reports-header h2{
+    font-size:18px;
+  }
+
+}

@@ -1,4 +1,20 @@
+// require("dotenv").config();
+
+const path = require("path");
+
+// 1. Detectar si estamos ejecutando el binario compilado (.exe) o con node normal
+const isCompiled = typeof process.pkg !== 'undefined';
+
+// 2. Obtener la ruta de la carpeta donde realmente está el ejecutable
+const baseDir = isCompiled ? path.dirname(process.execPath) : __dirname;
+
+// 3. Cargar el .env explícitamente desde esa carpeta
+require("dotenv").config({ path: path.join(baseDir, "agent.env") });
+
+// =============================
 // Manejo de errores globales
+// =============================
+
 process.on("uncaughtException", (err) => {
     console.error("UNCAUGHT EXCEPTION");
     console.error(err);
@@ -10,41 +26,102 @@ process.on("unhandledRejection", (reason) => {
 });
 
 console.log("================================");
-console.log("Inventory Service iniciado");
+console.log("HelpDesk Inventory Service");
 console.log("Node:", process.version);
 console.log("================================");
 
-const si = require('systeminformation');
-const axios = require('axios');
+const si = require("systeminformation");
+const axios = require("axios");
 
-const API_URL = "https://uas-helpdesk-backend.onrender.com/assets/agent";
+// =============================
+// Configuración
+// =============================
+
+const API_URL =
+    "https://uas-helpdesk-backend.onrender.com/assets/agent";
+
+const API_KEY = process.env.HELPDESK_AGENT_API_KEY;
+
+if (!API_KEY) {
+    console.error(
+        "ERROR: No está configurada la variable HELPDESK_AGENT_API_KEY"
+    );
+
+    process.exit(1);
+}
+
+const api = axios.create({
+    baseURL: API_URL,
+    timeout: 30000,
+    headers: {
+        "X-Agent-Key": API_KEY,
+        "Content-Type": "application/json"
+    }
+});
 
 // =============================
 // Obtener inventario
 // =============================
+
 async function collectInventory() {
+
     try {
+
         const cpu = await si.cpu();
         const mem = await si.mem();
         const os = await si.osInfo();
         const system = await si.system();
         const network = await si.networkInterfaces();
 
-        const ip = network.find(n => !n.internal && n.ip4);
+        const ip = network.find(
+            n => !n.internal && n.ip4
+        );
+
+        const serial =
+            system.serial &&
+            system.serial !== "unknown"
+                ? system.serial.trim()
+                : null;
+
+        if (!serial) {
+            throw new Error(
+                "No se pudo obtener el número de serie del equipo"
+            );
+        }
 
         return {
+
             hostname: os.hostname,
+
             asset_type: "desktop",
-            model: system.model,
-            serial_number: system.serial,
-            operative_system: os.distro + " " + os.release,
-            ip_address: ip ? ip.ip4 : null,
-            cpu: cpu.brand,
-            ram: Math.round(mem.total / (1024 * 1024 * 1024))
+
+            model: system.model || null,
+
+            serial_number: serial,
+
+            operative_system:
+                `${os.distro} ${os.release}`.trim(),
+
+            ip_address:
+                ip ? ip.ip4 : null,
+
+            cpu:
+                cpu.brand || null,
+
+            ram:
+                Math.round(
+                    mem.total /
+                    (1024 * 1024 * 1024)
+                )
         };
 
     } catch (error) {
-        console.error("Error recolectando inventario:", error.message);
+
+        console.error(
+            "Error recolectando inventario:",
+            error.message
+        );
+
         throw error;
     }
 }
@@ -52,12 +129,17 @@ async function collectInventory() {
 // =============================
 // Comparar cambios
 // =============================
+
 function getDifferences(localData, serverData) {
+
     const changes = {};
 
-    for (const key in localData) {
+    for (const key of Object.keys(localData)) {
+
         if (localData[key] !== serverData[key]) {
+
             changes[key] = localData[key];
+
         }
     }
 
@@ -65,62 +147,115 @@ function getDifferences(localData, serverData) {
 }
 
 // =============================
-// Lógica principal
+// Sincronizar inventario
 // =============================
+
 async function syncInventory() {
 
     try {
+
         const data = await collectInventory();
 
-        console.log("Verificando equipo:", data.serial_number);
-
-        // 1. Verificar si existe
-        const response = await axios.get(
-            `${API_URL}/${data.serial_number}/`
+        console.log(
+            "Verificando equipo:",
+            data.serial_number
         );
 
-        // 2. Si NO existe → registrar
+        // =============================
+        // 1. Consultar equipo
+        // =============================
+
+        const response = await api.get(
+            `/${encodeURIComponent(data.serial_number)}/`
+        );
+
+        // =============================
+        // 2. Registrar si no existe
+        // =============================
+
         if (!response.data.exists) {
 
-            console.log("Equipo no registrado. Registrando...");
+            console.log(
+                "Equipo no registrado. Registrando..."
+            );
 
-            await axios.post(
-                `${API_URL}/register/`,
+            await api.post(
+                "/register/",
                 data
             );
 
-            console.log("Equipo registrado correctamente");
+            console.log(
+                "Equipo registrado correctamente"
+            );
+
             return;
         }
 
-        // 3. Si existe → comparar
-        const serverData = response.data.data;
+        // =============================
+        // 3. Comparar
+        // =============================
 
-        const changes = getDifferences(data, serverData);
+        const serverData =
+            response.data.data;
 
-        if (Object.keys(changes).length === 0) {
-            console.log("Sin cambios. No se actualiza.");
+        const changes =
+            getDifferences(
+                data,
+                serverData
+            );
+
+        if (
+            Object.keys(changes).length === 0
+        ) {
+
+            console.log(
+                "Sin cambios. No se actualiza."
+            );
+
             return;
         }
 
-        console.log("Cambios detectados:", changes);
-
-        // 4. Actualizar solo cambios
-        await axios.patch(
-            `${API_URL}/update/${data.serial_number}/`,
+        console.log(
+            "Cambios detectados:",
             changes
         );
 
-        console.log("Equipo actualizado");
+        // =============================
+        // 4. Actualizar
+        // =============================
+
+        await api.patch(
+            `/update/${encodeURIComponent(data.serial_number)}/`,
+            changes
+        );
+
+        console.log(
+            "Equipo actualizado"
+        );
 
     } catch (error) {
 
         if (error.response) {
-            console.error("Error servidor:", error.response.data);
+
+            console.error(
+                "Error servidor:",
+                error.response.status,
+                error.response.data
+            );
+
         } else if (error.request) {
-            console.error("Servidor no responde");
+
+            console.error(
+                "Servidor no responde:",
+                error.message
+            );
+
         } else {
-            console.error("Error:", error.message);
+
+            console.error(
+                "Error:",
+                error.message
+            );
         }
     }
 }
@@ -128,55 +263,38 @@ async function syncInventory() {
 // =============================
 // Inicio del servicio
 // =============================
+
 async function startService() {
 
-    console.log("Servicio iniciado");
+    console.log(
+        "Servicio iniciado"
+    );
 
-    // Primera ejecución
+    // Primera sincronización
     await syncInventory();
 
-    // Ejecutar cada vez que inicia sistema
-    setInterval(syncInventory, 1000 * 60 * 10);
+    // Cada 10 minutos
+    setInterval(
+        syncInventory,
+        1000 * 60 * 10
+    );
 
-    // Revisión diaria completa
-    setInterval(async () => {
-        console.log("Revisión diaria completa del inventario...");
+    // =============================
+    // Revisión diaria
+    // =============================
 
-        try {
-            const data = await collectInventory();
+    setInterval(
+        async () => {
 
-            const response = await axios.get(
-                `${API_URL}/${data.serial_number}/`
+            console.log(
+                "Revisión diaria completa..."
             );
 
-            if (!response.data.exists) {
-                console.log("No existe en revisión diaria, registrando...");
-                await axios.post(`${API_URL}/register/`, data);
-                return;
-            }
+            await syncInventory();
 
-            const serverData = response.data.data;
-            const changes = getDifferences(data, serverData);
-
-            if (Object.keys(changes).length === 0) {
-                console.log("Revisión diaria: sin cambios");
-                return;
-            }
-
-            console.log("Revisión diaria: cambios detectados", changes);
-
-            await axios.patch(
-                `${API_URL}/update/${data.serial_number}/`,
-                changes
-            );
-
-            console.log("Revisión diaria: equipo actualizado");
-
-        } catch (error) {
-            console.error("Error en revisión diaria:", error.message);
-        }
-
-    }, 1000 * 60 * 60 * 24);
+        },
+        1000 * 60 * 60 * 24
+    );
 }
 
 startService();

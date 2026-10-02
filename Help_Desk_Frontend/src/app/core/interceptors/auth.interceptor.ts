@@ -1,70 +1,143 @@
-import { HttpInterceptorFn } from '@angular/common/http';
-import { inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { catchError, switchMap, throwError } from 'rxjs';
-import { environment } from '../../environments/environment';
+import {
+  HttpInterceptorFn
+} from '@angular/common/http';
 
-export const authInterceptor: HttpInterceptorFn = (req, next) => {
+import {
+  inject
+} from '@angular/core';
 
-  const http = inject(HttpClient);
+import {
+  catchError,
+  switchMap,
+  throwError
+} from 'rxjs';
 
-  const access = localStorage.getItem('access');
-  const refresh = localStorage.getItem('refresh');
+import { AuthService } from '../services/auth.service';
 
-  // NO enviar token en las siguientes rutas
-  if (
-    req.url.includes('/auth/login') ||
-    req.url.includes('/auth/activate-account') ||
-    req.url.includes('/auth/request-password-reset') ||
-    req.url.includes('/auth/reset-password')
-  ) {
-    return next(req);
+
+export const authInterceptor: HttpInterceptorFn = (
+  req,
+  next
+) => {
+
+  const authService = inject(AuthService);
+
+  // Rutas que NO necesitan access token.
+  const publicRoutes = [
+
+    '/auth/login',
+
+    '/auth/activate-account',
+
+    '/auth/request-password-reset',
+
+    '/auth/reset-password',
+
+    '/auth/refresh'
+
+  ];
+
+  // Comprobar si la petición corresponde a una ruta pública.
+  const isPublicRoute =
+    publicRoutes.some(
+      route => req.url.includes(route)
+    );
+
+
+  // Siempre enviamos credentials.
+  let request = req.clone({
+    withCredentials: true
+  });
+
+  // Si NO es una ruta pública, agregamos el access token.
+  if (!isPublicRoute) {
+
+    const access =
+      authService.getAccessToken();
+
+    if (access) {
+
+      request = request.clone({
+
+        setHeaders: {
+
+          Authorization:
+            `Bearer ${access}`
+
+        }
+
+      });
+
+    }
+
   }
 
-  // AGREGAR TOKEN
-  if (access) {
-    req = req.clone({
-      setHeaders: {
-        Authorization: `Bearer ${access}`
+  // Ejecutar petición.
+  return next(request).pipe(
+
+    catchError(error => {
+
+      // Si no es 401, simplemente devolvemos el error.
+      if (
+        error.status !== 401
+        ||
+        isPublicRoute
+      ) {
+
+        return throwError(
+          () => error
+        );
+
       }
-    });
-  }
 
-  return next(req).pipe(
+      return authService.refreshToken().pipe(
 
-    catchError((error) => {
+        switchMap(res => {
 
-      // TOKEN REFRESH
-      if (error.status === 401 && refresh) {
+          // Crear nuevamente la petición original pero utilizando el nuevo access token.
+          const retryRequest =
+            request.clone({
 
-        return http.post<any>(`${environment.apiUrl}/auth/refresh/`, {
-          refresh
-        }).pipe(
-
-          switchMap((res) => {
-
-            localStorage.setItem('access', res.access);
-
-            // REINTENTAR REQUEST ORIGINAL
-            const newReq = req.clone({
               setHeaders: {
-                Authorization: `Bearer ${res.access}`
+
+                Authorization:
+                  `Bearer ${res.access}`
+
               }
+
             });
 
-            return next(newReq);
-          }),
+          // Volver a ejecutar la petición.
+          return next(
+            retryRequest
+          );
 
-          catchError(() => {
-            // LOGOUT FORZADO
-            localStorage.clear();
-            location.replace('/login');
-            return throwError(() => error);
-          })
-        );
-      }
+        }),
 
-      return throwError(() => error);
+        catchError(refreshError => {
+
+          console.error(
+            'REFRESH TOKEN FALLÓ:',
+            refreshError
+          );
+
+          // Si el refresh también falla, la sesión ya no es válida.
+           
+          authService.clearSession();
+
+          // Mandar al login.
+          location.replace('/login');
+
+          return throwError(
+            () => refreshError
+          );
+
+        })
+
+      );
+
     })
+
   );
+
 };

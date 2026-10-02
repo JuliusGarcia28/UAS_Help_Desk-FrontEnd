@@ -1,20 +1,60 @@
 import { inject } from '@angular/core';
-import { Router } from '@angular/router';
+import {
+  CanActivateFn,
+  Router
+} from '@angular/router';
 
-export const authGuard = () => {
+import {
+  Observable,
+  catchError,
+  map,
+  of
+} from 'rxjs';
+
+import { AuthService } from '../services/auth.service';
+
+
+export const authGuard: CanActivateFn = (): Observable<boolean> => {
 
   const router = inject(Router);
+  const authService = inject(AuthService);
 
-  const user = JSON.parse(
-    localStorage.getItem('user') || 'null'
-  );
+  // Primero revisamos si ya existe una sesión cargada en memoria.
+  const currentUser = authService.getUser();
+  const accessToken = authService.getAccessToken();
 
-  if (!user) {
+  if (currentUser && accessToken) {
 
-    router.navigate(['/login']);
+    return of(true);
 
-    return false;
   }
 
-  return true;
+  // Si no existe información en memoria, intentamos recuperar la sesión utilizando la cookie HttpOnly.
+  return authService.restoreSession().pipe(
+
+    map(user => {
+
+      if (user) {
+
+        return true;
+
+      }
+
+      router.navigate(['/login']);
+
+      return false;
+
+    }),
+
+    catchError(() => {
+
+      authService.clearSession();
+
+      router.navigate(['/login']);
+
+      return of(false);
+
+    })
+
+  );
 };

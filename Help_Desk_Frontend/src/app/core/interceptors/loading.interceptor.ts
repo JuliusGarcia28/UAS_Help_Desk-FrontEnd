@@ -8,6 +8,15 @@ export const loadingInterceptor: HttpInterceptorFn = (req, next) => {
 
   const loadingService = inject(LoadingService);
 
+  // No mostrar loading global en este endpoint
+  const isAiChatRequest =
+    req.method === 'POST' &&
+    req.url.includes('/support-ai/chat/');
+
+  if (isAiChatRequest) {
+    return next(req);
+  }
+
   let message = 'Cargando...';
 
   switch (req.method) {

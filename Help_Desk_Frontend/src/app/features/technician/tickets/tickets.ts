@@ -25,11 +25,6 @@ import {
 })
 export class Tickets implements OnInit {
 
-  user: any =
-    JSON.parse(
-      localStorage.getItem('user') || '{}'
-    );
-
   tickets: Ticket[] = [];
 
   selected = 'asignados';
@@ -52,42 +47,56 @@ export class Tickets implements OnInit {
   ) {}
 
   ngOnInit(): void {
-
     this.loadTickets();
-
   }
 
-  loadTickets() {
+  // =========================
+  // CARGAR TICKETS
+  // =========================
+
+  loadTickets(): void {
 
     this.ticketService
       .getTickets()
-      .subscribe(res => {
+      .subscribe({
 
-        this.tickets = res;
+        next: (res: any) => {
+
+          // Por si DRF devuelve paginación
+          if (Array.isArray(res)) {
+            this.tickets = res;
+          } else if (res.results) {
+            this.tickets = res.results;
+          } else {
+            this.tickets = [];
+          }
+
+        },
+
+        error: (err) => {
+
+          console.error(
+            'Error cargando tickets:',
+            err
+          );
+
+          this.tickets = [];
+
+        }
 
       });
 
   }
 
-  isAssigned(ticket: Ticket): boolean {
+  // =========================
+  // FILTRAR POR ESTADO
+  // =========================
 
-    return (
-      ticket.technician_data?.id ===
-      this.user.id
-    );
-
-  }
-
-  filteredTickets() {
-
-    const myTickets =
-      this.tickets.filter(
-        t => this.isAssigned(t)
-      );
+  filteredTickets(): Ticket[] {
 
     if (this.selected === 'asignados') {
 
-      return myTickets.filter(
+      return this.tickets.filter(
         t => t.status === 1
       );
 
@@ -95,7 +104,7 @@ export class Tickets implements OnInit {
 
     if (this.selected === 'proceso') {
 
-      return myTickets.filter(
+      return this.tickets.filter(
         t => t.status === 2
       );
 
@@ -103,50 +112,49 @@ export class Tickets implements OnInit {
 
     if (this.selected === 'resueltos') {
 
-      return myTickets.filter(
+      return this.tickets.filter(
         t => t.status === 3
       );
 
     }
 
-    return myTickets;
+    return this.tickets;
 
   }
 
-  countAssigned() {
+  // =========================
+  // CONTADORES
+  // =========================
+
+  countAssigned(): number {
 
     return this.tickets.filter(
-      t =>
-        this.isAssigned(t)
-        &&
-        t.status === 1
+      t => t.status === 1
     ).length;
 
   }
 
-  countInProgress() {
+  countInProgress(): number {
 
     return this.tickets.filter(
-      t =>
-        this.isAssigned(t)
-        &&
-        t.status === 2
+      t => t.status === 2
     ).length;
 
   }
 
-  countResolved() {
+  countResolved(): number {
 
     return this.tickets.filter(
-      t =>
-        this.isAssigned(t)
-        &&
-        t.status === 3
+      t => t.status === 3
     ).length;
 
   }
 
-  viewTicket(ticket: Ticket) {
+  // =========================
+  // VER TICKET
+  // =========================
+
+  viewTicket(ticket: Ticket): void {
 
     Swal.fire({
 
@@ -215,12 +223,16 @@ export class Tickets implements OnInit {
 
           <p>
             <b>Creado:</b>
-            ${new Date(ticket.created_at).toLocaleString()}
+            ${new Date(
+              ticket.created_at
+            ).toLocaleString()}
           </p>
 
           <p>
             <b>Actualizado:</b>
-            ${new Date(ticket.updated_at).toLocaleString()}
+            ${new Date(
+              ticket.updated_at
+            ).toLocaleString()}
           </p>
 
         </div>
@@ -231,7 +243,11 @@ export class Tickets implements OnInit {
 
   }
 
-  startTicket(ticket: Ticket) {
+  // =========================
+  // INICIAR TICKET
+  // =========================
+
+  startTicket(ticket: Ticket): void {
 
     Swal.fire({
 
@@ -270,6 +286,21 @@ export class Tickets implements OnInit {
 
             this.loadTickets();
 
+          },
+
+          error: (err) => {
+
+            console.error(
+              'Error actualizando ticket:',
+              err
+            );
+
+            Swal.fire(
+              'Error',
+              'No se pudo actualizar el ticket',
+              'error'
+            );
+
           }
 
         });
@@ -278,7 +309,11 @@ export class Tickets implements OnInit {
 
   }
 
-  resolveTicket(ticket: Ticket) {
+  // =========================
+  // RESOLVER TICKET
+  // =========================
+
+  resolveTicket(ticket: Ticket): void {
 
     Swal.fire({
 
@@ -333,13 +368,9 @@ export class Tickets implements OnInit {
         }
 
         return {
-
           diagnosis,
-
           resolution,
-
           status: 3
-
         };
 
       }
@@ -367,6 +398,21 @@ export class Tickets implements OnInit {
 
             this.loadTickets();
 
+          },
+
+          error: (err) => {
+
+            console.error(
+              'Error resolviendo ticket:',
+              err
+            );
+
+            Swal.fire(
+              'Error',
+              'No se pudo resolver el ticket',
+              'error'
+            );
+
           }
 
         });
@@ -375,59 +421,76 @@ export class Tickets implements OnInit {
 
   }
 
-  viewHistory(ticket: Ticket) {
+  // =========================
+  // HISTORIAL
+  // =========================
+
+  viewHistory(ticket: Ticket): void {
 
     this.ticketService
       .getTicketHistory(ticket.id)
-      .subscribe(history => {
+      .subscribe({
 
-        const html = history
-          .map(h => `
+        next: (history) => {
 
-            <div class="history-item">
+          const html = history
+            .map(h => `
 
-              <div class="history-date">
+              <div class="history-item">
 
-                ${new Date(
-                  h.change_date
-                ).toLocaleString()}
+                <div class="history-date">
+
+                  ${new Date(
+                    h.change_date
+                  ).toLocaleString()}
+
+                </div>
+
+                <div class="history-body">
+
+                  Estado:
+                  ${this.statusMap[h.status]}
+
+                  <br>
+
+                  Usuario:
+                  ${h.changed_by_email || 'Sistema'}
+
+                </div>
 
               </div>
 
-              <div class="history-body">
+            `)
+            .join('');
 
-                Estado:
-                ${this.statusMap[h.status]}
+          Swal.fire({
 
-                <br>
+            title: `Historial ${ticket.code}`,
 
-                Usuario:
-                ${h.changed_by_email || 'Sistema'}
+            html: `
+
+              <div class="history-container">
+
+                ${html || '<p>No hay historial.</p>'}
 
               </div>
 
-            </div>
+            `,
 
-          `)
-          .join('');
+            width: 700
 
-        Swal.fire({
+          });
 
-          title: `Historial ${ticket.code}`,
+        },
 
-          html: `
+        error: (err) => {
 
-            <div class="history-container">
+          console.error(
+            'Error obteniendo historial:',
+            err
+          );
 
-              ${html}
-
-            </div>
-
-          `,
-
-          width: 700
-
-        });
+        }
 
       });
 

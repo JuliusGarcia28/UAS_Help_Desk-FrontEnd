@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from '../../../core/services/auth.service';
 import { CommonModule } from '@angular/common';
+
+import { AuthService } from '../../../core/services/auth.service';
 
 
 @Component({
@@ -27,11 +28,14 @@ export class Login {
 
   showPassword: boolean = false;
 
+
   constructor(
     private authService: AuthService,
     private router: Router
   ) {}
 
+
+  // Mostrar / ocultar contraseña.
   togglePasswordVisibility(): void {
 
     this.showPassword =
@@ -39,11 +43,18 @@ export class Login {
 
   }
 
+  // Realizar login.
   login(): void {
 
+    // Limpiar error anterior.
     this.error = '';
 
-    if (!this.email || !this.password) {
+    // Validación básica
+    if (
+      !this.email.trim()
+      ||
+      !this.password
+    ) {
 
       this.error =
         'Todos los campos son obligatorios';
@@ -52,57 +63,101 @@ export class Login {
 
     }
 
+    // Activar loading.
     this.loading = true;
 
+    // Ejecutar login.
     this.authService
       .login(
-        this.email,
+        this.email.trim(),
         this.password
       )
       .subscribe({
 
+        // LOGIN EXITOSO
         next: (res) => {
 
+          // Detener loading.
           this.loading = false;
 
+
+          //  Usuario recibido desde Django.
           const user = res.user;
 
-          // REDIRECCIÓN POR ROL
+          // Verificación de seguridad.
+          if (!user) {
 
-          if (user.role === 'admin') {
+            this.error =
+              'El servidor no devolvió información del usuario';
+
+            return;
+
+          }
+
+          // REDIRECCIÓN SEGÚN ROL
+          if (
+            user.role === 'admin'
+          ) {
 
             this.router.navigate([
               '/admin'
             ]);
 
-          } else if (user.role === 'client') {
+            return;
+
+          }
+
+
+          if (
+            user.role === 'client'
+          ) {
 
             this.router.navigate([
               '/client/dashboard'
             ]);
 
-          } else if (user.role === 'technician') {
+            return;
+
+          }
+
+
+          if (
+            user.role === 'technician'
+          ) {
 
             this.router.navigate([
               '/technician/dashboard'
             ]);
 
-          } else {
-
-            this.router.navigate([
-              '/'
-            ]);
+            return;
 
           }
 
+          this.router.navigate([
+            '/'
+          ]);
+
         },
 
+        // LOGIN CON ERROR
         error: (err) => {
 
+          console.error(
+            'ERROR EN LOGIN:',
+            err
+          );
+
+          // Detener loading.
           this.loading = false;
 
-          this.error = err;
+          // Mostrar mensaje.
+          this.error =
+            typeof err === 'string'
+              ? err
+              : 'No se pudo iniciar sesión';
 
+
+          // Ocultar mensaje después de 4 segundos.
           setTimeout(() => {
 
             this.error = '';

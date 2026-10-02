@@ -15,6 +15,8 @@ import {
   TicketService
 } from '../../../core/services/ticket.service';
 
+import { Ticket } from '../../../core/models/ticket.model';
+
 @Component({
   standalone: true,
   imports: [
@@ -25,11 +27,6 @@ import {
   styleUrl: './dashboard.css'
 })
 export class Dashboard implements OnInit {
-
-  user: any =
-    JSON.parse(
-      localStorage.getItem('user') || '{}'
-    );
 
   tickets: any[] = [];
 
@@ -54,52 +51,54 @@ export class Dashboard implements OnInit {
   loadTickets(): void {
 
     this.ticketService
-      .getTickets()
-      .subscribe({
+    .getTickets()
+    .subscribe({
 
-        next: (res) => {
+      next: (res: any) => {
 
-          const myTickets = res.filter(
-            (ticket: any) =>
-              ticket.technician_data?.id ===
-              this.user.id
-          );
+        const tickets = Array.isArray(res)
+          ? res
+          : res.results || [];
 
-          this.tickets = myTickets;
+        this.tickets = tickets;
 
-          this.openTickets =
-            myTickets.filter(
-              (t: any) => t.status === 1
-            ).length;
+        this.openTickets =
+          tickets.filter(
+            (t: Ticket) => t.status === 1
+          ).length;
 
-          this.inProgress =
-            myTickets.filter(
-              (t: any) => t.status === 2
-            ).length;
+        this.inProgress =
+          tickets.filter(
+            (t: Ticket) => t.status === 2
+          ).length;
 
-          this.closed =
-            myTickets.filter(
-              (t: any) => t.status === 3
-            ).length;
+        this.closed =
+          tickets.filter(
+            (t: Ticket) => t.status === 3
+          ).length;
 
-          this.totalTickets =
-            this.openTickets +
-            this.inProgress +
-            this.closed;
+        this.totalTickets =
+          tickets.length;
 
-        },
+        console.log(
+          'Tickets del técnico:',
+          tickets
+        );
 
-        error: (err) => {
+      },
 
-          console.error(
-            'Error cargando tickets',
-            err
-          );
+      error: (err) => {
 
-        }
+        console.error(
+          'Error cargando tickets',
+          err
+        );
 
-      });
+      }
+
+    });
 
   }
+
 
 }

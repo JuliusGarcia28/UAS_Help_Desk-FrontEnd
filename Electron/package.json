@@ -4,7 +4,7 @@
   "version": "1.0.1",
   "description": "Sistema HelpDesk",
   "main": "main.js",
-  "author": "UAS",
+  "author": "Julian Garcia",
   "private": true,
 
   "scripts": {
@@ -42,17 +42,26 @@
     ],
 
     "extraResources":[
-
       {
-        "from":"../Servicio_Recolector",
-        "to":"Servicio_Recolector"
+        "from": "../Servicio_Recolector/HelpDeskInventory.exe",
+        "to": "Servicio_Recolector/HelpDeskInventory.exe"
       },
-
       {
-        "from":"../Help_Desk_Frontend/dist",
-        "to":"frontend"
+        "from": "../Servicio_Recolector/HelpDeskInventoryService.exe",
+        "to": "Servicio_Recolector/HelpDeskInventoryService.exe"
+      },
+      {
+        "from": "../Servicio_Recolector/HelpDeskInventoryService.xml",
+        "to": "Servicio_Recolector/HelpDeskInventoryService.xml"
+      },
+      {
+        "from": "../Servicio_Recolector/agent.env",
+        "to": "Servicio_Recolector/agent.env"
+      },
+      {
+        "from": "../Help_Desk_Frontend/dist",
+        "to": "frontend"
       }
-
     ],
 
     "asar": true,
@@ -61,7 +70,9 @@
 
       "target": "nsis",
 
-      "icon": "build/icon.ico"
+      "icon": "build/icon.ico",
+
+      "signAndEditExecutable": false
 
     },
 

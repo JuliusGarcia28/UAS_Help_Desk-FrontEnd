@@ -1,22 +1,67 @@
 import { inject } from '@angular/core';
-import { CanActivateFn, Router } from '@angular/router';
+import {
+  CanActivateFn,
+  Router
+} from '@angular/router';
 
-export const adminGuard: CanActivateFn = () => {
+import {
+  Observable,
+  catchError,
+  map,
+  of
+} from 'rxjs';
+
+import { AuthService } from '../services/auth.service';
+
+
+export const adminGuard: CanActivateFn = (): Observable<boolean> => {
 
   const router = inject(Router);
+  const authService = inject(AuthService);
 
-  const user = JSON.parse(localStorage.getItem('user') || 'null');
+  // Si ya tenemos usuario y token en memoria, podemos validar directamente.
+  const currentUser = authService.getUser();
+  const accessToken = authService.getAccessToken();
 
-  // VALIDACIONES
-  if (!user) {
-    router.navigate(['/login']);
-    return false;
-  }
+  if (currentUser && accessToken) {
 
-  if (user.role !== 'admin') {
+    if (currentUser.role === 'admin') {
+
+      return of(true);
+
+    }
+
     router.navigate(['/']);
-    return false;
+
+    return of(false);
   }
 
-  return true;
+  // Si no hay sesión en memoria, intentamos restaurarla utilizando la cookie HttpOnly.
+  return authService.restoreSession().pipe(
+
+    map(user => {
+
+      if (user?.role === 'admin') {
+
+        return true;
+
+      }
+
+      router.navigate(['/']);
+
+      return false;
+
+    }),
+
+    catchError(() => {
+
+      authService.clearSession();
+
+      router.navigate(['/login']);
+
+      return of(false);
+
+    })
+
+  );
 };
