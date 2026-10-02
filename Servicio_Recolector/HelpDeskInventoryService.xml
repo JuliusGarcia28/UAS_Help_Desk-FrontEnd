@@ -1,0 +1,26 @@
+<service>
+    <id>HelpDeskInventoryService</id>
+
+    <name>HelpDesk Inventory Service</name>
+
+    <description>
+        Servicio de inventario del sistema HelpDesk.
+    </description>
+
+    <executable>%BASE%\HelpDeskInventory.exe</executable>
+
+    <workingdirectory>%BASE%</workingdirectory>
+
+    <startmode>Automatic</startmode>
+
+    <stoptimeout>30sec</stoptimeout>
+
+    <onfailure action="restart" delay="10 sec"/>
+
+    <logpath>%BASE%\logs</logpath>
+
+    <log mode="roll-by-size">
+        <sizeThreshold>10485760</sizeThreshold>
+        <keepFiles>5</keepFiles>
+    </log>
+</service>

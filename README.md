@@ -477,6 +477,14 @@ Ejemplo:
 ```bash
 npm run electron:build
 ```
+```bash
+npm run build
+```
+
+```bash
+npm run dist
+```
+
 
 El instalador generado puede distribuirse para su instalación en equipos Windows.
 
