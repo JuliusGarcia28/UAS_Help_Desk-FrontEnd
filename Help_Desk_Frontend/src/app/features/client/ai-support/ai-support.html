@@ -1,138 +1,142 @@
 <div class="ai-container">
 
-  <!-- HEADER -->
-  <div class="ai-header">
-    <div>
-      <h2>Asistente IA</h2>
-      <p>Describe tu problema técnico y recibirás ayuda automática</p>
+  <!-- ENCABEZADO -->
+  <div class="page-header">
+    <div class="ai-title">
+      <div class="ai-badge"><span class="material-icons">smart_toy</span></div>
+      <div>
+        <h2>Asistente IA</h2>
+        <p>Describe tu problema técnico y recibirás un diagnóstico inicial</p>
+      </div>
     </div>
-  </div>
 
-  <!-- SELECT EQUIPO -->
-  <div class="asset-select">
+    <div class="asset-select">
+      <label for="asset">
+        <span class="material-icons">computer</span>
+        Equipo afectado
+      </label>
 
-  <label>
-    Equipo afectado
-  </label>
-
-  <select
-    #assetSelect
-    (change)="onAssetChange(assetSelect.value)">
-
-    <option value="">
-      Selecciona un equipo
-    </option>
-
-    <option
-      *ngFor="let asset of assets"
-      [value]="asset.id">
-
-      {{ asset.hostname }} - {{ asset.asset_type }}
-
-    </option>
-
-  </select>
-
+      <select id="asset" [ngModel]="selectedAssetId" (ngModelChange)="onAssetChange($event)">
+        <option value="">Selecciona un equipo</option>
+        @for (asset of assets; track asset.id) {
+          <option [value]="asset.id">{{ asset.hostname }} · {{ asset.asset_type }}</option>
+        }
+      </select>
+    </div>
   </div>
 
   <!-- CHAT -->
-  <div
-    class="chat-box"
-    [class.empty]="messages.length === 0">
+  <div class="chat-card">
 
-    <div
-      *ngFor="let msg of messages"
-      class="message-wrapper"
-      [ngClass]="msg.role">
+    <div #chatBox class="chat-box" [class.empty]="messages.length === 0">
 
-      <div class="avatar">
-        <span class="material-icons">
-          {{ msg.role === 'assistant' ? 'smart_toy' : 'person' }}
-        </span>
-      </div>
+      @if (messages.length === 0) {
 
-      <div class="message-content">
+        <div class="welcome">
+          <div class="welcome-icon"><span class="material-icons">support_agent</span></div>
+          <h3>¿En qué puedo ayudarte hoy?</h3>
+          <p>Elige el equipo y cuéntame qué ocurre. Si no puedo resolverlo, crearemos un ticket para un técnico.</p>
 
-        <div class="message-header">
-          <span class="sender">
-            {{ msg.role === 'assistant' ? 'Asistente IA' : 'Tú' }}
-          </span>
-
-          <span class="time">
-            {{ currentTime }}
-          </span>
-        </div>
-
-        <div class="bubble" [ngClass]="msg.role">
-          <div class="formatted-text">
-            {{ msg.content }}
+          <div class="suggestions">
+            @for (s of suggestions; track s.text) {
+              <button type="button" class="suggestion" (click)="useSuggestion(s.text)">
+                <span class="material-icons">{{ s.icon }}</span>
+                {{ s.text }}
+              </button>
+            }
           </div>
         </div>
 
-      </div>
+      }
 
-    </div>
+      @for (msg of messages; track $index) {
 
-    <!-- LOADING -->
-    <div
-      class="message-wrapper assistant loading-message"
-      *ngIf="loading">
+        <div class="message" [class.user]="msg.role === 'user'" [class.assistant]="msg.role === 'assistant'">
 
-      <div class="avatar">
-        <span class="material-icons">smart_toy</span>
-      </div>
+          <div class="avatar">
+            <span class="material-icons">{{ msg.role === 'assistant' ? 'smart_toy' : 'person' }}</span>
+          </div>
 
-      <div class="message-content">
-        <div class="bubble assistant typing">
-          <span></span><span></span><span></span>
+          <div class="message-body">
+
+            <div class="message-meta">
+              <span class="sender">{{ msg.role === 'assistant' ? 'Asistente IA' : 'Tú' }}</span>
+              <span class="time">{{ msg.time }}</span>
+            </div>
+
+            <div class="bubble">
+              @if (msg.role === 'assistant') {
+                <div class="rich" [innerHTML]="format(msg.content)"></div>
+              } @else {
+                <div class="plain">{{ msg.content }}</div>
+              }
+            </div>
+
+          </div>
+
         </div>
-      </div>
+
+      }
+
+      @if (loading) {
+        <div class="message assistant">
+          <div class="avatar"><span class="material-icons">smart_toy</span></div>
+          <div class="message-body">
+            <div class="bubble typing" aria-label="El asistente está escribiendo">
+              <span></span><span></span><span></span>
+            </div>
+          </div>
+        </div>
+      }
+
+    </div>
+
+    <!-- ENTRADA -->
+    <div class="composer">
+
+      <textarea
+        rows="2"
+        [(ngModel)]="draft"
+        (keydown)="onKey($event)"
+        [disabled]="loading"
+        placeholder="Describe el problema técnico... (Enter para enviar, Shift+Enter para nueva línea)"
+      ></textarea>
+
+      <button class="btn-send" (click)="sendProblem()" [disabled]="!canSend" aria-label="Enviar mensaje">
+        @if (loading) {
+          <span class="btn-spinner"></span>
+        } @else {
+          <span class="material-icons">send</span>
+        }
+        <span class="send-text">{{ loading ? 'Analizando...' : 'Enviar' }}</span>
+      </button>
 
     </div>
 
   </div>
 
-  <!-- INPUT -->
-  <div class="chat-input">
+  <!-- ACCIONES TRAS LA RESPUESTA -->
+  @if (session && !loading) {
+    <div class="resolution-bar">
 
-    <textarea
-      #problemInput
-      placeholder="Describe el problema técnico..."
-      [disabled]="loading"
-    ></textarea>
+      <div class="resolution-text">
+        <strong>¿Te sirvió la respuesta?</strong>
+        <span>Cierra la conversación o pide ayuda a un técnico.</span>
+      </div>
 
-    <button
-      class="btn-send"
-      (click)="sendProblem(problemInput)"
-      [disabled]="loading || !selectedAssetId">
+      <div class="resolution-actions">
+        <button class="btn btn-solved" (click)="solved()">
+          <span class="material-icons">check_circle</span>
+          Se solucionó
+        </button>
 
-      <span class="material-icons">
-        send
-      </span>
+        <button class="btn btn-escalate" (click)="escalate()">
+          <span class="material-icons">support_agent</span>
+          Escalar a un técnico
+        </button>
+      </div>
 
-      {{
-        loading
-        ? 'Analizando problema...'
-        : 'Enviar'
-      }}
-
-    </button>
-
-  </div>
-
-  <!-- ACTIONS -->
-  <div class="actions" *ngIf="session">
-
-    <button class="btn-solved" (click)="solved()">
-      <span class="material-icons">check_circle</span>
-      Se solucionó
-    </button>
-
-    <button class="btn-escalate" (click)="escalate()">
-      <span class="material-icons">support_agent</span>
-      Escalar ticket
-    </button>
-
-  </div>
+    </div>
+  }
 
 </div>

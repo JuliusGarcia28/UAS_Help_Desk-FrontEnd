@@ -11,7 +11,8 @@ import {
   FormsModule
 } from '@angular/forms';
 
-import Swal from 'sweetalert2';
+import Swal, { toastSuccess, toastError } from '../../../core/utils/swal';
+import { detailHtml, timelineHtml, statusBadge, priorityBadge, formatDate, priorityClass, statusClass } from '../../../core/utils/modal-html';
 
 import {
   TicketService
@@ -201,33 +202,19 @@ export class Tickets implements OnInit {
   // =========================
 
   success(msg: string) {
-
-    Swal.fire({
-
-      title: msg,
-
-      icon: 'success',
-
-      confirmButtonColor: '#0B2545'
-
-    });
-
+    toastSuccess(msg);
   }
 
   error(msg: string) {
+    toastError(msg);
+  }
 
-    Swal.fire({
+  priorityCss(priority: number): string {
+    return priorityClass(priority);
+  }
 
-      title: 'Error',
-
-      text: msg,
-
-      icon: 'error',
-
-      confirmButtonColor: '#0B2545'
-
-    });
-
+  statusCss(status: number): string {
+    return statusClass(status);
   }
 
   getPriorityClass(priority: number): string {
@@ -255,91 +242,59 @@ export class Tickets implements OnInit {
 
   viewTicket(ticket: Ticket) {
 
-  Swal.fire({
+    const client = ticket.client
+      ? `${ticket.client.first_name || ''} ${ticket.client.last_name || ''}`.trim()
+      : '';
 
-    title: `Ticket #${ticket.code}`,
+    const tech = ticket.technician_data
+      ? `${ticket.technician_data.first_name} ${ticket.technician_data.last_name}`
+      : 'Sin asignar';
 
-    width: '900px',
-
-    html: `
-
-      <div style="text-align:left">
-
-        <h3>Información general</h3>
-
-        <p><b>Descripción:</b><br>${ticket.description}</p>
-
-        <p><b>Categoría:</b> ${ticket.category || 'N/A'}</p>
-          
-        <p><b>Prioridad:</b> ${this.priorityMap[ticket.priority]}</p>
-
-        <p><b>Estado:</b> ${this.statusMap[ticket.status]}</p>
-
-        <hr>
-
-        <h3>Cliente</h3>
-
-        <p>
-          ${ticket.client?.first_name || ''}
-
-          ${ticket.client?.last_name || ''}
-        </p>
-
-        <p>${ticket.client?.email || ''}</p>
-
-        <hr>
-
-        <h3>Técnico</h3>
-
-        <p>
-          ${
-            ticket.technician_data
-            ? ticket.technician_data.first_name +
-              ' ' +
-              ticket.technician_data.last_name
-            : 'Sin asignar'
-          }
-        </p>
-
-        <hr>
-
-        <h3>Diagnóstico</h3>
-
-        <p>${ticket.diagnosis || 'Sin diagnóstico'}</p>
-
-        <hr>
-
-        <h3>Resolución</h3>
-
-        <p>${ticket.resolution || 'Pendiente'}</p>
-
-        <hr>
-
-        <h3>Fechas</h3>
-
-        <p><b>Creado:</b> ${new Date(ticket.created_at).toLocaleString()}</p>
-
-        <p><b>Actualizado:</b> ${new Date(ticket.updated_at).toLocaleString()}</p>
-
-        <p><b>Finalizado:</b>
-          ${
-            ticket.finished_at
-              ? new Date(ticket.finished_at).toLocaleString()
-              : 'No finalizado'
-          }
-        </p>
-
-        <p><b>Tiempo resolución:</b>
-          ${this.formatResolutionTime(ticket.resolution_time)}
-        </p>
-
-      </div>
-
-    `
-
-  });
-
-}
+    Swal.fire({
+      title: `Ticket #${ticket.code}`,
+      width: 820,
+      confirmButtonText: 'Cerrar',
+      html: detailHtml([
+        {
+          title: 'Información general',
+          icon: 'description',
+          fields: [
+            { label: 'Descripción', value: ticket.description, wide: true },
+            { label: 'Categoría', value: String(ticket.category || 'N/A') },
+            { label: 'Prioridad', value: priorityBadge(ticket.priority), html: true },
+            { label: 'Estado', value: statusBadge(ticket.status), html: true }
+          ]
+        },
+        {
+          title: 'Personas',
+          icon: 'groups',
+          fields: [
+            { label: 'Cliente', value: client || 'Sin cliente' },
+            { label: 'Correo', value: ticket.client?.email || '' },
+            { label: 'Técnico', value: tech }
+          ]
+        },
+        {
+          title: 'Diagnóstico y resolución',
+          icon: 'build_circle',
+          fields: [
+            { label: 'Diagnóstico', value: ticket.diagnosis || 'Sin diagnóstico', wide: true },
+            { label: 'Resolución', value: ticket.resolution || 'Pendiente', wide: true }
+          ]
+        },
+        {
+          title: 'Fechas',
+          icon: 'event',
+          fields: [
+            { label: 'Creado', value: formatDate(ticket.created_at) },
+            { label: 'Actualizado', value: formatDate(ticket.updated_at) },
+            { label: 'Finalizado', value: formatDate(ticket.finished_at, 'No finalizado') },
+            { label: 'Tiempo de resolución', value: this.formatResolutionTime(ticket.resolution_time) }
+          ]
+        }
+      ])
+    });
+  }
 
   // =========================
   // HISTORY
@@ -353,73 +308,19 @@ export class Tickets implements OnInit {
 
         next: (history) => {
 
-          const html = `
-
-            <div class="history-container">
-
-              <div class="history-timeline">
-
-                ${history.map((h: any) => `
-
-                  <div class="timeline-item">
-
-                    <div class="timeline-dot"></div>
-
-                    <div class="timeline-card">
-
-                      <div class="timeline-header">
-
-                        <span class="timeline-date">
-
-                          ${new Date(
-                            h.change_date
-                          ).toLocaleString()}
-
-                        </span>
-
-                      </div>
-
-                      <div class="timeline-body">
-
-                        <div class="timeline-row">
-                          <b>Status:</b>
-                          ${this.statusMap[h.status]}
-                        </div>
-
-                        <div class="timeline-row">
-                          <b>Prioridad:</b>
-                          ${this.priorityMap[h.priority]}
-                        </div>
-
-                        <div class="timeline-row">
-                          <b>Modificado por:</b>
-                          ${h.changed_by_email}
-                        </div>
-
-                      </div>
-
-                    </div>
-
-                  </div>
-
-                `).join('')}
-
-              </div>
-
-            </div>
-
-          `;
-
           Swal.fire({
-
-            title: `Historial Ticket #${ticket.code}`,
-
-            html,
-
-            width: '700px',
-
-            confirmButtonColor: '#0B2545'
-
+            title: `Historial · Ticket #${ticket.code}`,
+            html: timelineHtml(history.map((h: any) => ({
+              date: h.change_date,
+              badge: statusBadge(h.status),
+              rows: [
+                { label: 'Estado', value: statusBadge(h.status), html: true },
+                { label: 'Prioridad', value: priorityBadge(h.priority), html: true },
+                { label: 'Modificado por', value: h.changed_by_email || 'Sistema', wide: true }
+              ]
+            }))),
+            width: 700,
+            confirmButtonText: 'Cerrar'
           });
 
         },
@@ -548,8 +449,6 @@ export class Tickets implements OnInit {
 
       showCancelButton: true,
 
-      confirmButtonColor: '#0B2545',
-
       preConfirm: () => {
 
         const technicianElement =
@@ -667,8 +566,6 @@ export class Tickets implements OnInit {
 
     cancelButtonText: 'Cancelar',
 
-    confirmButtonColor: '#0B2545',
-
     preConfirm: () => {
 
       const technicianElement =
@@ -745,8 +642,6 @@ export class Tickets implements OnInit {
       confirmButtonText: 'Sí, resolver',
 
       cancelButtonText: 'Cancelar',
-
-      confirmButtonColor: '#0B2545'
 
     }).then((result) => {
 

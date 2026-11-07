@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import Swal from 'sweetalert2';
+import Swal, { toastSuccess, toastError, esc } from '../../../core/utils/swal';
 import { AdminService } from '../../../core/services/admin.service';
 
 @Component({
@@ -14,6 +14,9 @@ export class Departments implements OnInit {
 
   departments: any[] = [];
   tree: any[] = [];
+
+  /** Nodos colapsados (por id). Todo inicia expandido. */
+  collapsed = new Set<number>();
 
   searchTerm = '';
   filterStatus = '';
@@ -49,7 +52,6 @@ export class Departments implements OnInit {
     this.adminService.getDepartments().subscribe({
       next: res => {
         this.departments = res;
-        this.tree = this.buildTree(res);
         this.applyFilters();
       },
       error: () => this.errorAlert('Error al obtener departamentos')
@@ -57,10 +59,12 @@ export class Departments implements OnInit {
   }
 
   applyFilters() {
+
+    const term = this.searchTerm.trim().toLowerCase();
+
     this.filteredDepartments = this.departments.filter(dep => {
 
-      const matchSearch =
-        dep.name.toLowerCase().includes(this.searchTerm.toLowerCase());
+      const matchSearch = dep.name.toLowerCase().includes(term);
 
       const matchStatus =
         this.filterStatus !== ''
@@ -69,6 +73,52 @@ export class Departments implements OnInit {
 
       return matchSearch && matchStatus;
     });
+
+    // Se conservan los ancestros de cada coincidencia para no romper el árbol.
+    const keep = new Set<number>();
+
+    this.filteredDepartments.forEach(dep => {
+      let current: any = dep;
+      while (current && !keep.has(current.id)) {
+        keep.add(current.id);
+        current = this.departments.find(d => d.id === current.parent);
+      }
+    });
+
+    this.tree = this.buildTree(this.departments.filter(d => keep.has(d.id)));
+  }
+
+  get activeCount(): number {
+    return this.departments.filter(d => d.status === 1).length;
+  }
+
+  get rootCount(): number {
+    return this.departments.filter(d => !d.parent).length;
+  }
+
+  isFiltering(): boolean {
+    return !!this.searchTerm.trim() || this.filterStatus !== '';
+  }
+
+  isCollapsed(dep: any): boolean {
+    // Con filtros activos todo se muestra abierto para ver las coincidencias.
+    return !this.isFiltering() && this.collapsed.has(dep.id);
+  }
+
+  toggleNode(dep: any): void {
+    this.collapsed.has(dep.id)
+      ? this.collapsed.delete(dep.id)
+      : this.collapsed.add(dep.id);
+  }
+
+  expandAll(): void {
+    this.collapsed.clear();
+  }
+
+  collapseAll(): void {
+    this.departments
+      .filter(d => this.departments.some(c => c.parent === d.id))
+      .forEach(d => this.collapsed.add(d.id));
   }
 
   // helper para indentación
@@ -82,31 +132,31 @@ export class Departments implements OnInit {
   }
 
   successAlert(msg: string) {
-    Swal.fire({ title: msg, icon: 'success', confirmButtonColor: '#0B2545' });
+    toastSuccess(msg);
   }
 
   errorAlert(msg: string) {
-    Swal.fire({ title: 'Error', text: msg, icon: 'error', confirmButtonColor: '#0B2545' });
+    toastError(msg);
   }
 
   createDepartment() {
 
     const options = this.departments
-      .map(d => `<option value="${d.id}">${d.name}</option>`)
+      .map(d => `<option value="${esc(d.id)}">${d.name}</option>`)
       .join('');
 
     Swal.fire({
       title: 'Nuevo departamento',
+      confirmButtonText: 'Crear',
       html: `
-        <input id="name" class="swal2-input" placeholder="Nombre">
-        <input id="description" class="swal2-input" placeholder="Descripción">
-        <select id="parent" class="swal2-select">
+        <label class="swal-field"><span>Nombre</span><input id="name" class="swal2-input" placeholder="Nombre"></label>
+        <label class="swal-field"><span>Descripción</span><input id="description" class="swal2-input" placeholder="Descripción"></label>
+        <label class="swal-field"><span>Departamento padre</span><select id="parent" class="swal2-select">
           <option value="">Sin dependencia</option>
           ${options}
-        </select>
+        </select></label>
       `,
       showCancelButton: true,
-      confirmButtonColor: '#0B2545',
       preConfirm: () => ({
         name: (document.getElementById('name') as HTMLInputElement).value,
         description: (document.getElementById('description') as HTMLInputElement).value,
@@ -131,23 +181,23 @@ export class Departments implements OnInit {
     const options = this.departments
       .filter(d => d.id !== dep.id)
       .map(d => `
-        <option value="${d.id}" ${dep.parent === d.id ? 'selected' : ''}>
-          ${d.name}
+        <option value="${esc(d.id)}" ${dep.parent === d.id ? 'selected' : ''}>
+          ${esc(d.name)}
         </option>
       `).join('');
 
     Swal.fire({
       title: 'Editar departamento',
+      confirmButtonText: 'Guardar',
       html: `
-        <input id="name" class="swal2-input" value="${dep.name}">
-        <input id="description" class="swal2-input" value="${dep.description}">
-        <select id="parent" class="swal2-select">
+        <label class="swal-field"><span>Nombre</span><input id="name" class="swal2-input" value="${esc(dep.name)}"></label>
+        <label class="swal-field"><span>Descripción</span><input id="description" class="swal2-input" value="${esc(dep.description)}"></label>
+        <label class="swal-field"><span>Departamento padre</span><select id="parent" class="swal2-select">
           <option value="">Sin dependencia</option>
           ${options}
-        </select>
+        </select></label>
       `,
       showCancelButton: true,
-      confirmButtonColor: '#0B2545',
       preConfirm: () => ({
         name: (document.getElementById('name') as HTMLInputElement).value,
         description: (document.getElementById('description') as HTMLInputElement).value,
@@ -175,8 +225,6 @@ export class Departments implements OnInit {
       text: `El departamento será ${newStatus === 1 ? 'activado' : 'desactivado'}`,
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#0B2545',
-      cancelButtonColor: '#E4E7EB'
     }).then(result => {
 
       if (result.isConfirmed) {

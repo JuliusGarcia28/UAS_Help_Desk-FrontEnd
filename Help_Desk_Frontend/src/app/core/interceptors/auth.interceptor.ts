@@ -6,6 +6,8 @@ import {
   inject
 } from '@angular/core';
 
+import { Router } from '@angular/router';
+
 import {
   catchError,
   switchMap,
@@ -21,6 +23,7 @@ export const authInterceptor: HttpInterceptorFn = (
 ) => {
 
   const authService = inject(AuthService);
+  const router = inject(Router);
 
   // Rutas que NO necesitan access token.
   const publicRoutes = [
@@ -126,7 +129,8 @@ export const authInterceptor: HttpInterceptorFn = (
           authService.clearSession();
 
           // Mandar al login.
-          location.replace('/login');
+          // (navegación interna: location.replace('/login') rompe bajo file:// en Electron)
+          router.navigate(['/login']);
 
           return throwError(
             () => refreshError

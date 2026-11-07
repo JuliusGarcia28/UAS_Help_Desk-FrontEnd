@@ -1,168 +1,80 @@
-<div class="admin-container">
+<div class="app-shell">
 
-  <!-- ==========================
-       SIDEBAR
-  =========================== -->
-
-  <aside
-    class="sidebar"
-    [class.open]="sidebarOpen">
+  <aside class="sidebar" [class.open]="sidebarOpen">
 
     <div class="logo">
-
-      <img
-        src="img/Help_Desk_Logo_White.png"
-        alt="HelpDesk">
-
+      <img src="img/Help_Desk_Logo_White.png" alt="HelpDesk">
       <span>HelpDesk</span>
-
     </div>
 
-    <nav>
+    <nav aria-label="Navegación principal">
 
-      <a
-        routerLink="/admin/dashboard"
-        routerLinkActive="active"
-        (click)="closeSidebar()">
-
-        <span class="material-icons">
-          dashboard
-        </span>
-
+      <a routerLink="/admin/dashboard" routerLinkActive="active" (click)="closeSidebar()">
+        <span class="material-icons">dashboard</span>
         Dashboard
-
       </a>
 
-      <a
-        routerLink="/admin/reports"
-        routerLinkActive="active"
-        (click)="closeSidebar()">
-
-        <span class="material-icons">
-          analytics
-        </span>
-
+      <a routerLink="/admin/reports" routerLinkActive="active" (click)="closeSidebar()">
+        <span class="material-icons">analytics</span>
         Reportes
-
       </a>
 
-      <a
-        routerLink="/admin/users"
-        routerLinkActive="active"
-        (click)="closeSidebar()">
-
-        <span class="material-icons">
-          group
-        </span>
-
+      <a routerLink="/admin/users" routerLinkActive="active" (click)="closeSidebar()">
+        <span class="material-icons">group</span>
         Usuarios
-
       </a>
 
-      <a
-        routerLink="/admin/assets"
-        routerLinkActive="active"
-        (click)="closeSidebar()">
-
-        <span class="material-icons">
-          inventory_2
-        </span>
-
+      <a routerLink="/admin/assets" routerLinkActive="active" (click)="closeSidebar()">
+        <span class="material-icons">inventory_2</span>
         Inventario
-
       </a>
 
-      <a
-        routerLink="/admin/departments"
-        routerLinkActive="active"
-        (click)="closeSidebar()">
-
-        <span class="material-icons">
-          apartment
-        </span>
-
+      <a routerLink="/admin/departments" routerLinkActive="active" (click)="closeSidebar()">
+        <span class="material-icons">apartment</span>
         Departamentos
-
       </a>
 
-      <a
-        routerLink="/admin/tickets"
-        routerLinkActive="active"
-        (click)="closeSidebar()">
-
-        <span class="material-icons">
-          confirmation_number
-        </span>
-
+      <a routerLink="/admin/tickets" routerLinkActive="active" (click)="closeSidebar()">
+        <span class="material-icons">confirmation_number</span>
         Tickets
-
       </a>
 
     </nav>
 
+    <div class="sidebar-footer">Help Desk</div>
+
   </aside>
 
-  <!-- ==========================
-       OVERLAY
-  =========================== -->
-  @if(sidebarOpen){
-    <div
-    class="sidebar-overlay"
-    (click)="closeSidebar()">
-
-    </div>
+  @if (sidebarOpen) {
+    <div class="sidebar-overlay" (click)="closeSidebar()"></div>
   }
-
-  <!-- ==========================
-       CONTENT
-  =========================== -->
 
   <main class="content">
 
     <header class="topbar">
 
       <div class="topbar-left">
-
-        <button
-          class="menu-btn"
-          (click)="toggleSidebar()">
-
-          <span class="material-icons">
-            menu
-          </span>
-
+        <button class="menu-btn" (click)="toggleSidebar()" aria-label="Abrir menú">
+          <span class="material-icons">menu</span>
         </button>
-
-        <h1>
-          Admin Panel
-        </h1>
-
+        <h1>Panel de Administración</h1>
       </div>
 
       <div class="topbar-actions">
 
-        <button
-          class="theme-toggle"
-          (click)="toggleTheme()">
+        <div class="user-chip" [title]="user.email || ''">
+          <span class="avatar-sm">{{ initials }}</span>
+          <span class="user-name">{{ fullName }}</span>
+        </div>
 
-          <span class="material-icons">
-            {{ isDark() ? 'light_mode' : 'dark_mode' }}
-          </span>
-
+        <button class="theme-toggle" (click)="toggleTheme()"
+                [attr.aria-label]="isDark() ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro'">
+          <span class="material-icons">{{ isDark() ? 'light_mode' : 'dark_mode' }}</span>
         </button>
 
-        <button
-          class="btn btn-outline logout"
-          (click)="logout()">
-
-          <span class="material-icons">
-            logout
-          </span>
-
-          <span>
-            Cerrar sesión
-          </span>
-
+        <button class="btn btn-outline btn-logout" (click)="logout()">
+          <span class="material-icons">logout</span>
+          <span class="btn-text">Cerrar sesión</span>
         </button>
 
       </div>
@@ -170,9 +82,7 @@
     </header>
 
     <section class="page">
-
       <router-outlet></router-outlet>
-
     </section>
 
   </main>

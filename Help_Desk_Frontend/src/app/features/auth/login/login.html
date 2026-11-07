@@ -5,7 +5,7 @@
     <div class="auth-card">
 
       <a
-        href="/"
+        routerLink="/"
         class="btn btn-outline back-button"
       >
         <span class="material-icons">arrow_back</span>
@@ -42,6 +42,7 @@
             #emailCtrl="ngModel"
             required
             email
+            autocomplete="username"
             placeholder="usuario@correo.com"
           >
 
@@ -82,6 +83,7 @@
               #passwordCtrl="ngModel"
               required
               minlength="6"
+              autocomplete="current-password"
               placeholder="••••••••"
             >
 
@@ -138,6 +140,9 @@
           [disabled]="loading || loginForm.invalid"
         >
 
+          @if (loading) {
+            <span class="btn-spinner"></span>
+          }
           {{ loading ? 'Ingresando...' : 'Ingresar al sistema' }}
 
         </button>
@@ -145,7 +150,7 @@
         <!-- FORGOT PASSWORD -->
         <div class="auth-footer">
 
-          <a href="/forgot-password">
+          <a routerLink="/forgot-password">
             ¿Olvidaste tu contraseña?
           </a>
 

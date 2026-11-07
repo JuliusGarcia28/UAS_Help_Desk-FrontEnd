@@ -1,10 +1,17 @@
-<h2>Mis Tickets</h2>
+<div class="page-header">
+  <div>
+    <h2>Mis tickets</h2>
+    <p>Consulta el estado de tus solicitudes o abre una nueva</p>
+  </div>
 
-<button class="btn btn-primary floating-btn" (click)="createTicket()">
-  + Nuevo Ticket
-</button>
+  <button class="btn btn-primary" (click)="createTicket()">
+    <span class="material-icons">add</span>
+    Nuevo ticket
+  </button>
+</div>
 
 @if (tickets.length > 0){
+<div class="table-wrap">
 <table class="table">
   <thead>
     <tr>
@@ -45,7 +52,7 @@
       </td>
 
       <td class="actions">
-        <button class="btn btn-outline" (click)="viewHistory(t)">
+        <button class="btn-icon" (click)="viewHistory(t)" title="Ver historial" aria-label="Ver historial">
           <span class="material-icons">history</span>
         </button>
       </td>
@@ -53,6 +60,11 @@
     </tr>
   </tbody>
 </table>
+</div>
 } @else {
-  <p style="margin-top:2rem">No tienes tickets abiertos. Crea uno nuevo!</p>
+  <div class="empty-state">
+    <span class="material-icons">inbox</span>
+    <strong>Aún no tienes tickets</strong>
+    <span>Crea uno nuevo para recibir ayuda del equipo de soporte.</span>
+  </div>
 }

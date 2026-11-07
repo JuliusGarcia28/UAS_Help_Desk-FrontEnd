@@ -1,9 +1,11 @@
-<h2>Mis Tickets</h2>
+<div class="page-header">
+  <div>
+    <h2>Tickets asignados</h2>
+    <p>Atiende, da seguimiento y resuelve tus incidencias</p>
+  </div>
+</div>
 
-<div
-  class="tabs"
-  style="display:flex;gap:10px;margin-top:10px"
->
+<div class="tabs">
 
   <button
     class="btn"
@@ -33,7 +35,8 @@
 
 <div *ngIf="filteredTickets().length > 0">
 
-  <table class="table">
+  <div class="table-wrap">
+<table class="table">
 
     <thead>
 
@@ -108,7 +111,7 @@
         <td class="actions">
 
           <button
-            class="btn btn-outline"
+            class="btn-icon"
             (click)="viewTicket(t)"
             title="Ver ticket"
           >
@@ -118,7 +121,7 @@
           </button>
 
           <button
-            class="btn btn-outline"
+            class="btn-icon"
             (click)="viewHistory(t)"
             title="Historial"
           >
@@ -130,7 +133,7 @@
           @if (t.status === 1) {
 
             <button
-              class="btn btn-outline"
+              class="btn-icon"
               (click)="startTicket(t)"
               title="Iniciar atención"
             >
@@ -144,7 +147,7 @@
           @if (t.status !== 3) {
 
             <button
-              class="btn btn-outline"
+              class="btn-icon"
               (click)="resolveTicket(t)"
               title="Resolver ticket"
             >
@@ -162,12 +165,14 @@
     </tbody>
 
   </table>
+</div>
 
 </div>
 
 <div
   *ngIf="filteredTickets().length === 0"
-  style="margin-top:2rem"
+  class="empty-state"
 >
-  <p>No hay tickets para esta categoría.</p>
+  <span class="material-icons">inbox</span>
+  <strong>No hay tickets para esta categoría</strong>
 </div>

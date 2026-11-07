@@ -25,6 +25,8 @@
               }
             ],
             "styles": [
+              "@fontsource-variable/inter/wght.css",
+              "material-icons/iconfont/filled.css",
               "src/styles.css"
             ],
             "allowedCommonJsDependencies": [
@@ -46,7 +48,7 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "8kB",
+                  "maximumWarning": "12kB",
                   "maximumError": "16kB"
                 }
               ],
@@ -90,6 +92,8 @@
               }
             ],
             "styles": [
+              "@fontsource-variable/inter/wght.css",
+              "material-icons/iconfont/filled.css",
               "src/styles.css"
             ]
           }

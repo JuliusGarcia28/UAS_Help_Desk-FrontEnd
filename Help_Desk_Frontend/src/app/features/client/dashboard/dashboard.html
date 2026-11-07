@@ -1,29 +1,47 @@
-<h2>Mi Panel</h2>
-
-<div class="cards">
-
-  <div class="card total">
-    <h3>Total Tickets</h3>
-    <p>{{ tickets.length }}</p>
+<div class="page-header">
+  <div>
+    <h2>Mi panel</h2>
+    <p>Un vistazo al estado de tus solicitudes de soporte</p>
   </div>
 
-  <div class="card open">
-    <h3>Abiertos</h3>
-    <p>{{ openTickets }}</p>
+  <button class="btn btn-primary" routerLink="/client/tickets">
+    <span class="material-icons">support_agent</span>
+    Ver mis tickets
+  </button>
+</div>
+
+<div class="stat-grid stagger">
+
+  <div class="stat-card stat-total">
+    <div class="stat-icon"><span class="material-icons">confirmation_number</span></div>
+    <div class="stat-info">
+      <div class="stat-label">Total tickets</div>
+      <div class="stat-value" [appCountUp]="tickets.length">0</div>
+    </div>
   </div>
 
-  <div class="card progress">
-    <h3>En proceso</h3>
-    <p>{{ inProgress }}</p>
+  <div class="stat-card stat-open">
+    <div class="stat-icon"><span class="material-icons">mark_email_unread</span></div>
+    <div class="stat-info">
+      <div class="stat-label">Abiertos</div>
+      <div class="stat-value" [appCountUp]="openTickets">0</div>
+    </div>
   </div>
 
-  <div class="card closed">
-    <h3>Cerrados</h3>
-    <p>{{ closed }}</p>
+  <div class="stat-card stat-progress">
+    <div class="stat-icon"><span class="material-icons">autorenew</span></div>
+    <div class="stat-info">
+      <div class="stat-label">En proceso</div>
+      <div class="stat-value" [appCountUp]="inProgress">0</div>
+    </div>
+  </div>
+
+  <div class="stat-card stat-closed">
+    <div class="stat-icon"><span class="material-icons">task_alt</span></div>
+    <div class="stat-info">
+      <div class="stat-label">Cerrados</div>
+      <div class="stat-value" [appCountUp]="closed">0</div>
+    </div>
   </div>
 
 </div>
-
-<button class="btn btn-primary" routerLink="/client/tickets">
-  Ver mis tickets
-</button>

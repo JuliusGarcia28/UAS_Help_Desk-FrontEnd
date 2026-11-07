@@ -1,5 +1,10 @@
 <div class="admin-card">
-  <h2>Inventario</h2>
+  <div class="page-header">
+  <div>
+    <h2>Inventario</h2>
+    <p>Equipos registrados y su estado · {{ filteredAssets.length }} de {{ assets.length }}</p>
+  </div>
+</div>
 
 <div class="filters">
 
@@ -28,9 +33,10 @@
 </div>
 
 <button class="btn btn-primary btn-create" (click)="createAsset()">
-  + Nuevo equipo
+  <span class="material-icons">add</span> Nuevo equipo
 </button>
 
+<div class="table-wrap">
 <table class="table">
   <thead>
     <tr>
@@ -50,7 +56,7 @@
   <tbody>
     <tr *ngFor="let asset of filteredAssets">
 
-      <td>{{ asset.hostname }}</td>
+      <td class="mono strong">{{ asset.hostname }}</td>
       <td>{{ asset.asset_type }}</td>
       <td>{{ asset.serial_number }}</td>
       <td>{{ asset.operative_system }}</td>
@@ -70,41 +76,49 @@
         </span>
       </td>
 
-      <td class="actions">
+      <td>
+        <div class="actions">
 
-        <!-- HISTORIAL -->
-        <button class="btn btn-outline" (click)="viewHistory(asset)">
-          <span class="material-icons">history</span>
-        </button>
+          <button class="btn-icon" (click)="viewHistory(asset)"
+                  title="Ver historial" aria-label="Ver historial">
+            <span class="material-icons">history</span>
+          </button>
 
-        <!-- EDITAR -->
-        <button class="btn btn-outline" (click)="editAsset(asset)">
-          <span class="material-icons">edit</span>
-        </button>
+          <button class="btn-icon" (click)="editAsset(asset)"
+                  title="Editar equipo" aria-label="Editar equipo">
+            <span class="material-icons">edit</span>
+          </button>
 
-        <!-- ACTIVAR / DESACTIVAR -->
-        <button
-          class="btn"
-          [ngClass]="asset.status === 1 ? 'btn-primary' : 'btn-outline'"
-          (click)="toggleAsset(asset)"
-        >
-          <span class="material-icons">
-            {{ asset.status === 1 ? 'block' : 'check_circle' }}
-          </span>
-        </button>
+          <button class="btn-icon warn" (click)="setMaintenance(asset)"
+                  [disabled]="asset.status === 2"
+                  title="Poner en mantenimiento" aria-label="Poner en mantenimiento">
+            <span class="material-icons">build</span>
+          </button>
 
-        <!-- MANTENIMIENTO -->
-        <button
-          class="btn btn-outline"
-          (click)="setMaintenance(asset)"
-          [disabled]="asset.status === 3"
-        >
-          <span class="material-icons">build</span>
-        </button>
+          <button class="btn-icon"
+                  [class.danger]="asset.status === 1"
+                  [class.success]="asset.status !== 1"
+                  (click)="toggleAsset(asset)"
+                  [title]="asset.status === 1 ? 'Desactivar equipo' : 'Activar equipo'"
+                  [attr.aria-label]="asset.status === 1 ? 'Desactivar equipo' : 'Activar equipo'">
+            <span class="material-icons">
+              {{ asset.status === 1 ? 'block' : 'check_circle' }}
+            </span>
+          </button>
 
+        </div>
       </td>
 
     </tr>
   </tbody>
 </table>
+</div>
+
+@if (filteredAssets.length === 0) {
+  <div class="empty-state">
+    <span class="material-icons">inventory_2</span>
+    <strong>No se encontraron equipos</strong>
+    <span>Prueba con otros filtros.</span>
+  </div>
+}
 </div>

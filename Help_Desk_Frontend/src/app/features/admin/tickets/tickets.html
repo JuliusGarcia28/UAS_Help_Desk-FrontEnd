@@ -1,6 +1,11 @@
 <div class="admin-card">
 
-  <h2>Tickets</h2>
+  <div class="page-header">
+  <div>
+    <h2>Tickets</h2>
+    <p>Seguimiento y asignación de incidencias · {{ filteredTickets.length }} de {{ tickets.length }}</p>
+  </div>
+</div>
 
   <div class="filters">
 
@@ -71,7 +76,8 @@
 
   </div>
 
-  <table class="table">
+  <div class="table-wrap">
+<table class="table">
 
     <thead>
 
@@ -101,7 +107,7 @@
 
       <tr *ngFor="let ticket of filteredTickets">
 
-        <td>
+        <td class="mono">
           {{ ticket.code }}
         </td>
 
@@ -139,7 +145,7 @@
 
           <span
             class="badge"
-            [ngClass]="getPriorityClass(ticket.priority)"
+            [ngClass]="priorityCss(ticket.priority)"
           >
 
             {{ priorityMap[ticket.priority] }}
@@ -150,7 +156,7 @@
 
         <td>
 
-          <span class="badge active">
+          <span class="badge" [ngClass]="statusCss(ticket.status)">
 
             {{ statusMap[ticket.status] }}
 
@@ -170,7 +176,7 @@
         <td class="actions">
 
         <button
-          class="btn btn-outline"
+          class="btn-icon"
           (click)="viewTicket(ticket)"
           title="Ver detalles">
 
@@ -181,7 +187,7 @@
         </button>
 
           <button
-            class="btn btn-outline"
+            class="btn-icon"
             (click)="viewHistory(ticket)"
             title="Ver historial"
           >
@@ -193,7 +199,7 @@
           </button>
 
           <button
-            class="btn btn-outline"
+            class="btn-icon"
             (click)="editTicket(ticket)"
             title="Editar ticket"
           >
@@ -205,7 +211,7 @@
           </button>
 
           <button
-            class="btn btn-outline"
+            class="btn-icon"
             (click)="assignTechnician(ticket)"
             title="Asignar técnico"
           >
@@ -217,7 +223,7 @@
           </button>
 
           <button
-            class="btn btn-outline"
+            class="btn-icon success"
             (click)="closeTicket(ticket)"
             [disabled]="ticket.status === 3"
             title="Marcar como resuelto">
@@ -235,5 +241,14 @@
     </tbody>
 
   </table>
+</div>
+
+@if (filteredTickets.length === 0) {
+  <div class="empty-state">
+    <span class="material-icons">confirmation_number</span>
+    <strong>No se encontraron tickets</strong>
+    <span>Prueba con otros filtros.</span>
+  </div>
+}
 
 </div>

@@ -1,65 +1,60 @@
-<div class="technician-container">
+<div class="app-shell">
 
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
+  <aside class="sidebar" [class.open]="sidebarOpen">
 
     <div class="logo">
       <img src="img/Help_Desk_Logo_White.png" alt="HelpDesk">
       <span>HelpDesk</span>
     </div>
 
-    <nav>
+    <nav aria-label="Navegación principal">
 
-      <a routerLink="/technician/dashboard" routerLinkActive="active">
+      <a routerLink="/technician/dashboard" routerLinkActive="active" (click)="closeSidebar()">
         <span class="material-icons">dashboard</span>
         Panel Técnico
       </a>
 
-      <a routerLink="/technician/tickets" routerLinkActive="active">
+      <a routerLink="/technician/tickets" routerLinkActive="active" (click)="closeSidebar()">
         <span class="material-icons">confirmation_number</span>
         Tickets Asignados
       </a>
 
     </nav>
 
+    <div class="sidebar-footer">Help Desk</div>
+
   </aside>
 
-  <!-- CONTENT -->
+  @if (sidebarOpen) {
+    <div class="sidebar-overlay" (click)="closeSidebar()"></div>
+  }
+
   <main class="content">
 
     <header class="topbar">
 
-      <h1>Panel Técnico</h1>
+      <div class="topbar-left">
+        <button class="menu-btn" (click)="toggleSidebar()" aria-label="Abrir menú">
+          <span class="material-icons">menu</span>
+        </button>
+        <h1>Panel Técnico</h1>
+      </div>
 
-      <div class="user-info">
+      <div class="topbar-actions">
 
-        <span>
-          {{ user.first_name }} {{ user.last_name }}
-        </span>
+        <div class="user-chip" [title]="user.email || ''">
+          <span class="avatar-sm">{{ initials }}</span>
+          <span class="user-name">{{ fullName }}</span>
+        </div>
 
-        <button
-          class="theme-toggle"
-          (click)="toggleTheme()">
-
-          <span class="material-icons">
-            {{ isDark() ? 'light_mode' : 'dark_mode' }}
-          </span>
-
+        <button class="theme-toggle" (click)="toggleTheme()"
+                [attr.aria-label]="isDark() ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro'">
+          <span class="material-icons">{{ isDark() ? 'light_mode' : 'dark_mode' }}</span>
         </button>
 
-        <button
-          class="btn btn-outline logout-btn"
-          style="display:flex;align-items:center;"
-          (click)="logout()">
-
-          <span
-            class="material-icons"
-            style="margin-right:.2rem;">
-            logout
-          </span>
-
-          <span>Cerrar Sesión</span>
-
+        <button class="btn btn-outline btn-logout" (click)="logout()">
+          <span class="material-icons">logout</span>
+          <span class="btn-text">Cerrar sesión</span>
         </button>
 
       </div>

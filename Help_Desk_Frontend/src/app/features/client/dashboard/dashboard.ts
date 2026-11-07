@@ -1,3 +1,4 @@
+import { CountUpDirective } from '../../../core/directives/count-up.directive';
 import { Component, OnInit } from '@angular/core';
 import { TicketService } from '../../../core/services/ticket.service';
 import { CommonModule } from '@angular/common';
@@ -5,7 +6,7 @@ import { RouterModule } from '@angular/router';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, CountUpDirective],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css'
 })

@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, shell, nativeTheme } = require("electron");
 const path = require("path");
 
 function createWindow() {
@@ -15,7 +15,12 @@ function createWindow() {
 
         autoHideMenuBar: true,
 
-        show: true,
+        // Se muestra al terminar de pintar para evitar el destello blanco inicial.
+        show: false,
+
+        backgroundColor: nativeTheme.shouldUseDarkColors ? "#0B1220" : "#F4F7FB",
+
+        title: "HelpDesk",
 
         webPreferences: {
 
@@ -25,6 +30,31 @@ function createWindow() {
 
             nodeIntegration: false
 
+        }
+
+    });
+
+    win.once("ready-to-show", () => win.show());
+
+    // Enlaces externos (p. ej. descarga del instalador) se abren en el navegador
+    // del sistema en lugar de crear otra ventana de Electron.
+    win.webContents.setWindowOpenHandler(({ url }) => {
+
+        if (/^https?:\/\//i.test(url)) {
+            shell.openExternal(url);
+        }
+
+        return { action: "deny" };
+
+    });
+
+    // La aplicacion es una SPA cargada desde disco: cualquier navegacion
+    // externa se envia al navegador del sistema.
+    win.webContents.on("will-navigate", (event, url) => {
+
+        if (/^https?:\/\//i.test(url)) {
+            event.preventDefault();
+            shell.openExternal(url);
         }
 
     });

@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import Swal from 'sweetalert2';
+import Swal, { toastSuccess, toastError, esc } from '../../../core/utils/swal';
+import { timelineHtml, badgeHtml } from '../../../core/utils/modal-html';
 import { AdminService } from '../../../core/services/admin.service';
 
 @Component({
@@ -74,31 +75,20 @@ export class Assets implements OnInit {
   // ================= ALERTAS =================
 
   success(msg: string) {
-    Swal.fire({
-      title: msg,
-      icon: 'success',
-      confirmButtonColor: '#0B2545'
-    });
+    toastSuccess(msg);
   }
 
   error(msg: string) {
-    Swal.fire({
-      title: 'Error',
-      text: msg,
-      icon: 'error',
-      confirmButtonColor: '#0B2545'
-    });
+    toastError(msg);
   }
 
-  confirm(msg: string) {
+  confirm(msg: string, confirmText = 'Sí, continuar') {
     return Swal.fire({
-      title: '¿Confirmar?',
+      title: '¿Confirmar acción?',
       text: msg,
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#0B2545',
-      cancelButtonColor: '#E4E7EB',
-      confirmButtonText: 'Sí',
+      confirmButtonText: confirmText,
       cancelButtonText: 'Cancelar'
     });
   }
@@ -164,73 +154,23 @@ export class Assets implements OnInit {
         new Date(a.snapshot_date).getTime()
       );
 
-      const timeline = `
-        <div class="history-timeline">
-
-          ${history.map((h: any) => `
-
-            <div class="timeline-item">
-
-              <div class="timeline-dot"></div>
-
-              <div class="timeline-card">
-
-                <div class="timeline-header">
-                  <span class="timeline-date">
-                    ${new Date(h.snapshot_date).toLocaleString()}
-                  </span>
-
-                  <span class="badge ${this.getStatusClass(h.status)}">
-                    ${this.getStatusText(h.status)}
-                  </span>
-                </div>
-
-                <div class="timeline-body">
-
-                  <div class="timeline-row">
-                    <b>Equipo:</b> ${h.hostname}
-                  </div>
-
-                  <div class="timeline-row">
-                    <b>Serie:</b> ${h.serial_number}
-                  </div>
-
-                  <div class="timeline-row">
-                    <b>Hardware:</b> ${h.cpu} | ${h.ram}GB
-                  </div>
-
-                  <div class="timeline-row">
-                    <b>IP:</b> ${h.ip_address}
-                  </div>
-
-                  <div class="timeline-row">
-                    <b>Usuario:</b> ${h.user_email || 'Sin asignar'}
-                  </div>
-
-                  <div class="timeline-row">
-                    <b>Departamento:</b> ${h.department_name || 'Sin asignar'}
-                  </div>
-
-                  <div class="timeline-reason">
-                    ${h.change_reason || 'Actualización del sistema'}
-                  </div>
-
-                </div>
-
-              </div>
-
-            </div>
-
-          `).join('')}
-
-        </div>
-      `;
-
       Swal.fire({
-        title: `Historial - ${asset.hostname}`,
-        html: `<div class="history-container">${timeline}</div>`,
-        width: '750px',
-        confirmButtonColor: '#0B2545'
+        title: `Historial · ${asset.hostname}`,
+        html: timelineHtml(history.map((h: any) => ({
+          date: h.snapshot_date,
+          badge: badgeHtml(this.getStatusText(h.status), this.getStatusClass(h.status)),
+          note: h.change_reason || 'Actualización del sistema',
+          rows: [
+            { label: 'Equipo', value: h.hostname },
+            { label: 'Serie', value: h.serial_number },
+            { label: 'Hardware', value: `${h.cpu} · ${h.ram} GB` },
+            { label: 'IP', value: h.ip_address },
+            { label: 'Usuario', value: h.user_email || 'Sin asignar' },
+            { label: 'Departamento', value: h.department_name || 'Sin asignar' }
+          ]
+        }))),
+        width: 760,
+        confirmButtonText: 'Cerrar'
       });
 
     },
@@ -245,8 +185,8 @@ export class Assets implements OnInit {
 
   buildUserOptions(selectedId: any = null) {
     return this.users.map(user => `
-      <option value="${user.id}" ${selectedId === user.id ? 'selected' : ''}>
-        ${user.email}
+      <option value="${esc(user.id)}" ${selectedId === user.id ? 'selected' : ''}>
+        ${esc(user.email)}
       </option>
     `).join('');
   }
@@ -259,22 +199,23 @@ export class Assets implements OnInit {
 
     Swal.fire({
       title: 'Editar equipo',
+      width: 680,
+      confirmButtonText: 'Guardar',
       html: `
-        <input id="hostname" class="swal2-input" value="${asset.hostname}" placeholder="Hostname">
-        <input id="asset_type" class="swal2-input" value="${asset.asset_type}" placeholder="Tipo">
-        <input id="serial_number" class="swal2-input" value="${asset.serial_number}" placeholder="Serie">
-        <input id="operative_system" class="swal2-input" value="${asset.operative_system}" placeholder="Sistema operativo">
-        <input id="cpu" class="swal2-input" value="${asset.cpu}" placeholder="CPU">
-        <input id="ram" type="number" class="swal2-input" value="${asset.ram}" placeholder="RAM">
-        <input id="ip_address" class="swal2-input" value="${asset.ip_address}" placeholder="IP">
+        <label class="swal-field"><span>Hostname *</span><input id="hostname" class="swal2-input" value="${esc(asset.hostname)}" placeholder="Hostname"></label>
+        <label class="swal-field"><span>Tipo</span><input id="asset_type" class="swal2-input" value="${esc(asset.asset_type)}" placeholder="Tipo"></label>
+        <label class="swal-field"><span>Número de serie</span><input id="serial_number" class="swal2-input" value="${esc(asset.serial_number)}" placeholder="Serie"></label>
+        <label class="swal-field"><span>Sistema operativo</span><input id="operative_system" class="swal2-input" value="${esc(asset.operative_system)}" placeholder="Sistema operativo"></label>
+        <label class="swal-field"><span>CPU</span><input id="cpu" class="swal2-input" value="${esc(asset.cpu)}" placeholder="CPU"></label>
+        <label class="swal-field"><span>RAM (GB)</span><input id="ram" type="number" class="swal2-input" value="${esc(asset.ram)}" placeholder="RAM"></label>
+        <label class="swal-field"><span>Dirección IP</span><input id="ip_address" class="swal2-input" value="${esc(asset.ip_address)}" placeholder="IP"></label>
 
-        <select id="responsible" class="swal2-select" style="min-width: 60%;">
+        <label class="swal-field"><span>Responsable</span><select id="responsible" class="swal2-select">
           <option value="">Sin asignar</option>
           ${userOptions}
-        </select>
+        </select></label>
       `,
       showCancelButton: true,
-      confirmButtonColor: '#0B2545',
 
       preConfirm: () => {
 
@@ -330,22 +271,23 @@ export class Assets implements OnInit {
 
     Swal.fire({
       title: 'Nuevo equipo',
+      width: 680,
+      confirmButtonText: 'Crear equipo',
       html: `
-        <input id="hostname" class="swal2-input" placeholder="Hostname">
-        <input id="asset_type" class="swal2-input" placeholder="Tipo">
-        <input id="serial_number" class="swal2-input" placeholder="Serie">
-        <input id="operative_system" class="swal2-input" placeholder="Sistema operativo">
-        <input id="cpu" class="swal2-input" placeholder="CPU">
-        <input id="ram" type="number" class="swal2-input" placeholder="RAM">
-        <input id="ip_address" class="swal2-input" placeholder="IP">
+        <label class="swal-field"><span>Hostname *</span><input id="hostname" class="swal2-input" placeholder="Hostname"></label>
+        <label class="swal-field"><span>Tipo</span><input id="asset_type" class="swal2-input" placeholder="Tipo"></label>
+        <label class="swal-field"><span>Número de serie</span><input id="serial_number" class="swal2-input" placeholder="Serie"></label>
+        <label class="swal-field"><span>Sistema operativo</span><input id="operative_system" class="swal2-input" placeholder="Sistema operativo"></label>
+        <label class="swal-field"><span>CPU</span><input id="cpu" class="swal2-input" placeholder="CPU"></label>
+        <label class="swal-field"><span>RAM (GB)</span><input id="ram" type="number" class="swal2-input" placeholder="RAM"></label>
+        <label class="swal-field"><span>Dirección IP</span><input id="ip_address" class="swal2-input" placeholder="IP"></label>
 
-        <select id="responsible" class="swal2-select" style="min-width: 61%;">
+        <label class="swal-field"><span>Responsable</span><select id="responsible" class="swal2-select">
           <option value="">Sin asignar</option>
           ${userOptions}
-        </select>
+        </select></label>
       `,
       showCancelButton: true,
-      confirmButtonColor: '#0B2545',
 
       preConfirm: () => {
 

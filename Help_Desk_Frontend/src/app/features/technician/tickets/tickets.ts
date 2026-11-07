@@ -7,7 +7,8 @@ import {
   CommonModule
 } from '@angular/common';
 
-import Swal from 'sweetalert2';
+import Swal, { toastSuccess, toastError, esc } from '../../../core/utils/swal';
+import { detailHtml, timelineHtml, statusBadge, priorityBadge, formatDate } from '../../../core/utils/modal-html';
 
 import {
   TicketService
@@ -156,89 +157,50 @@ export class Tickets implements OnInit {
 
   viewTicket(ticket: Ticket): void {
 
+    const client = ticket.client
+      ? `${ticket.client.first_name || ''} ${ticket.client.last_name || ''}`.trim()
+      : '';
+
     Swal.fire({
-
-      title: ticket.code,
-
-      width: '900px',
-
-      html: `
-
-        <div style="text-align:left">
-
-          <h3>Información general</h3>
-
-          <p>
-            <b>Descripción:</b><br>
-            ${ticket.description}
-          </p>
-
-          <p>
-            <b>Categoría:</b>
-            ${ticket.category || 'N/A'}
-          </p>
-
-          <p>
-            <b>Prioridad:</b>
-            ${this.priorityMap[ticket.priority]}
-          </p>
-
-          <p>
-            <b>Estado:</b>
-            ${this.statusMap[ticket.status]}
-          </p>
-
-          <hr>
-
-          <h3>Cliente</h3>
-
-          <p>
-            ${ticket.client?.first_name || ''}
-            ${ticket.client?.last_name || ''}
-          </p>
-
-          <p>
-            ${ticket.client?.email || ''}
-          </p>
-
-          <hr>
-
-          <h3>Diagnóstico</h3>
-
-          <p>
-            ${ticket.diagnosis || 'Sin diagnóstico'}
-          </p>
-
-          <hr>
-
-          <h3>Resolución</h3>
-
-          <p>
-            ${ticket.resolution || 'Pendiente'}
-          </p>
-
-          <hr>
-
-          <h3>Fechas</h3>
-
-          <p>
-            <b>Creado:</b>
-            ${new Date(
-              ticket.created_at
-            ).toLocaleString()}
-          </p>
-
-          <p>
-            <b>Actualizado:</b>
-            ${new Date(
-              ticket.updated_at
-            ).toLocaleString()}
-          </p>
-
-        </div>
-
-      `
-
+      title: `Ticket ${ticket.code}`,
+      width: 780,
+      confirmButtonText: 'Cerrar',
+      html: detailHtml([
+        {
+          title: 'Información general',
+          icon: 'description',
+          fields: [
+            { label: 'Descripción', value: ticket.description, wide: true },
+            { label: 'Categoría', value: String(ticket.category || 'N/A') },
+            { label: 'Prioridad', value: priorityBadge(ticket.priority), html: true },
+            { label: 'Estado', value: statusBadge(ticket.status), html: true }
+          ]
+        },
+        {
+          title: 'Cliente',
+          icon: 'person',
+          fields: [
+            { label: 'Nombre', value: client || 'Sin cliente' },
+            { label: 'Correo', value: ticket.client?.email || '' }
+          ]
+        },
+        {
+          title: 'Diagnóstico y resolución',
+          icon: 'build_circle',
+          fields: [
+            { label: 'Diagnóstico', value: ticket.diagnosis || 'Sin diagnóstico', wide: true },
+            { label: 'Resolución', value: ticket.resolution || 'Pendiente', wide: true }
+          ]
+        },
+        {
+          title: 'Fechas',
+          icon: 'event',
+          fields: [
+            { label: 'Creado', value: formatDate(ticket.created_at) },
+            { label: 'Actualizado', value: formatDate(ticket.updated_at) }
+          ]
+        }
+      ])
     });
 
   }
@@ -259,7 +221,9 @@ export class Tickets implements OnInit {
 
       showCancelButton: true,
 
-      confirmButtonText: 'Iniciar'
+      confirmButtonText: 'Iniciar',
+
+      cancelButtonText: 'Cancelar'
 
     }).then(result => {
 
@@ -278,11 +242,7 @@ export class Tickets implements OnInit {
 
           next: () => {
 
-            Swal.fire(
-              'Correcto',
-              'Ticket en proceso',
-              'success'
-            );
+            toastSuccess('Ticket en proceso');
 
             this.loadTickets();
 
@@ -295,11 +255,7 @@ export class Tickets implements OnInit {
               err
             );
 
-            Swal.fire(
-              'Error',
-              'No se pudo actualizar el ticket',
-              'error'
-            );
+            toastError('No se pudo actualizar el ticket');
 
           }
 
@@ -319,27 +275,29 @@ export class Tickets implements OnInit {
 
       title: `Resolver ${ticket.code}`,
 
-      width: 800,
+      width: 640,
 
       html: `
 
-        <textarea
-          id="diagnosis"
-          class="swal2-textarea"
-          placeholder="Diagnóstico"
-        >${ticket.diagnosis || ''}</textarea>
+        <div class="swal-form">
+          <label class="swal-field">
+            <span>Diagnóstico</span>
+            <textarea id="diagnosis" class="swal2-textarea" placeholder="¿Cuál fue la causa del problema?">${esc(ticket.diagnosis)}</textarea>
+          </label>
 
-        <textarea
-          id="resolution"
-          class="swal2-textarea"
-          placeholder="Resolución aplicada"
-        >${ticket.resolution || ''}</textarea>
+          <label class="swal-field">
+            <span>Resolución aplicada *</span>
+            <textarea id="resolution" class="swal2-textarea" placeholder="Describe la solución aplicada">${esc(ticket.resolution)}</textarea>
+          </label>
+        </div>
 
       `,
 
       showCancelButton: true,
 
       confirmButtonText: 'Resolver',
+
+      cancelButtonText: 'Cancelar',
 
       preConfirm: () => {
 
@@ -390,11 +348,7 @@ export class Tickets implements OnInit {
 
           next: () => {
 
-            Swal.fire(
-              'Correcto',
-              'Ticket resuelto',
-              'success'
-            );
+            toastSuccess('Ticket resuelto');
 
             this.loadTickets();
 
@@ -407,11 +361,7 @@ export class Tickets implements OnInit {
               err
             );
 
-            Swal.fire(
-              'Error',
-              'No se pudo resolver el ticket',
-              'error'
-            );
+            toastError('No se pudo resolver el ticket');
 
           }
 
@@ -433,52 +383,18 @@ export class Tickets implements OnInit {
 
         next: (history) => {
 
-          const html = history
-            .map(h => `
-
-              <div class="history-item">
-
-                <div class="history-date">
-
-                  ${new Date(
-                    h.change_date
-                  ).toLocaleString()}
-
-                </div>
-
-                <div class="history-body">
-
-                  Estado:
-                  ${this.statusMap[h.status]}
-
-                  <br>
-
-                  Usuario:
-                  ${h.changed_by_email || 'Sistema'}
-
-                </div>
-
-              </div>
-
-            `)
-            .join('');
-
           Swal.fire({
-
-            title: `Historial ${ticket.code}`,
-
-            html: `
-
-              <div class="history-container">
-
-                ${html || '<p>No hay historial.</p>'}
-
-              </div>
-
-            `,
-
-            width: 700
-
+            title: `Historial · ${ticket.code}`,
+            html: timelineHtml(history.map((h: any) => ({
+              date: h.change_date,
+              badge: statusBadge(h.status),
+              rows: [
+                { label: 'Estado', value: statusBadge(h.status), html: true },
+                { label: 'Usuario', value: h.changed_by_email || 'Sistema' }
+              ]
+            }))),
+            width: 640,
+            confirmButtonText: 'Cerrar'
           });
 
         },
@@ -489,6 +405,8 @@ export class Tickets implements OnInit {
             'Error obteniendo historial:',
             err
           );
+
+          toastError('No se pudo obtener el historial');
 
         }
 
