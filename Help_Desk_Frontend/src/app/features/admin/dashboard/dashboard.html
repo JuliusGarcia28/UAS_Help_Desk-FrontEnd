@@ -1,59 +1,62 @@
 <div class="dashboard">
 
-  <h2>Dashboard Administrativo</h2>
+  <div class="page-header">
+    <div>
+      <h2>Dashboard administrativo</h2>
+      <p>Resumen general de la operación del Help Desk</p>
+    </div>
+  </div>
 
-  <div class="stats-grid">
+  <div class="stat-grid stagger">
 
-    <div class="stat-card">
-      <span class="material-icons">group</span>
-      <h3>Usuarios</h3>
-      <p>{{ users.length }}</p>
+    <div class="stat-card stat-total">
+      <div class="stat-icon"><span class="material-icons">group</span></div>
+      <div class="stat-info">
+        <div class="stat-label">Usuarios</div>
+        <div class="stat-value" [appCountUp]="users.length">0</div>
+      </div>
     </div>
 
-    <div class="stat-card">
-      <span class="material-icons">confirmation_number</span>
-      <h3>Tickets</h3>
-      <p>{{ tickets.length }}</p>
+    <div class="stat-card stat-progress">
+      <div class="stat-icon"><span class="material-icons">confirmation_number</span></div>
+      <div class="stat-info">
+        <div class="stat-label">Tickets</div>
+        <div class="stat-value" [appCountUp]="tickets.length">0</div>
+      </div>
     </div>
 
-    <div class="stat-card">
-      <span class="material-icons">inventory_2</span>
-      <h3>Activos</h3>
-      <p>{{ assets.length }}</p>
+    <div class="stat-card stat-closed">
+      <div class="stat-icon"><span class="material-icons">inventory_2</span></div>
+      <div class="stat-info">
+        <div class="stat-label">Activos</div>
+        <div class="stat-value" [appCountUp]="assets.length">0</div>
+      </div>
     </div>
 
-    <div class="stat-card">
-      <span class="material-icons">apartment</span>
-      <h3>Departamentos</h3>
-      <p>{{ departments.length }}</p>
+    <div class="stat-card stat-open">
+      <div class="stat-icon"><span class="material-icons">apartment</span></div>
+      <div class="stat-info">
+        <div class="stat-label">Departamentos</div>
+        <div class="stat-value" [appCountUp]="departments.length">0</div>
+      </div>
     </div>
 
   </div>
 
-  <div class="charts">
+  <div class="charts stagger">
 
     <div class="chart-card">
-
-      <h3>Estado de Tickets</h3>
-
-      <canvas
-        baseChart
-        [data]="ticketChartData"
-        [type]="ticketChartType">
-      </canvas>
-
+      <h3>Estado de tickets</h3>
+      <div class="chart-box">
+        <canvas baseChart [data]="ticketChartData" [options]="doughnutOptions()" [type]="ticketChartType"></canvas>
+      </div>
     </div>
 
     <div class="chart-card">
-
-      <h3>Usuarios por Rol</h3>
-
-      <canvas
-        baseChart
-        [data]="roleChartData"
-        [type]="roleChartType">
-      </canvas>
-
+      <h3>Usuarios por rol</h3>
+      <div class="chart-box">
+        <canvas baseChart [data]="roleChartData" [options]="barOptions()" [type]="roleChartType"></canvas>
+      </div>
     </div>
 
   </div>

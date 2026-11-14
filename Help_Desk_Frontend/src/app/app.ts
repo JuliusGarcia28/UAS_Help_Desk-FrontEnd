@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { AuthService } from './core/services/auth.service';
+
 import { ThemeService } from './core/services/theme.service';
 import { LoadingOverlay } from './core/components/loading-overlay/loading-overlay';
 
@@ -11,29 +11,8 @@ import { LoadingOverlay } from './core/components/loading-overlay/loading-overla
   styleUrl: './app.css'
 })
 export class App {
-  protected title = 'Help_Desk_Frontend';
 
-  constructor(private themeService: ThemeService, private authService: AuthService) {}
+  // Se inyecta para que el tema guardado se aplique al arrancar.
+  private readonly themeService = inject(ThemeService);
 
-  ngOnInit() {
-
-    const access =
-    localStorage.getItem('access');
-
-    if(access){
-
-      this.authService
-        .loadUser()
-        .subscribe({
-
-        next:(user)=>{
-
-         localStorage.setItem(
-              'user',
-              JSON.stringify(user)
-            );
-          }
-        });
-    }
-  }
 }

@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import Swal from 'sweetalert2';
+import Swal, { toastSuccess, toastError, esc } from '../../../core/utils/swal';
 import { AdminService } from '../../../core/services/admin.service';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   standalone: true,
@@ -29,10 +30,13 @@ export class Users implements OnInit {
     admin: 'Admin'
   };
 
-  constructor(private adminService: AdminService) {}
+  constructor(
+    private adminService: AdminService,
+    private authService: AuthService
+  ) {}
 
   ngOnInit() {
-    this.currentUser = JSON.parse(localStorage.getItem('user') || '{}');
+    this.currentUser = this.authService.getUser() ?? {};
     this.getUsers();
     this.getDepartments();
   }
@@ -68,7 +72,7 @@ export class Users implements OnInit {
         const prefix = level > 0 ? '↳ ' : '';
 
         const option = `
-          <option value="${node.id}">
+          <option value="${esc(node.id)}">
             ${indent}${prefix}${node.name}
           </option>
         `;
@@ -98,7 +102,7 @@ export class Users implements OnInit {
         const selected = String(node.id) === String(selectedId) ? 'selected' : '';
 
         const option = `
-          <option value="${node.id}" ${selected}>
+          <option value="${esc(node.id)}" ${selected}>
             ${indent}${prefix}${node.name}
           </option>
         `;
@@ -173,20 +177,11 @@ export class Users implements OnInit {
   }
 
   successAlert(msg: string) {
-    Swal.fire({
-      title: msg,
-      icon: 'success',
-      confirmButtonColor: '#0B2545'
-    });
+    toastSuccess(msg);
   }
 
   errorAlert(msg: string) {
-    Swal.fire({
-      title: 'Error',
-      text: msg,
-      icon: 'error',
-      confirmButtonColor: '#0B2545'
-    });
+    toastError(msg);
   }
 
   // ========================
@@ -200,12 +195,11 @@ export class Users implements OnInit {
     const newStatus = user.status === 1 ? 0 : 1;
 
     Swal.fire({
-      title: '¿Confirmar acción?',
+      title: newStatus === 1 ? '¿Activar usuario?' : '¿Desactivar usuario?',
       text: `El usuario será ${newStatus === 1 ? 'activado' : 'desactivado'}`,
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#0B2545',
-      cancelButtonColor: '#E4E7EB'
+      confirmButtonText: newStatus === 1 ? 'Activar' : 'Desactivar',
     }).then(result => {
       if (result.isConfirmed) {
         this.adminService.toggleUser(user.id, newStatus).subscribe({
@@ -221,13 +215,17 @@ export class Users implements OnInit {
 
   viewUser(user: any) {
     Swal.fire({
-      title: `${user.first_name} ${user.last_name}`,
+      title: esc(`${user.first_name} ${user.last_name}`),
       html: `
-        <b>Email:</b> ${user.email}<br>
-        <b>Rol:</b> ${this.roleMap[user.role]}<br>
-        <b>Departamento:</b> ${user.department?.name || 'Sin asignar'}
+        <div class="detail-view">
+          <div class="detail-grid">
+            <div class="detail-field wide"><span class="detail-label">Correo</span><span class="detail-value">${esc(user.email)}</span></div>
+            <div class="detail-field"><span class="detail-label">Rol</span><span class="detail-value">${esc(this.roleMap[user.role])}</span></div>
+            <div class="detail-field"><span class="detail-label">Departamento</span><span class="detail-value">${esc(user.department?.name || 'Sin asignar')}</span></div>
+          </div>
+        </div>
       `,
-      confirmButtonColor: '#0B2545'
+      confirmButtonText: 'Cerrar'
     });
   }
 
@@ -240,17 +238,18 @@ export class Users implements OnInit {
 
     Swal.fire({
       title: 'Editar usuario',
+      width: 620,
+      confirmButtonText: 'Guardar',
       html: `
-        <input id="first_name" class="swal2-input" value="${user.first_name || ''}" placeholder="Nombre(s)">
-        <input id="last_name" class="swal2-input" value="${user.last_name || ''}" placeholder="Apellido(s)">
-        <input id="email" class="swal2-input" value="${user.email || ''}" placeholder="Correo">
-        <select id="department" class="swal2-select">
+        <label class="swal-field"><span>Nombre(s)</span><input id="first_name" class="swal2-input" value="${esc(user.first_name || '')}" placeholder="Nombre(s)"></label>
+        <label class="swal-field"><span>Apellido(s)</span><input id="last_name" class="swal2-input" value="${esc(user.last_name || '')}" placeholder="Apellido(s)"></label>
+        <label class="swal-field"><span>Correo</span><input id="email" class="swal2-input" value="${esc(user.email || '')}" placeholder="Correo"></label>
+        <label class="swal-field"><span>Departamento</span><select id="department" class="swal2-select">
           <option value="">Sin departamento</option>
           ${departmentOptions}
-        </select>
+        </select></label>
       `,
       showCancelButton: true,
-      confirmButtonColor: '#0B2545',
       preConfirm: () => {
 
         const first_name = (document.getElementById('first_name') as HTMLInputElement).value.trim();
@@ -290,27 +289,28 @@ export class Users implements OnInit {
   createUser() {
 
     const roleOptions = Object.entries(this.roleMap)
-      .map(([value, label]) => `<option value="${value}">${label}</option>`)
+      .map(([value, label]) => `<option value="${esc(value)}">${label}</option>`)
       .join('');
 
     const departmentOptions = this.buildDepartmentOptionsTree(this.departments);
 
     Swal.fire({
       title: 'Nuevo usuario',
+      width: 620,
+      confirmButtonText: 'Crear usuario',
       html: `
         <div class="swal-form">
-          <input id="first_name" class="swal2-input" placeholder="Nombre(s)">
-          <input id="last_name" class="swal2-input" placeholder="Apellido(s)">
-          <input id="email" class="swal2-input" placeholder="Correo">
-          <select id="role" class="swal2-select">${roleOptions}</select>
-          <select id="department" class="swal2-select">
+          <label class="swal-field"><span>Nombre(s)</span><input id="first_name" class="swal2-input" placeholder="Nombre(s)"></label>
+          <label class="swal-field"><span>Apellido(s)</span><input id="last_name" class="swal2-input" placeholder="Apellido(s)"></label>
+          <label class="swal-field"><span>Correo</span><input id="email" class="swal2-input" placeholder="Correo"></label>
+          <label class="swal-field"><span>Rol</span><select id="role" class="swal2-select">${roleOptions}</select></label>
+          <label class="swal-field"><span>Departamento</span><select id="department" class="swal2-select">
             <option value="">Sin departamento</option>
               ${departmentOptions}
-          </select>
+          </select></label>
         </div>
       `,
       showCancelButton: true,
-      confirmButtonColor: '#0B2545',
       preConfirm: () => {
 
         const first_name = (document.getElementById('first_name') as HTMLInputElement).value.trim();

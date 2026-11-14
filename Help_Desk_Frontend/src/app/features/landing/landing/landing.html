@@ -1,62 +1,30 @@
-<!-- HEADER / NAVBAR -->
-<header class="navbar">
+<!-- NAVBAR -->
+<header class="navbar" [class.scrolled]="scrolled">
 
   <div class="container navbar-content">
 
-    <!-- LOGO -->
-
-    <div class="logo">
-
-      <img
-        class="logo-image"
-        src="img/Help_Desk_Logo_Blue.png"
-        alt="HelpDesk">
-
+    <a class="logo" routerLink="/" aria-label="HelpDesk">
+      <img class="logo-image" src="img/Help_Desk_Logo_Blue.png" alt="HelpDesk">
       <span>HelpDesk</span>
+    </a>
 
-    </div>
-
-    <!-- NAV LINKS -->
-
-    <nav class="nav-links">
-
-      <a href="#features">Funciones</a>
-      <a href="#how">Cómo funciona</a>
-      <a href="#downloads">Descargas</a>
-
+    <nav class="nav-links" aria-label="Secciones">
+      <a href="javascript:void(0)" (click)="scrollTo('features', $event)">Funciones</a>
+      <a href="javascript:void(0)" (click)="scrollTo('how', $event)">Cómo funciona</a>
+      <a href="javascript:void(0)" (click)="scrollTo('downloads', $event)">Descargas</a>
     </nav>
-
-    <!-- ACTIONS -->
 
     <div class="nav-actions">
 
-      <button
-        class="theme-toggle"
-        (click)="toggleTheme()">
-
-        <span class="material-icons">
-          {{ isDark() ? 'light_mode' : 'dark_mode' }}
-        </span>
-
+      <button class="theme-toggle" (click)="toggleTheme()"
+              [attr.aria-label]="isDark() ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro'">
+        <span class="material-icons">{{ isDark() ? 'light_mode' : 'dark_mode' }}</span>
       </button>
 
-      <a
-        routerLink="/login"
-        class="btn btn-outline">
-
+      <a routerLink="/login" class="btn btn-primary">
+        <span class="material-icons">login</span>
         Iniciar sesión
-
       </a>
-
-      <!--
-      <a
-        routerLink="/register"
-        class="btn btn-primary">
-
-        Registrarse
-
-      </a>
-      -->
 
     </div>
 
@@ -65,54 +33,50 @@
 </header>
 
 <!-- HERO -->
-
 <section class="hero">
+
+  <div class="hero-bg" aria-hidden="true">
+    <span class="orb orb-1"></span>
+    <span class="orb orb-2"></span>
+    <span class="grid-overlay"></span>
+  </div>
 
   <div class="container hero-content">
 
     <div class="hero-text">
 
+      <span class="eyebrow">Soporte técnico</span>
+
       <h1>
-
         Sistema Inteligente de
-
         <span>Help Desk</span>
-
       </h1>
 
       <p>
-
-        Plataforma diseñada para gestionar incidencias técnicas,
-        administrar inventario de hardware y software y mejorar
-        la eficiencia del soporte tecnológico en entornos universitarios.
-
+        Plataforma diseñada para gestionar incidencias técnicas, administrar
+        inventario de hardware y software y mejorar la eficiencia del soporte
+        tecnológico en entornos universitarios.
       </p>
 
       <div class="hero-actions">
 
-        <button class="btn btn-primary hero-btn">
+        <a routerLink="/login" class="btn btn-light hero-btn">
+          Solicitar soporte
+          <span class="material-icons">arrow_forward</span>
+        </a>
 
-          Solicitar Soporte
-
-        </button>
-
-        <button class="btn btn-outline hero-btn hero-outline" style="color: var(--text-secondary);">
-
+        <a href="javascript:void(0)" class="btn btn-ghost hero-btn" (click)="scrollTo('features', $event)">
           Conocer más
-
-        </button>
+        </a>
 
       </div>
 
     </div>
 
     <div class="hero-image">
-
-      <img
-        class="hero-logo"
-        src="img/Help_Desk_Logo_White.png"
-        alt="HelpDesk">
-
+      <div class="logo-halo">
+        <img class="hero-logo" src="img/Help_Desk_Logo_White.png" alt="HelpDesk">
+      </div>
     </div>
 
   </div>
@@ -120,84 +84,28 @@
 </section>
 
 <!-- FEATURES -->
-
-<section
-  id="features"
-  class="section">
+<section id="features" class="section">
 
   <div class="container">
 
-    <h2 class="section-title">
+    <h2 class="section-title" appReveal>Solución Integral de Soporte Técnico</h2>
 
-      Solución Integral de Soporte Técnico
-
-    </h2>
-
-    <p class="section-subtitle">
-
-      Nuestro sistema centraliza la gestión de incidencias,
-      inventario tecnológico y diagnóstico inteligente
-      en una sola plataforma.
-
+    <p class="section-subtitle" appReveal [revealDelay]="80">
+      Nuestro sistema centraliza la gestión de incidencias, inventario
+      tecnológico y diagnóstico inteligente en una sola plataforma.
     </p>
 
     <div class="features-grid">
 
-      <div class="feature-card">
-
-        <h3>Gestión de Tickets</h3>
-
-        <p>
-
-          Registro estructurado de incidencias técnicas
-          para facilitar la comunicación entre docentes
-          y personal de soporte.
-
-        </p>
-
-      </div>
-
-      <div class="feature-card">
-
-        <h3>Seguimiento en Tiempo Real</h3>
-
-        <p>
-
-          Los usuarios pueden consultar el estado
-          de sus solicitudes y conocer el progreso
-          de la resolución.
-
-        </p>
-
-      </div>
-
-      <div class="feature-card">
-
-        <h3>Inventario Tecnológico</h3>
-
-        <p>
-
-          Administración centralizada de hardware
-          y software para mejorar la planificación
-          del mantenimiento.
-
-        </p>
-
-      </div>
-
-      <div class="feature-card">
-
-        <h3>Diagnóstico Inteligente</h3>
-
-        <p>
-
-          Un agente inteligente proporciona un
-          diagnóstico inicial que facilita la
-          identificación del problema.
-
-        </p>
-
-      </div>
+      @for (f of features; track f.title; let i = $index) {
+        <article class="feature-card" appReveal [revealDelay]="i * 90">
+          <div class="feature-icon">
+            <span class="material-icons">{{ f.icon }}</span>
+          </div>
+          <h3>{{ f.title }}</h3>
+          <p>{{ f.text }}</p>
+        </article>
+      }
 
     </div>
 
@@ -206,80 +114,21 @@
 </section>
 
 <!-- HOW -->
-
-<section
-  id="how"
-  class="section section-dark">
+<section id="how" class="section section-dark">
 
   <div class="container">
 
-    <h2 class="section-title light">
-
-      ¿Cómo funciona?
-
-    </h2>
+    <h2 class="section-title light" appReveal>¿Cómo funciona?</h2>
 
     <div class="steps">
 
-      <div class="step">
-
-        <span>1</span>
-
-        <h4>Registrar incidencia</h4>
-
-        <p>
-
-          El docente reporta el problema
-          mediante un ticket estructurado.
-
-        </p>
-
-      </div>
-
-      <div class="step">
-
-        <span>2</span>
-
-        <h4>Análisis inicial</h4>
-
-        <p>
-
-          El sistema analiza la información
-          y genera un diagnóstico preliminar.
-
-        </p>
-
-      </div>
-
-      <div class="step">
-
-        <span>3</span>
-
-        <h4>Asignación técnica</h4>
-
-        <p>
-
-          El personal de soporte recibe la incidencia
-          y planifica su solución.
-
-        </p>
-
-      </div>
-
-      <div class="step">
-
-        <span>4</span>
-
-        <h4>Resolución</h4>
-
-        <p>
-
-          Se atiende el problema y se registra
-          la solución aplicada.
-
-        </p>
-
-      </div>
+      @for (s of steps; track s.title; let i = $index) {
+        <div class="step" appReveal [revealDelay]="i * 110">
+          <span>{{ i + 1 }}</span>
+          <h4>{{ s.title }}</h4>
+          <p>{{ s.text }}</p>
+        </div>
+      }
 
     </div>
 
@@ -288,72 +137,42 @@
 </section>
 
 <!-- DOWNLOADS -->
-
-<section
-  id="downloads"
-  class="section downloads">
+<section id="downloads" class="section downloads">
 
   <div class="container">
 
-    <h2 class="section-title">
+    <h2 class="section-title" appReveal>Descargas</h2>
 
-      Descargas
-
-    </h2>
-
-    <p class="section-subtitle">
-
-      Accede a la aplicación de escritorio del sistema
-      Help Desk para una experiencia más completa y
-      eficiente en la gestión de incidencias.
-
+    <p class="section-subtitle" appReveal [revealDelay]="80">
+      Accede a la aplicación de escritorio del sistema Help Desk para una
+      experiencia más completa y eficiente en la gestión de incidencias.
     </p>
 
     <div class="downloads-grid">
 
-      <div class="download-card">
+      <div class="download-card" appReveal>
 
         <div class="download-icon">
-
-          <span class="material-icons">
-
-            desktop_windows
-
-          </span>
-
+          <span class="material-icons">desktop_windows</span>
         </div>
 
-        <h3>
+        <h3>Windows</h3>
 
-          Windows
-
-        </h3>
-
-        <p style="text-align: center;">
-
-          Versión de escritorio compatible
-          con sistemas Windows.
-
-          Ideal para personal técnico
-          y administrativo.
-
+        <p>
+          Versión de escritorio compatible con sistemas Windows.
+          Ideal para personal técnico y administrativo.
         </p>
 
         <ul class="download-features">
-
-          <li>✔ Acceso rápido al sistema</li>
-          <li>✔ Mejor rendimiento</li>
-          <li>✔ Notificaciones locales</li>
-
+          <li><span class="material-icons">check_circle</span> Acceso rápido al sistema</li>
+          <li><span class="material-icons">check_circle</span> Mejor rendimiento</li>
+          <li><span class="material-icons">check_circle</span> Mejor experiencia de usuario</li>
         </ul>
 
-        <button
-          onclick="window.open('https://github.com/JuliusGarcia28/UAS_Help_Desk-FrontEnd/releases/download/Release/HelpDesk.Setup.1.0.1.exe','_blank')"
-          class="btn btn-primary btn-full">
-
+        <a [href]="downloadUrl" target="_blank" rel="noopener" class="btn btn-primary btn-full">
+          <span class="material-icons">download</span>
           Descargar (.exe)
-
-        </button>
+        </a>
 
       </div>
 
@@ -364,57 +183,32 @@
 </section>
 
 <!-- CTA -->
+<section class="section cta-section">
 
-<section class="section">
+  <div class="container cta" appReveal>
 
-  <div class="container cta">
-
-    <h2>
-
-      Optimiza la gestión del soporte técnico
-
-    </h2>
+    <h2>Optimiza la gestión del soporte técnico</h2>
 
     <p>
-
-      Mejora los tiempos de atención,
-      reduce incidencias recurrentes
-      y centraliza la información
-      tecnológica en una sola plataforma.
-
+      Mejora los tiempos de atención, reduce incidencias recurrentes y
+      centraliza la información tecnológica en una sola plataforma.
     </p>
 
-    <button class="btn btn-primary">
-
+    <a routerLink="/login" class="btn btn-primary">
       Comenzar ahora
-
-    </button>
+      <span class="material-icons">arrow_forward</span>
+    </a>
 
   </div>
 
 </section>
 
 <!-- FOOTER -->
-
 <footer class="footer">
 
   <div class="container footer-content">
-
-    <p>
-
-      © 2026 Sistema Help Desk
-      - UAS Ciudad Universitaria
-
-    </p>
-
-    <p>
-
-      Proyecto académico de gestión
-      de soporte técnico e inventario
-      tecnológico.
-
-    </p>
-
+    <p>© {{ year }} Sistema Help Desk · UAS Ciudad Universitaria</p>
+    <p>Proyecto académico de gestión de soporte técnico e inventario tecnológico.</p>
   </div>
 
 </footer>

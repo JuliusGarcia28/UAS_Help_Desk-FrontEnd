@@ -11,7 +11,8 @@ import {
   CommonModule
 } from '@angular/common';
 
-import Swal from 'sweetalert2';
+import Swal, { toastError } from '../../../core/utils/swal';
+import { timelineHtml, statusBadge } from '../../../core/utils/modal-html';
 
 import {
   Router
@@ -31,7 +32,9 @@ export class Tickets implements OnInit {
   statusMap: any = {
     1: 'Abierto',
     2: 'En proceso',
-    3: 'Cerrado'
+    3: 'Resuelto',
+    4: 'Escalado',
+    0: 'Cerrado'
   };
 
   priorityMap: any = {
@@ -75,34 +78,27 @@ export class Tickets implements OnInit {
 
     this.ticketService
       .getTicketHistory(ticket.id)
-      .subscribe(history => {
+      .subscribe({
 
-        const html = history.map(h => `
-          <div class="history-item">
-            <div class="history-date">
-              ${new Date(h.change_date).toLocaleString()}
-            </div>
+        next: history => {
 
-            <div class="history-body">
-              Estado:
-              ${this.statusMap[h.status]}
-              <br>
+          Swal.fire({
+            title: 'Historial del ticket',
+            html: timelineHtml(history.map((h: any) => ({
+              date: h.change_date,
+              badge: statusBadge(h.status),
+              rows: [
+                { label: 'Estado', value: statusBadge(h.status), html: true },
+                { label: 'Atendido por', value: h.changed_by_email || 'Sistema' }
+              ]
+            }))),
+            width: 600,
+            confirmButtonText: 'Cerrar'
+          });
 
-              Usuario:
-              ${h.changed_by_email || 'Sistema'}
-            </div>
-          </div>
-        `).join('');
+        },
 
-        Swal.fire({
-          title: 'Historial',
-          html: `
-            <div class="history-container">
-              ${html}
-            </div>
-          `,
-          width: 600
-        });
+        error: () => toastError('No se pudo obtener el historial')
 
       });
 

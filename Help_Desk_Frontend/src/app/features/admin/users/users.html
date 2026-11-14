@@ -1,5 +1,10 @@
 <div class="admin-card">
-<h2>Usuarios</h2>
+<div class="page-header">
+  <div>
+    <h2>Usuarios</h2>
+    <p>Gestiona cuentas, roles y departamentos · {{ filteredUsers.length }} de {{ users.length }}</p>
+  </div>
+</div>
 
 <div class="filters">
 
@@ -34,9 +39,10 @@
 </div>
 
 <button class="btn btn-primary btn-create" (click)="createUser()">
-  + Nuevo usuario
+  <span class="material-icons">add</span> Nuevo usuario
 </button>
 
+<div class="table-wrap">
 <table class="table">
   <thead>
     <tr>
@@ -74,18 +80,19 @@
       </td>
 
       <td class="actions">
-        <!--button class="btn btn-outline" (click)="viewUser(user)">
+        <!--button class="btn-icon" (click)="viewUser(user)">
           <span class="material-icons">visibility</span>
         </button-->
 
-        <button class="btn btn-outline" (click)="editUser(user)">
+        <button class="btn-icon" (click)="editUser(user)" title="Editar usuario" aria-label="Editar usuario">
           <span class="material-icons">edit</span>
         </button>
 
         <button
-          class="btn"
-          [ngClass]="user.status === 1 ? 'btn-primary' : 'btn-outline'"
+          class="btn-icon" [class.danger]="user.status === 1" [class.success]="user.status !== 1"
           (click)="toggleUser(user)"
+          [disabled]="isSelf(user)"
+          [title]="user.status === 1 ? 'Desactivar' : 'Activar'"
         >
           <span class="material-icons">
             {{ user.status === 1 ? 'block' : 'check_circle' }}
@@ -96,4 +103,13 @@
     </tr>
   </tbody>
 </table>
+</div>
+
+@if (filteredUsers.length === 0) {
+  <div class="empty-state">
+    <span class="material-icons">group</span>
+    <strong>No se encontraron usuarios</strong>
+    <span>Prueba con otros filtros.</span>
+  </div>
+}
 </div>

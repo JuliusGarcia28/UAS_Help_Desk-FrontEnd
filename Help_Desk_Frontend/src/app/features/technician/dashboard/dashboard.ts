@@ -1,3 +1,4 @@
+import { CountUpDirective } from '../../../core/directives/count-up.directive';
 import {
   Component,
   OnInit
@@ -21,7 +22,8 @@ import { Ticket } from '../../../core/models/ticket.model';
   standalone: true,
   imports: [
     CommonModule,
-    RouterModule
+    RouterModule,
+    CountUpDirective
   ],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css'

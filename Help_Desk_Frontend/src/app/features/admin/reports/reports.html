@@ -1,252 +1,210 @@
 <div class="reports-container">
 
-  <!-- =========================
-        HEADER
-  ========================== -->
+  <!-- ENCABEZADO -->
+  <div class="page-header">
+    <div>
+      <h2>Centro de reportes</h2>
+      <p>Análisis general del sistema de tickets y rendimiento operativo</p>
+    </div>
 
-  <div class="reports-header">
-
-    <h2>Centro de Reportes</h2>
-
-    <p>
-      Análisis general del sistema de tickets y rendimiento operativo
-    </p>
-
+    <div class="header-actions">
+      <button class="btn btn-outline" (click)="exportPDF()">
+        <span class="material-icons">picture_as_pdf</span>
+        PDF
+      </button>
+      <button class="btn btn-primary" (click)="exportExcel()">
+        <span class="material-icons">table_view</span>
+        Excel
+      </button>
+    </div>
   </div>
 
-  <!-- =========================
-        KPI CARDS
-  ========================== -->
+  <!-- KPIs -->
+  <div class="stat-grid kpi-grid stagger">
 
-  <div class="kpi-grid">
-
-    <div class="kpi-card primary">
-
-      <h3>Total Tickets</h3>
-
-      <p>{{ dashboard?.total_tickets || 0 }}</p>
-
+    <div class="stat-card stat-total">
+      <div class="stat-icon"><span class="material-icons">confirmation_number</span></div>
+      <div class="stat-info">
+        <div class="stat-label">Total tickets</div>
+        <div class="stat-value" [appCountUp]="dashboard?.total_tickets || 0">0</div>
+      </div>
     </div>
 
-    <div class="kpi-card success">
-
-      <h3>Resueltos</h3>
-
-      <p>{{ dashboard?.resolved || 0 }}</p>
-
+    <div class="stat-card stat-open">
+      <div class="stat-icon"><span class="material-icons">mark_email_unread</span></div>
+      <div class="stat-info">
+        <div class="stat-label">Abiertos</div>
+        <div class="stat-value" [appCountUp]="dashboard?.open_tickets || 0">0</div>
+      </div>
     </div>
 
-    <div class="kpi-card warning">
-
-      <h3>En proceso</h3>
-
-      <p>{{ dashboard?.in_progress || 0 }}</p>
-
+    <div class="stat-card stat-progress">
+      <div class="stat-icon"><span class="material-icons">autorenew</span></div>
+      <div class="stat-info">
+        <div class="stat-label">En proceso</div>
+        <div class="stat-value" [appCountUp]="dashboard?.in_progress || 0">0</div>
+      </div>
     </div>
 
-    <div class="kpi-card danger">
-
-      <h3>Abiertos</h3>
-
-      <p>{{ dashboard?.open_tickets || 0 }}</p>
-
+    <div class="stat-card stat-closed">
+      <div class="stat-icon"><span class="material-icons">task_alt</span></div>
+      <div class="stat-info">
+        <div class="stat-label">Resueltos</div>
+        <div class="stat-value" [appCountUp]="dashboard?.resolved || 0">0</div>
+      </div>
     </div>
 
-    <div class="kpi-card info">
-
-      <h3>Usuarios</h3>
-
-      <p>{{ dashboard?.total_users || 0 }}</p>
-
+    <div class="stat-card stat-total">
+      <div class="stat-icon"><span class="material-icons">group</span></div>
+      <div class="stat-info">
+        <div class="stat-label">Usuarios</div>
+        <div class="stat-value" [appCountUp]="dashboard?.total_users || 0">0</div>
+      </div>
     </div>
 
-    <div class="kpi-card info">
-
-      <h3>Departamentos</h3>
-
-      <p>{{ dashboard?.total_departments || 0 }}</p>
-
+    <div class="stat-card stat-progress">
+      <div class="stat-icon"><span class="material-icons">apartment</span></div>
+      <div class="stat-info">
+        <div class="stat-label">Departamentos</div>
+        <div class="stat-value" [appCountUp]="dashboard?.total_departments || 0">0</div>
+      </div>
     </div>
 
-    <div class="kpi-card info">
-
-      <h3>IA Sessions</h3>
-
-      <p>{{ dashboard?.ai_sessions || 0 }}</p>
-
+    <div class="stat-card stat-ai">
+      <div class="stat-icon"><span class="material-icons">smart_toy</span></div>
+      <div class="stat-info">
+        <div class="stat-label">Sesiones IA</div>
+        <div class="stat-value" [appCountUp]="dashboard?.ai_sessions || 0">0</div>
+      </div>
     </div>
 
-    <div class="kpi-card secondary">
-
-      <h3>Prom. Resolución</h3>
-
-      <p>{{ formatResolutionTime(averageResolution) }}</p>
-
-    </div>
-
-  </div>
-
-  <!-- =========================
-        GRÁFICOS
-  ========================== -->
-
-  <div class="charts-grid">
-
-    <div class="chart-card">
-
-      <h3>Tickets por Estado</h3>
-
-      <canvas id="chartStatus"></canvas>
-
-    </div>
-
-    <div class="chart-card">
-
-      <h3>Tickets por Prioridad</h3>
-
-      <canvas id="chartPriority"></canvas>
-
-    </div>
-
-    <div class="chart-card">
-
-      <h3>Tickets por Categoría</h3>
-
-      <canvas id="chartCategory"></canvas>
-
-    </div>
-
-    <div class="chart-card">
-
-      <h3>Tickets por Técnico</h3>
-
-      <canvas id="chartTechnician"></canvas>
-
-    </div>
-
-    <div class="chart-card">
-
-      <h3>Tickets por Departamento</h3>
-
-      <canvas id="chartDepartment"></canvas>
-
-    </div>
-
-    <div class="chart-card">
-
-      <h3>Tickets por Mes</h3>
-
-      <canvas id="chartMonth"></canvas>
-
+    <div class="stat-card stat-time">
+      <div class="stat-icon"><span class="material-icons">timer</span></div>
+      <div class="stat-info">
+        <div class="stat-label">Prom. resolución</div>
+        <div class="stat-value stat-text">{{ formatResolutionTime(averageResolution) }}</div>
+      </div>
     </div>
 
   </div>
 
-    <!-- =========================
-        FILTROS + EXPORT
-  ========================== -->
+  <!-- GRÁFICAS -->
+  <div class="charts-grid stagger">
 
-  <div class="reports-filters">
+    @for (card of chartCards; track card.id) {
+      <div class="chart-card" [class.wide]="card.id === 'chartMonth'">
 
-    <select [(ngModel)]="status" (change)="applyFilters()">
+        <h3>
+          <span class="material-icons">{{ card.icon }}</span>
+          {{ card.title }}
+        </h3>
 
-      <option value="">Todos los estados</option>
+        <div class="chart-box">
+          <canvas [id]="card.id" [hidden]="emptyCharts.has(card.id)"></canvas>
 
-      <option value="1">Abiertos</option>
+          @if (emptyCharts.has(card.id)) {
+            <div class="chart-empty">
+              <span class="material-icons">insights</span>
+              <span>Aún no hay datos para mostrar</span>
+            </div>
+          }
+        </div>
 
-      <option value="2">En proceso</option>
-
-      <option value="3">Resueltos</option>
-
-    </select>
-
-    <select [(ngModel)]="department" (change)="applyFilters()">
-
-      <option value="">Todos los departamentos</option>
-
-      <option *ngFor="let dep of departments" [value]="dep.id">
-
-        {{ dep.name }}
-
-      </option>
-
-    </select>
-
-    <button class="btn btn-primary" (click)="exportExcel()">
-
-      Exportar Excel
-
-    </button>
-
-    <button class="btn btn-outline" (click)="exportPDF()">
-
-      Exportar PDF
-
-    </button>
+      </div>
+    }
 
   </div>
 
-  <!-- =========================
-        TABLA
-  ========================== -->
+  <!-- DETALLE -->
+  <div class="detail-card">
 
-  <div class="table-container">
+    <div class="detail-head">
+      <h3>
+        <span class="material-icons">list_alt</span>
+        Detalle de tickets
+        <span class="count-pill">{{ filteredTickets.length }}</span>
+      </h3>
+    </div>
 
-    <table class="table">
+    <div class="filters">
 
-      <thead>
+      <input
+        type="text"
+        placeholder="Buscar por código, descripción o cliente..."
+        [(ngModel)]="search"
+        (input)="applyFilters()"
+      />
 
-        <tr>
+      <select [(ngModel)]="status" (change)="applyFilters()">
+        <option value="">Todos los estados</option>
+        <option value="1">Abiertos</option>
+        <option value="2">En proceso</option>
+        <option value="3">Resueltos</option>
+        <option value="4">Escalados</option>
+        <option value="0">Cerrados</option>
+      </select>
 
-          <th>Código</th>
+      <select [(ngModel)]="department" (change)="applyFilters()">
+        <option value="">Todos los departamentos</option>
+        @for (dep of departments; track dep.id) {
+          <option [value]="dep.id">{{ dep.name }}</option>
+        }
+      </select>
 
-          <th>Descripción</th>
+      @if (hasFilters) {
+        <button class="btn btn-outline" (click)="clearFilters()">
+          <span class="material-icons">filter_alt_off</span>
+          Limpiar
+        </button>
+      }
 
-          <th>Estado</th>
+    </div>
 
-          <th>Departamento</th>
+    <div class="table-wrap">
+      <table class="table">
 
-        </tr>
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Descripción</th>
+            <th>Prioridad</th>
+            <th>Estado</th>
+            <th>Cliente</th>
+            <th>Departamento</th>
+          </tr>
+        </thead>
 
-      </thead>
+        <tbody>
+          @for (ticket of filteredTickets; track ticket.id) {
+            <tr>
+              <td class="mono strong">{{ ticket.code }}</td>
+              <td class="cell-desc" [title]="ticket.description">{{ ticket.description }}</td>
+              <td>
+                <span class="badge" [ngClass]="priorityCss(ticket.priority)">
+                  {{ priorityLabel[ticket.priority] || 'Sin prioridad' }}
+                </span>
+              </td>
+              <td>
+                <span class="badge" [ngClass]="statusCss(ticket.status)">
+                  {{ statusLabel[ticket.status] || 'Desconocido' }}
+                </span>
+              </td>
+              <td>{{ ticket.client?.email || 'N/A' }}</td>
+              <td>{{ ticket.client?.department?.name || 'N/A' }}</td>
+            </tr>
+          }
+        </tbody>
 
-      <tbody>
+      </table>
+    </div>
 
-        <tr *ngFor="let ticket of filteredTickets">
-
-          <td>{{ ticket.code }}</td>
-
-          <td>{{ ticket.description }}</td>
-
-          <td>
-
-            {{
-
-              ticket.status === 1
-
-              ? 'Abierto'
-
-              : ticket.status === 2
-
-              ? 'En proceso'
-
-              : 'Resuelto'
-
-            }}
-
-          </td>
-
-          <td>
-
-            {{ ticket.client?.department?.name || 'N/A' }}
-
-          </td>
-
-        </tr>
-
-      </tbody>
-
-    </table>
+    @if (filteredTickets.length === 0) {
+      <div class="empty-state">
+        <span class="material-icons">search_off</span>
+        <strong>Sin resultados</strong>
+        <span>No hay tickets que coincidan con los filtros.</span>
+      </div>
+    }
 
   </div>
 

@@ -1,65 +1,72 @@
-<div class="client-container">
+<div class="app-shell">
 
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
+  <aside class="sidebar" [class.open]="sidebarOpen">
 
     <div class="logo">
       <img src="img/Help_Desk_Logo_White.png" alt="HelpDesk">
       <span>HelpDesk</span>
     </div>
 
-    <nav>
+    <nav aria-label="Navegación principal">
 
-      <a routerLink="/client/dashboard" routerLinkActive="active">
+      <a routerLink="/client/dashboard" routerLinkActive="active" (click)="closeSidebar()">
         <span class="material-icons">dashboard</span>
         Mi Panel
       </a>
 
-      <a routerLink="/client/tickets" routerLinkActive="active">
+      <a routerLink="/client/tickets" routerLinkActive="active" (click)="closeSidebar()">
         <span class="material-icons">support_agent</span>
         Mis Tickets
       </a>
 
-      <a routerLink="/client/ai-support" routerLinkActive="active">
+      <a routerLink="/client/ai-support" routerLinkActive="active" (click)="closeSidebar()">
         <span class="material-icons">smart_toy</span>
         Asistente IA
       </a>
 
-      <a routerLink="/client/ai-history" routerLinkActive="active">
+      <a routerLink="/client/ai-history" routerLinkActive="active" (click)="closeSidebar()">
         <span class="material-icons">history</span>
         Historial
       </a>
 
     </nav>
 
+    <div class="sidebar-footer">Help Desk</div>
+
   </aside>
 
-  <!-- CONTENT -->
+  @if (sidebarOpen) {
+    <div class="sidebar-overlay" (click)="closeSidebar()"></div>
+  }
+
   <main class="content">
 
     <header class="topbar">
 
-      <h1>Panel de Usuario</h1>
-
-      <div class="user-info">
-        <span>
-          {{ user.first_name }} {{ user.last_name }}
-        </span>
-
-            <button
-              class="theme-toggle"
-              (click)="toggleTheme()">
-
-              <span class="material-icons">
-                {{ isDark() ? 'light_mode' : 'dark_mode' }}
-              </span>
-
-            </button>
-
-        <button class="btn btn-outline logout-btn" style="display: flex; flex-direction: row; align-items: center;" (click)="logout()">
-          <span class="material-icons" style="margin-right: 0.2rem;">logout</span>
-          <span>Cerrar Sesión</span>
+      <div class="topbar-left">
+        <button class="menu-btn" (click)="toggleSidebar()" aria-label="Abrir menú">
+          <span class="material-icons">menu</span>
         </button>
+        <h1>Panel de Usuario</h1>
+      </div>
+
+      <div class="topbar-actions">
+
+        <div class="user-chip" [title]="user.email || ''">
+          <span class="avatar-sm">{{ initials }}</span>
+          <span class="user-name">{{ fullName }}</span>
+        </div>
+
+        <button class="theme-toggle" (click)="toggleTheme()"
+                [attr.aria-label]="isDark() ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro'">
+          <span class="material-icons">{{ isDark() ? 'light_mode' : 'dark_mode' }}</span>
+        </button>
+
+        <button class="btn btn-outline btn-logout" (click)="logout()">
+          <span class="material-icons">logout</span>
+          <span class="btn-text">Cerrar sesión</span>
+        </button>
+
       </div>
 
     </header>

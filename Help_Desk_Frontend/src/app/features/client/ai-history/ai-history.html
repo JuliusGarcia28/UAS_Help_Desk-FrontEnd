@@ -1,14 +1,20 @@
-<h2>Historial IA</h2>
+<div class="page-header">
+  <div>
+    <h2>Historial IA</h2>
+    <p>Conversaciones previas con el asistente</p>
+  </div>
+</div>
 
 @if (loading) {
 
-  <p>Cargando conversaciones...</p>
+  <div class="empty-state"><span class="material-icons">hourglass_empty</span>Cargando conversaciones...</div>
 
 } @else {
 
   @if (sessions.length > 0) {
 
-    <table class="table">
+    <div class="table-wrap">
+<table class="table">
 
       <thead>
 
@@ -70,12 +76,15 @@
       </tbody>
 
     </table>
+</div>
 
   } @else {
 
-    <p>
-      Aún no existen conversaciones con el asistente IA.
-    </p>
+    <div class="empty-state">
+      <span class="material-icons">smart_toy</span>
+      <strong>Aún no hay conversaciones</strong>
+      <span>Cuando uses el asistente IA aparecerán aquí.</span>
+    </div>
 
   }
 

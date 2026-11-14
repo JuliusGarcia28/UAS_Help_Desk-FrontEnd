@@ -11,7 +11,8 @@ import {
   AiSupportService
 } from '../../../core/services/ai_support.service';
 
-import Swal from 'sweetalert2';
+import Swal, { toastError, esc } from '../../../core/utils/swal';
+import { formatDate } from '../../../core/utils/modal-html';
 
 @Component({
   selector: 'app-ai-history',
@@ -58,15 +59,7 @@ export class AiHistory implements OnInit {
 
           this.loading = false;
 
-          Swal.fire({
-
-            icon: 'error',
-
-            title: 'Error',
-
-            text: 'No se pudo cargar el historial'
-
-          });
+          toastError('No se pudo cargar el historial');
 
         }
 
@@ -76,70 +69,38 @@ export class AiHistory implements OnInit {
 
   viewChat(session: any) {
 
-    const html = session.messages
-      .map((m: any) => `
+    const messages: any[] = session.messages ?? [];
 
-        <div style="
-          margin-bottom:20px;
-          padding:12px;
-          border-radius:10px;
-          color: var(--text-primary);
-          background:${
-            m.role === 'user'
-              ? 'var(--primary)'
-              : '#e9e3e3'
-          };
-          color:${
-            m.role === 'user'
-              ? 'white'
-              : 'black'
-          };
-          text-align:${
-            m.role === 'user'
-              ? 'right'
-              : 'left'
-          };
-        ">
+    const bubbles = messages.map(m => {
 
-          <b>
-            ${
-              m.role === 'user'
-                ? 'Tú'
-                : 'Asistente IA'
-            }
-          </b>
+      const isUser = m.role === 'user';
 
-          <br><br>
+      return `
+        <div class="chat-modal-msg ${isUser ? 'user' : 'assistant'}">
+          <div class="chat-modal-avatar">
+            <span class="material-icons">${isUser ? 'person' : 'smart_toy'}</span>
+          </div>
+          <div class="chat-modal-bubble">
+            <span class="chat-modal-sender">${isUser ? 'Tú' : 'Asistente IA'}</span>
+            <div class="chat-modal-text">${esc(m.content)}</div>
+          </div>
+        </div>`;
 
-          ${m.content}
-
-        </div>
-
-      `)
-      .join('');
+    }).join('');
 
     Swal.fire({
-
       title: 'Conversación',
-
-      width: '900px',
-
+      width: 760,
+      confirmButtonText: 'Cerrar',
       html: `
-
-        <div style="
-          max-height:500px;
-          overflow-y:auto;
-          text-align:left;
-          background: var(--surface);
-          color: var(--text-primary);
-        ">
-
-          ${html}
-
+        <div class="chat-modal-meta">
+          <span class="material-icons">schedule</span>
+          ${esc(formatDate(session.created_at))}
         </div>
-
+        <div class="chat-modal">
+          ${bubbles || '<p class="timeline-empty">Sin mensajes.</p>'}
+        </div>
       `
-
     });
 
   }

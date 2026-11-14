@@ -1,63 +1,111 @@
 <div class="admin-card">
-<h2>Departamentos</h2>
 
-<div class="filters">
+  <div class="page-header">
+    <div>
+      <h2>Departamentos</h2>
+      <p>
+        {{ departments.length }} en total · {{ activeCount }} activos · {{ rootCount }} de primer nivel
+      </p>
+    </div>
 
-  <input
-    type="text"
-    placeholder="Buscar departamento..."
-    [(ngModel)]="searchTerm"
-    (input)="applyFilters()"
-  />
+    <button class="btn btn-primary" (click)="createDepartment()">
+      <span class="material-icons">add</span>
+      Nuevo departamento
+    </button>
+  </div>
 
-  <select [(ngModel)]="filterStatus" (change)="applyFilters()">
-    <option value="">Todos</option>
-    <option value="1">Activo</option>
-    <option value="0">Inactivo</option>
-  </select>
+  <div class="filters">
 
-</div>
+    <input
+      type="text"
+      placeholder="Buscar departamento..."
+      [(ngModel)]="searchTerm"
+      (input)="applyFilters()"
+    />
 
-<button class="btn btn-primary btn-create" (click)="createDepartment()">
-  + Nuevo departamento
-</button>
+    <select [(ngModel)]="filterStatus" (change)="applyFilters()">
+      <option value="">Todos</option>
+      <option value="1">Activos</option>
+      <option value="0">Inactivos</option>
+    </select>
 
-<div class="tree-container">
-  <ng-container *ngFor="let dep of tree">
-    <ng-container *ngTemplateOutlet="recursiveTemplate; context:{ $implicit: dep, level: 0 }"></ng-container>
-  </ng-container>
+    <div class="tree-tools">
+      <button class="btn btn-outline" (click)="expandAll()" [disabled]="isFiltering()">
+        <span class="material-icons">unfold_more</span> Expandir
+      </button>
+      <button class="btn btn-outline" (click)="collapseAll()" [disabled]="isFiltering()">
+        <span class="material-icons">unfold_less</span> Colapsar
+      </button>
+    </div>
+
+  </div>
+
+  @if (tree.length === 0) {
+    <div class="empty-state">
+      <span class="material-icons">apartment</span>
+      <strong>No se encontraron departamentos</strong>
+      <span>Ajusta los filtros o crea uno nuevo.</span>
+    </div>
+  }
+
+  <div class="tree-container">
+    <ng-container *ngFor="let dep of tree">
+      <ng-container *ngTemplateOutlet="recursiveTemplate; context:{ $implicit: dep, level: 0 }"></ng-container>
+    </ng-container>
+  </div>
+
 </div>
 
 <!-- TEMPLATE RECURSIVO -->
 <ng-template #recursiveTemplate let-dep let-level="level">
 
-  <div class="tree-node">
+  <div class="tree-node" [class.has-parent]="level > 0">
 
-    <div class="node-content" [style.marginLeft.px]="level * 20">
+    <div class="node-content" [class.inactive]="dep.status !== 1">
 
-      <span class="tree-line" *ngIf="level > 0">│</span>
+      @if (dep.children?.length) {
+        <button
+          class="tree-toggle"
+          (click)="toggleNode(dep)"
+          [attr.aria-expanded]="!isCollapsed(dep)"
+          [title]="isCollapsed(dep) ? 'Expandir' : 'Colapsar'"
+        >
+          <span class="material-icons" [class.rotated]="!isCollapsed(dep)">chevron_right</span>
+        </button>
+      } @else {
+        <span class="tree-leaf"><span class="material-icons">subdirectory_arrow_right</span></span>
+      }
 
-      <span class="node-name">
-        {{ dep.name }}
-      </span>
+      <div class="node-info">
+        <span class="node-name">{{ dep.name }}</span>
+        @if (dep.description) {
+          <span class="node-desc">{{ dep.description }}</span>
+        }
+      </div>
 
-      <span
-        class="status"
-        [style.color]="dep.status === 1 ? 'green' : 'red'"
-      >
+      @if (dep.children?.length) {
+        <span class="node-count" title="Subdepartamentos">
+          <span class="material-icons">account_tree</span>{{ dep.children.length }}
+        </span>
+      }
+
+      <span class="badge" [ngClass]="dep.status === 1 ? 'active' : 'inactive'">
         {{ dep.status === 1 ? 'Activo' : 'Inactivo' }}
       </span>
 
       <div class="actions">
 
-        <button class="btn btn-outline" (click)="editDepartment(dep)">
+        <button class="btn-icon" (click)="editDepartment(dep)" title="Editar departamento" aria-label="Editar departamento">
           <span class="material-icons">edit</span>
         </button>
 
         <button
-          class="btn"
-          [ngClass]="dep.status === 1 ? 'btn-primary' : 'btn-outline'"
+          class="btn-icon"
+          [class.danger]="dep.status === 1"
+          [class.success]="dep.status !== 1"
           (click)="toggleDepartment(dep)"
+          [title]="dep.status === 1 ? 'Desactivar' : 'Activar'"
+          [attr.aria-label]="dep.status === 1 ? 'Desactivar departamento' : 'Activar departamento'"
         >
           <span class="material-icons">
             {{ dep.status === 1 ? 'block' : 'check_circle' }}
@@ -69,11 +117,14 @@
     </div>
 
     <!-- HIJOS -->
-    <ng-container *ngFor="let child of dep.children">
-      <ng-container *ngTemplateOutlet="recursiveTemplate; context:{ $implicit: child, level: level + 1 }"></ng-container>
-    </ng-container>
+    @if (dep.children?.length && !isCollapsed(dep)) {
+      <div class="tree-children">
+        <ng-container *ngFor="let child of dep.children">
+          <ng-container *ngTemplateOutlet="recursiveTemplate; context:{ $implicit: child, level: level + 1 }"></ng-container>
+        </ng-container>
+      </div>
+    }
 
   </div>
 
 </ng-template>
-</div>
