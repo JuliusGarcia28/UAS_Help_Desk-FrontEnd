@@ -1,7 +1,7 @@
 {
   "name": "helpdesk-desktop",
   "productName": "HelpDesk",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Sistema HelpDesk",
   "main": "main.js",
   "author": "Julian Garcia",
@@ -38,7 +38,8 @@
     "files": [
       "main.js",
       "preload.js",
-      "installer/**/*"
+      "installer/**/*",
+      "build/icon.ico"
     ],
 
     "extraResources":[
@@ -72,7 +73,7 @@
 
       "icon": "build/icon.ico",
 
-      "signAndEditExecutable": false
+      "signAndEditExecutable": true
 
     },
 
