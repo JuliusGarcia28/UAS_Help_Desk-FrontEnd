@@ -59,7 +59,7 @@ export abstract class LayoutBase {
 
     Swal.fire({
       title: '¿Cerrar sesión?',
-      text: 'Tu sesión actual se cerrará',
+      //text: 'Tu sesión actual se cerrará',
       icon: 'question',
       showCancelButton: true,
       confirmButtonText: 'Sí, cerrar sesión',
