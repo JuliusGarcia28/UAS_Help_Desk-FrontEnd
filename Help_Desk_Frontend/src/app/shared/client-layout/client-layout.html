@@ -77,4 +77,24 @@
 
   </main>
 
+  <!-- Navegación inferior (solo móvil) -->
+  <nav class="bottom-nav" aria-label="Navegación móvil" style="--items: 4">
+    <a routerLink="/client/dashboard" routerLinkActive="active" (click)="closeSidebar()">
+      <span class="material-icons">dashboard</span>
+      <span class="bottom-nav-label">Inicio</span>
+    </a>
+    <a routerLink="/client/tickets" routerLinkActive="active" (click)="closeSidebar()">
+      <span class="material-icons">support_agent</span>
+      <span class="bottom-nav-label">Tickets</span>
+    </a>
+    <a routerLink="/client/ai-support" routerLinkActive="active" (click)="closeSidebar()">
+      <span class="material-icons">smart_toy</span>
+      <span class="bottom-nav-label">Asistente</span>
+    </a>
+    <a routerLink="/client/ai-history" routerLinkActive="active" (click)="closeSidebar()">
+      <span class="material-icons">history</span>
+      <span class="bottom-nav-label">Historial</span>
+    </a>
+  </nav>
+
 </div>

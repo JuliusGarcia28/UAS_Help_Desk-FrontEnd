@@ -177,20 +177,20 @@
         <tbody>
           @for (ticket of filteredTickets; track ticket.id) {
             <tr>
-              <td class="mono strong">{{ ticket.code }}</td>
-              <td class="cell-desc" [title]="ticket.description">{{ ticket.description }}</td>
-              <td>
+              <td class="mono strong cell-primary" data-label="Código">{{ ticket.code }}</td>
+              <td class="cell-desc cell-wide" [title]="ticket.description" data-label="Descripción">{{ ticket.description }}</td>
+              <td data-label="Prioridad">
                 <span class="badge" [ngClass]="priorityCss(ticket.priority)">
                   {{ priorityLabel[ticket.priority] || 'Sin prioridad' }}
                 </span>
               </td>
-              <td>
+              <td data-label="Estado">
                 <span class="badge" [ngClass]="statusCss(ticket.status)">
                   {{ statusLabel[ticket.status] || 'Desconocido' }}
                 </span>
               </td>
-              <td>{{ ticket.client?.email || 'N/A' }}</td>
-              <td>{{ ticket.client?.department?.name || 'N/A' }}</td>
+              <td class="cell-wide" data-label="Cliente">{{ ticket.client?.email || 'N/A' }}</td>
+              <td data-label="Departamento">{{ ticket.client?.department?.name || 'N/A' }}</td>
             </tr>
           }
         </tbody>

@@ -83,7 +83,7 @@
 
       <tr>
 
-        <th>Codigo</th>
+        <th>Código</th>
 
         <th>Descripción</th>
 
@@ -93,7 +93,7 @@
 
         <th>Prioridad</th>
 
-        <th>Status</th>
+        <th>Estado</th>
 
         <th>Fecha</th>
 
@@ -107,11 +107,11 @@
 
       <tr *ngFor="let ticket of filteredTickets">
 
-        <td class="mono">
+        <td class="mono cell-primary" data-label="Código">
           {{ ticket.code }}
         </td>
 
-        <td>
+        <td class="cell-wide" data-label="Descripción">
 
           {{
             ticket.description.length > 60
@@ -121,7 +121,7 @@
 
         </td>
 
-        <td>
+        <td class="cell-wide" data-label="Cliente">
 
           {{
             ticket.client?.email ||
@@ -131,7 +131,7 @@
 
         </td>
 
-        <td>
+        <td data-label="Técnico">
 
           {{
             ticket.technician
@@ -141,7 +141,7 @@
 
         </td>
 
-        <td>
+        <td data-label="Prioridad">
 
           <span
             class="badge"
@@ -154,7 +154,7 @@
 
         </td>
 
-        <td>
+        <td data-label="Estado">
 
           <span class="badge" [ngClass]="statusCss(ticket.status)">
 
@@ -164,7 +164,7 @@
 
         </td>
 
-        <td>
+        <td data-label="Fecha">
 
           {{
             ticket.created_at
@@ -173,7 +173,7 @@
 
         </td>
 
-        <td class="actions">
+        <td class="actions cell-actions" data-label="Acciones">
 
         <button
           class="btn-icon"

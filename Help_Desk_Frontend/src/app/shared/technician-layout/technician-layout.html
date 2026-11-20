@@ -67,4 +67,16 @@
 
   </main>
 
+  <!-- Navegación inferior (solo móvil) -->
+  <nav class="bottom-nav" aria-label="Navegación móvil" style="--items: 2">
+    <a routerLink="/technician/dashboard" routerLinkActive="active" (click)="closeSidebar()">
+      <span class="material-icons">dashboard</span>
+      <span class="bottom-nav-label">Inicio</span>
+    </a>
+    <a routerLink="/technician/tickets" routerLinkActive="active" (click)="closeSidebar()">
+      <span class="material-icons">confirmation_number</span>
+      <span class="bottom-nav-label">Tickets</span>
+    </a>
+  </nav>
+
 </div>

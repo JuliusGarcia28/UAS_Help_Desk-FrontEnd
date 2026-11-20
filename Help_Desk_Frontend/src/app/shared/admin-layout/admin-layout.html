@@ -87,4 +87,32 @@
 
   </main>
 
+  <!-- Navegación inferior (solo móvil) -->
+  <nav class="bottom-nav" aria-label="Navegación móvil" style="--items: 6">
+    <a routerLink="/admin/dashboard" routerLinkActive="active" (click)="closeSidebar()">
+      <span class="material-icons">dashboard</span>
+      <span class="bottom-nav-label">Inicio</span>
+    </a>
+    <a routerLink="/admin/tickets" routerLinkActive="active" (click)="closeSidebar()">
+      <span class="material-icons">confirmation_number</span>
+      <span class="bottom-nav-label">Tickets</span>
+    </a>
+    <a routerLink="/admin/users" routerLinkActive="active" (click)="closeSidebar()">
+      <span class="material-icons">group</span>
+      <span class="bottom-nav-label">Usuarios</span>
+    </a>
+    <a routerLink="/admin/assets" routerLinkActive="active" (click)="closeSidebar()">
+      <span class="material-icons">inventory_2</span>
+      <span class="bottom-nav-label">Equipos</span>
+    </a>
+    <a routerLink="/admin/departments" routerLinkActive="active" (click)="closeSidebar()">
+      <span class="material-icons">apartment</span>
+      <span class="bottom-nav-label">Deptos.</span>
+    </a>
+    <a routerLink="/admin/reports" routerLinkActive="active" (click)="closeSidebar()">
+      <span class="material-icons">analytics</span>
+      <span class="bottom-nav-label">Reportes</span>
+    </a>
+  </nav>
+
 </div>

@@ -2487,3 +2487,563 @@ td.actions > .btn-icon + .btn-icon,
 }
 
 .table-wrap > .table { display: table !important; white-space: normal; }
+
+/* ==========================================================
+   RESPONSIVE MOVIL
+   - Navegacion inferior tipo app
+   - Tablas convertidas en tarjetas (usa data-label en cada <td>)
+   - Objetivos tactiles de 40px+, formularios y modales a pantalla
+========================================================== */
+
+/* La barra inferior solo existe en movil */
+.bottom-nav {
+  display: none;
+}
+
+@media (max-width: 768px) {
+
+  /* ---------- Navegacion inferior ---------- */
+
+  .bottom-nav {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 32;
+    display: grid;
+    grid-template-columns: repeat(var(--items, 4), minmax(0, 1fr));
+    padding: 6px 6px calc(6px + env(safe-area-inset-bottom));
+    background: color-mix(in srgb, var(--surface) 92%, transparent);
+    backdrop-filter: blur(14px);
+    border-top: 1px solid var(--border);
+    box-shadow: 0 -6px 20px rgba(15, 23, 42, .06);
+    animation: fade-up .4s var(--ease) backwards;
+  }
+
+  .bottom-nav a {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    min-height: 52px;
+    padding: 4px 2px;
+    border-radius: 12px;
+    color: var(--text-muted);
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: color var(--t) var(--ease), background var(--t) var(--ease);
+  }
+
+  .bottom-nav a .material-icons {
+    font-size: 23px;
+    padding: 2px 14px;
+    border-radius: 999px;
+    transition: background var(--t) var(--ease), transform var(--t) var(--ease-spring);
+  }
+
+  .bottom-nav-label {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: .68rem;
+    font-weight: 600;
+    letter-spacing: .01em;
+  }
+
+  .bottom-nav a:active .material-icons {
+    transform: scale(.9);
+  }
+
+  .bottom-nav a.active {
+    color: var(--accent);
+  }
+
+  .bottom-nav a.active .material-icons {
+    background: var(--accent-soft);
+  }
+
+  /* Con la barra inferior el menu lateral sobra en movil */
+  .menu-btn {
+    display: none !important;
+  }
+
+  .app-shell .page {
+    padding: 16px 14px calc(84px + env(safe-area-inset-bottom));
+  }
+
+  /* ---------- Barra superior ---------- */
+
+  .app-shell .topbar {
+    padding: 10px 14px;
+    padding-top: calc(10px + env(safe-area-inset-top));
+    gap: 10px;
+  }
+
+  .app-shell .topbar h1 {
+    font-size: 1rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .topbar-left {
+    min-width: 0;
+  }
+
+  .topbar-actions {
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .user-chip .user-name,
+  .btn-logout .btn-text {
+    display: none;
+  }
+
+  .user-chip {
+    padding: 3px;
+  }
+
+  .btn-logout {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+  }
+
+  .theme-toggle {
+    width: 40px;
+    height: 40px;
+  }
+
+  /* ---------- Encabezados de pagina ---------- */
+
+  .page-header {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .page-header h2 {
+    font-size: 1.25rem;
+  }
+
+  .page-header > .btn,
+  .page-header .header-actions {
+    width: 100%;
+  }
+
+  .page-header > .btn {
+    justify-content: center;
+    min-height: 44px;
+  }
+
+  .admin-card,
+  .card-surface,
+  .detail-card {
+    padding: 16px;
+    border-radius: var(--radius);
+  }
+
+  /* En movil las tarjetas contenedoras no necesitan marco propio:
+     cada fila de tabla ya es una tarjeta. */
+  .admin-card {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+  }
+
+  /* ---------- Formularios y filtros ---------- */
+
+  /* 16px evita el zoom automatico de iOS al enfocar un campo */
+  input:not([type="checkbox"]):not([type="radio"]),
+  select,
+  textarea,
+  .swal2-input,
+  .swal2-select,
+  .swal2-textarea {
+    font-size: 16px !important;
+  }
+
+  input:not([type="checkbox"]):not([type="radio"]),
+  select {
+    min-height: 44px;
+  }
+
+  .filters {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .filters input[type="text"],
+  .filters > :only-child,
+  .filters .tree-tools,
+  .filters > .btn {
+    grid-column: 1 / -1;
+  }
+
+  .filters .tree-tools .btn {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .btn-create {
+    width: 100%;
+    min-height: 44px;
+    justify-content: center;
+  }
+
+  /* Pestanas: desplazamiento horizontal en lugar de saltos de linea */
+  .tabs {
+    display: flex;
+    flex-wrap: nowrap;
+    width: 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tabs .btn {
+    flex: 1 0 auto;
+    white-space: nowrap;
+    justify-content: center;
+    min-height: 40px;
+  }
+
+  /* ---------- Tablas como tarjetas ---------- */
+
+  .table-wrap {
+    overflow: visible;
+    max-height: none;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+  }
+
+  .table-wrap > .table,
+  .table {
+    display: block !important;
+    min-width: 0 !important;
+    border: none;
+    background: transparent;
+    white-space: normal;
+  }
+
+  .table thead {
+    display: none;
+  }
+
+  .table tbody {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .table tbody tr {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px 14px;
+    padding: 14px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .table tbody tr:active {
+    transform: scale(.995);
+  }
+
+  .table tbody tr:hover td {
+    background: transparent;
+  }
+
+  .table td {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 3px;
+    min-width: 0;
+    padding: 0 !important;
+    border: none !important;
+    background: transparent !important;
+    font-size: .9rem;
+    overflow-wrap: anywhere;
+  }
+
+  .table td[data-label]::before {
+    content: attr(data-label);
+    font-size: .68rem;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  /* Celda principal: titulo de la tarjeta */
+  .table td.cell-primary {
+    grid-column: 1 / -1;
+    padding-bottom: 10px !important;
+    border-bottom: 1px solid var(--border) !important;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+
+  .table td.cell-primary::before {
+    display: none;
+  }
+
+  .table td.cell-wide {
+    grid-column: 1 / -1;
+  }
+
+  .table td.cell-desc {
+    max-width: none;
+    white-space: normal;
+  }
+
+  /* Acciones al pie de la tarjeta, con botones comodos para el dedo */
+  .table td.cell-actions,
+  .table td.actions {
+    grid-column: 1 / -1;
+    display: flex !important;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 8px;
+    padding-top: 12px !important;
+    border-top: 1px dashed var(--border) !important;
+  }
+
+  .table td.cell-actions::before,
+  .table td.actions::before {
+    display: none;
+  }
+
+  .table td.cell-actions > .actions {
+    width: 100%;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .table td .btn-icon {
+    width: 42px;
+    height: 42px;
+    margin: 0 !important;
+  }
+
+  .table td .btn-icon .material-icons {
+    font-size: 20px;
+  }
+
+  .table td.cell-actions > .btn {
+    flex: 1;
+    justify-content: center;
+    min-height: 42px;
+  }
+
+  /* ---------- Metricas y graficas ---------- */
+
+  .stat-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .stat-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 14px;
+  }
+
+  .stat-card:hover {
+    transform: none;
+  }
+
+  .stat-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 11px;
+  }
+
+  .stat-icon .material-icons {
+    font-size: 21px;
+  }
+
+  .stat-label {
+    font-size: .68rem;
+  }
+
+  .stat-value {
+    font-size: 1.5rem;
+  }
+
+  .chart-card {
+    padding: 16px;
+  }
+
+  .chart-box {
+    height: 240px;
+  }
+
+  /* ---------- Arbol de departamentos ---------- */
+
+  .node-content {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 8px 10px;
+  }
+
+  .node-content > .badge,
+  .node-content > .node-count {
+    grid-column: 2;
+    justify-self: start;
+  }
+
+  .node-content > .actions {
+    grid-column: 3;
+    grid-row: 1 / span 3;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .node-content .btn-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .node-content > .actions > .btn-icon + .btn-icon {
+    margin-left: 0;
+  }
+
+  .node-desc {
+    white-space: normal;
+  }
+
+  /* ---------- Estados vacios ---------- */
+
+  .empty-state {
+    padding: 32px 16px;
+  }
+}
+
+/* ---------- Modales a pantalla en telefonos ---------- */
+
+@media (max-width: 600px) {
+
+  .swal2-container {
+    padding: 10px !important;
+  }
+
+  .swal2-popup:not(.swal2-toast) {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 20px 16px 16px !important;
+    border-radius: 18px !important;
+  }
+
+  .swal2-popup.swal-show:not(.swal2-toast) {
+    animation: swal-sheet .32s var(--ease) both;
+  }
+
+  @keyframes swal-sheet {
+    from { opacity: 0; transform: translateY(40px); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  .swal-html,
+  .swal2-html-container {
+    max-height: 62dvh;
+  }
+
+  /* Botones apilados: accion principal arriba */
+  .swal-actions,
+  .swal2-actions {
+    flex-direction: column-reverse;
+  }
+
+  .swal-confirm-btn,
+  .swal-cancel-btn,
+  .swal-deny-btn {
+    width: 100%;
+    min-height: 46px;
+  }
+
+  .swal2-icon {
+    transform: scale(.72);
+    margin: 0 auto 6px !important;
+  }
+
+  .timeline-body {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .history-timeline {
+    margin-left: 4px;
+    padding-left: 18px;
+  }
+
+  .timeline-dot {
+    left: -26px;
+  }
+
+  .timeline-card {
+    padding: 12px;
+  }
+
+  .chat-modal {
+    padding: 10px;
+  }
+
+  .chat-modal-msg {
+    max-width: 96%;
+  }
+
+  .swal2-toast {
+    width: calc(100vw - 20px) !important;
+  }
+}
+
+@media (max-width: 380px) {
+
+  .stat-value {
+    font-size: 1.3rem;
+  }
+
+  .filters {
+    grid-template-columns: 1fr;
+  }
+
+  .bottom-nav a .material-icons {
+    padding: 2px 10px;
+  }
+
+  .timeline-body {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Dispositivos tactiles: sin efectos hover que se quedan "pegados" */
+@media (hover: none) {
+
+  .btn:hover:not(:disabled),
+  .btn-icon:hover:not(:disabled),
+  .stat-card:hover,
+  .chart-card:hover,
+  .timeline-card:hover,
+  .node-content:hover {
+    transform: none;
+  }
+}

@@ -58,9 +58,9 @@
   <tbody>
     <tr *ngFor="let user of filteredUsers">
 
-      <td>{{ user.first_name }} {{ user.last_name }}</td>
-      <td>{{ user.email }}</td>
-      <td>
+      <td class="cell-primary" data-label="Nombre">{{ user.first_name }} {{ user.last_name }}</td>
+      <td class="cell-wide" data-label="Email">{{ user.email }}</td>
+      <td data-label="Rol">
         <span class="badge"
         [ngClass]="{
         'admin': user.role === 'admin',
@@ -70,16 +70,16 @@
           {{ roleMap[user.role] }}
         </span>
       </td>
-      <td>{{ user.department?.name || 'Sin asignar' }}</td>
+      <td data-label="Departamento">{{ user.department?.name || 'Sin asignar' }}</td>
 
-      <td>
+      <td data-label="Estado">
         <span class="badge"
         [ngClass]="user.status === 1 ? 'active' : 'inactive'">
           {{ user.status === 1 ? 'Activo' : 'Inactivo' }}
         </span>
       </td>
 
-      <td class="actions">
+      <td class="actions cell-actions" data-label="Acciones">
         <!--button class="btn-icon" (click)="viewUser(user)">
           <span class="material-icons">visibility</span>
         </button-->
