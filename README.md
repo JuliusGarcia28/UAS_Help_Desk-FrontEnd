@@ -485,6 +485,24 @@ npm run build
 npm run dist
 ```
 
+# Build de movil (android)
+
+La aplicacion es empaquetada usando ionic con capacitor.
+
+Ejemplo: 
+
+```bash
+npm run sdk:setup
+```
+
+```bash
+npm run apk:debug
+```
+
+```bash
+npm run apk:release
+```
+
 
 El instalador generado puede distribuirse para su instalación en equipos Windows.
 

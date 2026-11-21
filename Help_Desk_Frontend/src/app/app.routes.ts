@@ -31,7 +31,7 @@ export const routes: Routes = [
     children: technicianRoutes
   },
 
-  ...LandingRoutes,
+  //...LandingRoutes,
   ...loginRoutes,
 
   // FALLBACK
