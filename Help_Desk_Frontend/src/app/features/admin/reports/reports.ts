@@ -12,6 +12,7 @@ import { TicketService } from '../../../core/services/ticket.service';
 import { AdminService } from '../../../core/services/admin.service';
 import { ReportService } from '../../../core/services/report.service';
 import { ThemeService } from '../../../core/services/theme.service';
+import { NativeService } from '../../../core/services/native.service';
 import { CountUpDirective } from '../../../core/directives/count-up.directive';
 import { toastError, toastSuccess } from '../../../core/utils/swal';
 import {
@@ -40,6 +41,7 @@ export class Reports implements OnInit, OnDestroy {
   private readonly ticketService = inject(TicketService);
   private readonly adminService = inject(AdminService);
   private readonly themeService = inject(ThemeService);
+  private readonly native = inject(NativeService);
 
   /*==================================================
       KPI
@@ -477,6 +479,14 @@ export class Reports implements OnInit, OnDestroy {
 
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Tickets');
+    if (this.native.isNative) {
+      const base64 = XLSX.write(wb, { type: 'base64', bookType: 'xlsx' });
+      this.native.saveAndShare('ReporteTickets.xlsx', base64, 'Reporte de tickets (Excel)')
+        .then(() => toastSuccess('Excel generado'))
+        .catch(() => toastError('No se pudo guardar el archivo'));
+      return;
+    }
+
     XLSX.writeFile(wb, 'ReporteTickets.xlsx');
 
     toastSuccess('Excel generado');
@@ -510,6 +520,14 @@ export class Reports implements OnInit, OnDestroy {
       styles: { fontSize: 9, cellPadding: 3 },
       columnStyles: { 1: { cellWidth: 90 } }
     });
+
+    if (this.native.isNative) {
+      const base64 = pdf.output('datauristring').split(',')[1];
+      this.native.saveAndShare('ReporteTickets.pdf', base64, 'Reporte de tickets (PDF)')
+        .then(() => toastSuccess('PDF generado'))
+        .catch(() => toastError('No se pudo guardar el archivo'));
+      return;
+    }
 
     pdf.save('ReporteTickets.pdf');
 

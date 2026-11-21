@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
 import { ThemeService } from './core/services/theme.service';
+import { NativeService } from './core/services/native.service';
 import { LoadingOverlay } from './core/components/loading-overlay/loading-overlay';
 
 @Component({
@@ -14,5 +15,8 @@ export class App {
 
   // Se inyecta para que el tema guardado se aplique al arrancar.
   private readonly themeService = inject(ThemeService);
+
+  // Integración con Android/iOS (botón atrás, barra de estado). En web no hace nada.
+  private readonly nativeService = inject(NativeService);
 
 }

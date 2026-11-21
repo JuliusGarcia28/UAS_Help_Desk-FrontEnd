@@ -54,6 +54,10 @@
               ],
               "outputHashing": "all"
             },
+            "mobile": {
+              "baseHref": "/",
+              "outputPath": "dist/mobile"
+            },
             "development": {
               "optimization": false,
               "extractLicenses": false,

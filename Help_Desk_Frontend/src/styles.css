@@ -3047,3 +3047,42 @@ td.actions > .btn-icon + .btn-icon,
     transform: none;
   }
 }
+
+/* ==========================================================
+   APP NATIVA (Capacitor / Ionic)
+   env(safe-area-inset-*) vale 0 en escritorio, así que estas
+   reglas solo tienen efecto en teléfonos con notch o barra de estado.
+========================================================== */
+
+app-landing .navbar {
+  padding-top: env(safe-area-inset-top);
+}
+
+.auth-section {
+  padding-top: calc(24px + env(safe-area-inset-top));
+  padding-bottom: calc(24px + env(safe-area-inset-bottom));
+}
+
+.app-shell .sidebar {
+  padding-top: calc(22px + env(safe-area-inset-top));
+  padding-bottom: calc(16px + env(safe-area-inset-bottom));
+}
+
+.swal2-container {
+  padding-top: max(10px, env(safe-area-inset-top)) !important;
+  padding-bottom: max(10px, env(safe-area-inset-bottom)) !important;
+}
+
+body.native {
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior-y: none;
+}
+
+/* En la app, los botones y la navegación no deben seleccionarse como texto */
+body.native .btn,
+body.native .btn-icon,
+body.native .bottom-nav,
+body.native .sidebar nav {
+  -webkit-user-select: none;
+  user-select: none;
+}
