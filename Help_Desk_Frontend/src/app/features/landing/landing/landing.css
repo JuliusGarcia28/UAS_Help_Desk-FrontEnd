@@ -239,9 +239,9 @@
   transition: transform .25s var(--ease);
 }
 
-.btn-light:hover .material-icons {
+/*.btn-light:hover .material-icons {
   transform: translateX(4px);
-}
+}*/
 
 .btn-ghost {
   background: transparent;
