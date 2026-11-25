@@ -21,6 +21,9 @@ export class Landing {
   readonly downloadUrl =
     'https://github.com/JuliusGarcia28/UAS_Help_Desk-FrontEnd/releases/download/Release/HelpDesk.Setup.1.0.1.exe';
 
+  readonly downloadMobileUrl =
+    'https://github.com/JuliusGarcia28/UAS_Help_Desk-FrontEnd/releases/download/Mobile_Release_V1/help-desk-v1_0.apk';
+
   readonly year = new Date().getFullYear();
 
   scrolled = false;
