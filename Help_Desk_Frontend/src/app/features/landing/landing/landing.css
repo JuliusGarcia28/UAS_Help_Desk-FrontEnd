@@ -239,9 +239,9 @@
   transition: transform .25s var(--ease);
 }
 
-.btn-light:hover .material-icons {
+/*.btn-light:hover .material-icons {
   transform: translateX(4px);
-}
+}*/
 
 .btn-ghost {
   background: transparent;
@@ -625,6 +625,11 @@
 }
 
 @media (max-width: 480px) {
+
+  .nav-actions a{
+    max-width: 7.3rem;
+    max-height: 3rem;
+  }
 
   .nav-actions .btn {
     padding: 9px 14px;

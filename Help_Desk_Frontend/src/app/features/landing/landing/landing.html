@@ -11,7 +11,9 @@
     <nav class="nav-links" aria-label="Secciones">
       <a href="javascript:void(0)" (click)="scrollTo('features', $event)">Funciones</a>
       <a href="javascript:void(0)" (click)="scrollTo('how', $event)">Cómo funciona</a>
-      <a href="javascript:void(0)" (click)="scrollTo('downloads', $event)">Descargas</a>
+      @if (!isNative) {
+        <a href="javascript:void(0)" (click)="scrollTo('downloads', $event)">Descargas</a>
+      }
     </nav>
 
     <div class="nav-actions">
@@ -136,6 +138,7 @@
 
 </section>
 
+@if (!isNative) {
 <!-- DOWNLOADS -->
 <section id="downloads" class="section downloads">
 
@@ -171,7 +174,33 @@
 
         <a [href]="downloadUrl" target="_blank" rel="noopener" class="btn btn-primary btn-full">
           <span class="material-icons">download</span>
-          Descargar (.exe)
+          Descargar
+        </a>
+
+      </div>
+
+      <div class="download-card" appReveal>
+
+        <div class="download-icon">
+          <span class="material-icons">phone_android</span>
+        </div>
+
+        <h3>Android</h3>
+
+        <p>
+          Aplicación móvil para dispositivos Android.
+          Permite gestionar incidencias desde cualquier lugar.
+        </p>
+
+        <ul class="download-features">
+          <li><span class="material-icons">check_circle</span> Gestión de incidencias en cualquier lugar</li>
+          <li><span class="material-icons">check_circle</span> Mayor comodidad en la gestión</li>
+          <li><span class="material-icons">check_circle</span> Buena experiencia de usuario</li>
+        </ul>
+
+        <a [href]="downloadUrl" target="_blank" rel="noopener" class="btn btn-primary btn-full">
+          <span class="material-icons">download</span>
+          Descargar
         </a>
 
       </div>
@@ -181,6 +210,7 @@
   </div>
 
 </section>
+}
 
 <!-- CTA -->
 <section class="section cta-section">

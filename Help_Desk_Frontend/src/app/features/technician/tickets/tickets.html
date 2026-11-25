@@ -62,14 +62,14 @@
 
       <tr *ngFor="let t of filteredTickets()">
 
-        <td>{{ t.code }}</td>
+        <td class="cell-primary" data-label="Código">{{ t.code }}</td>
 
-        <td>
+        <td class="cell-wide" data-label="Descripción">
           {{ t.description | slice:0:50 }}
           {{ t.description.length > 50 ? '...' : '' }}
         </td>
 
-        <td>
+        <td data-label="Prioridad">
 
           <span
             class="badge"
@@ -87,7 +87,7 @@
 
         </td>
 
-        <td>
+        <td data-label="Estado">
 
           <span
             class="badge"
@@ -104,11 +104,11 @@
 
         </td>
 
-        <td>
+        <td data-label="Fecha">
           {{ t.created_at | date:'short' }}
         </td>
 
-        <td class="actions">
+        <td class="actions cell-actions" data-label="Acciones">
 
           <button
             class="btn-icon"

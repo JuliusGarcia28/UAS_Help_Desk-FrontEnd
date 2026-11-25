@@ -26,9 +26,9 @@
     <tr *ngFor="let t of tickets">
 
       <!--td>{{ t.description }}</td-->
-      <td>{{ t.description | slice:0:85 }}{{ t.description.length > 85 ? '...' : '' }}</td>
+      <td class="cell-primary cell-wide" data-label="Descripción">{{ t.description | slice:0:85 }}{{ t.description.length > 85 ? '...' : '' }}</td>
 
-      <td>
+      <td data-label="Prioridad">
         <span class="badge"
           [ngClass]="{
           'low': t.priority === 1,
@@ -40,7 +40,7 @@
         </span>
       </td>
 
-      <td>
+      <td data-label="Estado">
         <span class="badge"
           [ngClass]="{
           'open': t.status === 1,
@@ -51,7 +51,7 @@
         </span>
       </td>
 
-      <td class="actions">
+      <td class="actions cell-actions" data-label="Acciones">
         <button class="btn-icon" (click)="viewHistory(t)" title="Ver historial" aria-label="Ver historial">
           <span class="material-icons">history</span>
         </button>

@@ -366,22 +366,34 @@ export class Tickets implements OnInit {
 
         <div class="swal-form">
 
+          <span class="swal2-label">
+            Descripción
+          </span>
           <textarea
             id="description"
             class="swal2-textarea"
             readonly
           >${ticket.description}</textarea>
 
-          <input
-            class="swal2-input"
-            readonly
-            value="${ticket.client?.email || ticket.cliente || 'Sin cliente'}"
-          >
+          <div class="swal2-row">
+            <span class="swal2-label">
+              Cliente
+            </span>
+            <input
+              class="swal2-input"
+              readonly
+              value="${ticket.client?.email || ticket.cliente || 'Sin cliente'}"
+            >
+          </div>
 
-          <select
-            id="technician"
-            class="swal2-select"
-          >
+          <div class="swal2-row">
+            <span class="swal2-label">
+              Tecnico
+            </span>
+            <select
+              id="technician"
+              class="swal2-select"
+            >
 
             <option value="">
               Sin técnico
@@ -389,12 +401,18 @@ export class Tickets implements OnInit {
 
             ${technicianOptions}
 
-          </select>
+            </select>
+          </div>
 
-          <select
-            id="priority"
-            class="swal2-select"
-          >
+          <div class="swal2-row">
+            <span class="swal2-label">
+              Prioridad
+            </span>
+            
+            <select
+              id="priority"
+              class="swal2-select"
+            >
 
             <option value="1" ${ticket.priority === 1 ? 'selected' : ''}>
               Baja
@@ -412,12 +430,18 @@ export class Tickets implements OnInit {
               Crítica
             </option>
 
-          </select>
+            </select>
+          </div>
 
-          <select
-            id="status"
-            class="swal2-select"
-          >
+          <div class="swal2-row">
+            <span class="swal2-label">
+              Estado
+            </span>
+
+            <select
+              id="status"
+              class="swal2-select"
+            >
 
             <option value="1" ${ticket.status === 1 ? 'selected' : ''}>
               Abierto
@@ -439,7 +463,8 @@ export class Tickets implements OnInit {
               Cerrado
             </option>
 
-          </select>
+            </select>
+          </div>
 
         </div>
 

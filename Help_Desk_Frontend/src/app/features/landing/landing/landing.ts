@@ -2,6 +2,7 @@ import { Component, HostListener, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { ThemeService } from '../../../core/services/theme.service';
+import { NativeService } from '../../../core/services/native.service';
 import { RevealDirective } from '../../../core/directives/reveal.directive';
 
 @Component({
@@ -13,6 +14,9 @@ import { RevealDirective } from '../../../core/directives/reveal.directive';
 export class Landing {
 
   readonly themeService = inject(ThemeService);
+
+  /** En la app móvil no tiene sentido ofrecer el instalador de Windows. */
+  readonly isNative = inject(NativeService).isNative;
 
   readonly downloadUrl =
     'https://github.com/JuliusGarcia28/UAS_Help_Desk-FrontEnd/releases/download/Release/HelpDesk.Setup.1.0.1.exe';
