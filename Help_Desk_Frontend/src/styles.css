@@ -321,13 +321,13 @@ h1, h2, h3, h4 {
   font-size: 20px;
 }
 
-.btn:hover:not(:disabled) {
+/*.btn:hover:not(:disabled) {
   transform: translateY(-1px);
-}
+}*/
 
-.btn:active:not(:disabled) {
+/*.btn:active:not(:disabled) {
   transform: translateY(0) scale(.98);
-}
+}*/
 
 .btn:disabled {
   opacity: .5;

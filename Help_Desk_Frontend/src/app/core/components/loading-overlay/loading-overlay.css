@@ -42,7 +42,7 @@
   animation: spin .8s linear infinite;
 }
 
-.spinner::after {
+/*.spinner::after {
   content: "";
   position: absolute;
   inset: 6px;
@@ -50,7 +50,7 @@
   border: 3px solid transparent;
   border-bottom-color: var(--secondary);
   animation: spin 1.2s linear infinite reverse;
-}
+}*/
 
 .loading-content p {
   margin: 0;
